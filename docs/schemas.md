@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `045_nomenclatura_notas` está instalada no banco.
+A versão `046_chaves_estrangeiras_explicitas` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

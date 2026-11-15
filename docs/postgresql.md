@@ -66,7 +66,7 @@ Busque por tabela, coluna ou tipo, ou filtre por área. Cada card explica onde a
 
 Abra a [modelagem]({{ '/modelagem.html' | relative_url }}) para seguir os vínculos de horários, atividades e contas.
 
-`atividades.data` usa `date` e `atividades.hora` usa `time`. O horário é opcional. Cada anexo fica em uma linha de `anexos_atividade`, com posição, nome, tamanho e referência ao arquivo no R2.
+`atividades.data` usa `date` e `atividades.hora` usa `time`. O horário é opcional. Cada anexo fica em uma linha de `anexos_atividade`, com `id_atividade`, nome, tamanho e referência ao arquivo no R2. A sequência é dada pelo ID, sem uma coluna de ordem.
 
 ## Acesso ao banco
 
@@ -125,3 +125,5 @@ Em um banco local vazio, siga os passos em [Consultas SQL]({{ '/consultas.html' 
 [Ver arquivos SQL](https://github.com/Tech-2D/database/tree/main/sql/migrations) · [Rodar em um banco local](https://github.com/Tech-2D/database#rodar-o-sql-localmente) · [Consultas de exemplo](https://github.com/Tech-2D/database/blob/main/sql/examples/consultas.sql)
 
 A versão **045** padroniza os nomes da área de Notas: `notas_cadernos`, `notas_lancamentos`, `notas_recuperacoes`, `visao_disciplinas_notas` e `visao_notas_resultados`. O rename preserva dados, permissões, vínculos e RLS.
+
+A versão **046** substitui as seis FKs chamadas `id_pai` por nomes explícitos de relacionamento e remove `ordem` de `anexos_atividade`. Funções SQL e a view de atividades usam os novos campos; os anexos são retornados por ID.

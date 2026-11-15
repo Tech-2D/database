@@ -118,7 +118,7 @@
         "name": "attachments",
         "source": "attachments",
         "type": "jsonb",
-        "note": "Lista de anexos montada a partir dos registros de anexos na ordem original."
+        "note": "Lista de anexos montada a partir dos registros de anexos, em sequência estável pelo ID numérico, sem depender de uma coluna ordem."
       },
       {
         "name": "created_at",

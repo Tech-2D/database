@@ -1,7 +1,7 @@
 {
   "anexos_atividade": {
     "feature": "Atividade · Materiais e downloads",
-    "description": "Usada ao criar, editar e abrir os materiais de uma atividade. Guarda os metadados e a ordem dos anexos; o conteúdo binário permanece no Cloudflare R2, com download autorizado pela API."
+    "description": "Usada ao criar, editar e abrir os materiais de uma atividade. Guarda os metadados dos anexos e o vínculo id_atividade; a API os retorna em sequência estável pelo ID, sem coluna ordem; o conteúdo binário permanece no Cloudflare R2, com download autorizado pela API."
   },
   "atividades": {
     "feature": "Calendário · Dia, semana, mês e detalhes",

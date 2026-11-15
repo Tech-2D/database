@@ -65,7 +65,7 @@ A visão [Catálogo de horários]({{ '/views.html#view-catalogo_horarios' | rela
 
 ## Atividades e anexos
 
-`atividades` guarda título, descrição, disciplina, turma, data e hora. Uma turma nula indica atividade geral. `anexos_atividade` guarda os metadados dos arquivos e sua ordem. Cada anexo aponta para a atividade por chave estrangeira.
+`atividades` guarda título, descrição, disciplina, turma, data e hora. Uma turma nula indica atividade geral. `anexos_atividade` guarda os metadados dos arquivos. A FK `id_atividade` aponta para `atividades.id_registro`, deixando explícito a qual atividade o anexo pertence. Não há coluna `ordem`: a API devolve os anexos em sequência estável pelo ID numérico.
 
 `atividades.turma` usa a chave de turma da Agenda. `horarios_aula.id_turma` aponta para o identificador numérico do catálogo de aulas.
 
@@ -73,7 +73,7 @@ O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do 
 
 ## Sugestões e conversas
 
-`sugestoes_melhoria` registra o feedback autenticado. Cada linha de `mensagens_sugestao` se liga à sugestão por `registros_aplicacao.id_pai`. A API limita a conversa ao autor da sugestão e aos administradores.
+`sugestoes_melhoria` registra o feedback autenticado. Cada linha de `mensagens_sugestao` se liga à sugestão por `registros_aplicacao.id_registro_pai`. A API limita a conversa ao autor da sugestão e aos administradores.
 
 ## Kanban
 
@@ -114,3 +114,20 @@ Os vínculos de horários usam chaves estrangeiras no PostgreSQL. Os vínculos e
 ## Histórico do Firestore
 
 A exportação privada guarda a cópia original do Firestore. A tabela de arquivo e o esquema relacional foram retirados do Aiven. O processo está registrado no [Histórico do Firestore]({{ '/firestore-legado.html' | relative_url }}).
+
+## Nomes explícitos nas chaves estrangeiras
+
+Os antigos campos `id_pai` foram substituídos por nomes que indicam o destino do vínculo:
+
+| Tabela | Coluna | Referência |
+| --- | --- | --- |
+| anexos_atividade | id_atividade | atividades.id_registro |
+| quadros_kanban | id_espaco_kanban | espacos_kanban.id_registro |
+| colunas_kanban | id_quadro_kanban | quadros_kanban.id |
+| cartoes_kanban | id_quadro_kanban | quadros_kanban.id |
+| itens_checklist | id_cartao_kanban | cartoes_kanban.id |
+| registros_aplicacao | id_registro_pai | registros_aplicacao.id |
+
+Em `cartoes_kanban`, `(id_quadro_kanban, referencia_coluna)` também referencia `(id_quadro_kanban, referencia)` de `colunas_kanban`, garantindo que a coluna pertença ao mesmo quadro.
+
+Nas tabelas que usam `id_registro` como PK e FK, esse campo referencia `registros_aplicacao.id`: é a identidade compartilhada do registro, diferente dos vínculos com atividade, quadro ou cartão acima.

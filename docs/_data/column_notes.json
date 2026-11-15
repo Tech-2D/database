@@ -1,8 +1,7 @@
 {
   "anexos_atividade": {
     "id": "Identificador numérico gerado pelo banco.",
-    "id_pai": "Identifica a linha de atividades que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",
-    "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
+    "id_atividade": "Identifica a atividade dona do anexo. Referencia atividades.id_registro: um anexo pertence a uma atividade; ao excluir a atividade, seus metadados de anexos são removidos por ON DELETE CASCADE. O arquivo no R2 é tratado pelo fluxo de limpeza da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "nome": "Nome do material mostrado na lista de anexos e no download. Ajuda o aluno a reconhecer o arquivo antes de abri-lo.",
     "tipo_mime": "Tipo de conteúdo do arquivo, como PDF ou ZIP. Apoia a validação e a resposta de download.",
@@ -28,7 +27,7 @@
   },
   "cartoes_kanban": {
     "id": "Identificador numérico gerado pelo banco.",
-    "id_pai": "Identifica o quadro em quadros_kanban que contém a tarefa. A chave composta com referencia_coluna exige que a coluna escolhida pertença a esse mesmo quadro.",
+    "id_quadro_kanban": "Identifica o quadro que contém a tarefa. Referencia quadros_kanban.id. Junto com referencia_coluna, também referencia colunas_kanban(id_quadro_kanban, referencia), exigindo uma coluna do mesmo quadro.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "referencia_coluna": "Identificador externo da coluna do mesmo quadro. Mantém o cartão na etapa correta e impede vinculá-lo à coluna de outro quadro.",
@@ -42,7 +41,7 @@
   },
   "colunas_kanban": {
     "id": "Identificador numérico gerado pelo banco.",
-    "id_pai": "Identifica a linha de quadros_kanban que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",
+    "id_quadro_kanban": "Identifica o quadro ao qual esta coluna pertence. Referencia quadros_kanban.id. A mesma referência é usada na FK composta dos cartões para impedir que um cartão use uma coluna de outro quadro.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "nome": "Nome da etapa, como Em andamento ou Concluído. Permite adaptar o fluxo de trabalho de cada quadro.",
@@ -102,7 +101,7 @@
   },
   "itens_checklist": {
     "id": "Identificador numérico gerado pelo banco.",
-    "id_pai": "Identifica a linha de cartoes_kanban que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",
+    "id_cartao_kanban": "Identifica o cartão que contém esta etapa do checklist. Referencia cartoes_kanban.id. Excluir o cartão remove seus itens por ON DELETE CASCADE.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "descricao": "Texto da etapa dentro do cartão. Define o que precisa ser feito antes de marcar este item como concluído.",
@@ -216,7 +215,7 @@
   },
   "quadros_kanban": {
     "id": "Identificador numérico gerado pelo banco.",
-    "id_pai": "Identifica a linha de espacos_kanban que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",
+    "id_espaco_kanban": "Identifica o espaço pessoal ou compartilhado que contém o quadro. Referencia espacos_kanban.id_registro. Um espaço pode conter vários quadros.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "nome": "Nome do quadro mostrado na navegação do Kanban. Permite distinguir projetos ou modelos de organização dentro do espaço.",
@@ -234,7 +233,7 @@
     "tipo": "Tipo de registro usado pela API, como activities ou feedback/messages. Direciona a leitura e a gravação para a tabela de negócio correspondente.",
     "referencia": "Identificador externo preservado para os sites e links existentes.",
     "referencia_pai": "Referência externa da sugestão a que uma mensagem pertence. Vazia nos registros principais; preserva o vínculo aceito pelo contrato da API.",
-    "id_pai": "Identifica a linha de registros_aplicacao que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",
+    "id_registro_pai": "Identifica o registro da aplicação ao qual este registro está vinculado. É uma FK para registros_aplicacao.id; nas mensagens de sugestão, aponta para o registro da sugestão. Não representa o autor da mensagem.",
     "versao": "Versão usada para detectar conflitos de edição.",
     "atualizado_em": "Data e hora da última alteração da linha."
   },

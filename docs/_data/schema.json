@@ -13,20 +13,11 @@
                 "generated": true
             },
             {
-                "name": "id_pai",
+                "name": "id_atividade",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "ordem",
-                "type": "integer",
-                "check": true,
-                "unique": false,
-                "comment": null,
+                "comment": "Atividade que contém o anexo. Referencia atividades.id_registro; a exclusão da atividade remove os metadados de seus anexos.",
                 "nullable": false,
                 "generated": false
             },
@@ -98,7 +89,7 @@
         "references": [
             {
                 "table": "atividades",
-                "column": "id_pai",
+                "column": "id_atividade",
                 "target": "id_registro"
             }
         ],
@@ -256,11 +247,11 @@
                 "generated": true
             },
             {
-                "name": "id_pai",
+                "name": "id_quadro_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Quadro ao qual o cartão pertence. Referencia quadros_kanban.id; junto com referencia_coluna, exige uma coluna desse mesmo quadro.",
                 "nullable": false,
                 "generated": false
             },
@@ -359,8 +350,8 @@
         "references": [
             {
                 "table": "colunas_kanban",
-                "column": "id_pai",
-                "target": "id_pai"
+                "column": "id_quadro_kanban",
+                "target": "id_quadro_kanban"
             },
             {
                 "table": "colunas_kanban",
@@ -369,7 +360,7 @@
             },
             {
                 "table": "quadros_kanban",
-                "column": "id_pai",
+                "column": "id_quadro_kanban",
                 "target": "id"
             }
         ],
@@ -392,11 +383,11 @@
                 "generated": true
             },
             {
-                "name": "id_pai",
+                "name": "id_quadro_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Quadro ao qual a coluna pertence. Referencia quadros_kanban.id.",
                 "nullable": false,
                 "generated": false
             },
@@ -450,7 +441,7 @@
         "references": [
             {
                 "table": "quadros_kanban",
-                "column": "id_pai",
+                "column": "id_quadro_kanban",
                 "target": "id"
             }
         ],
@@ -943,11 +934,11 @@
                 "generated": true
             },
             {
-                "name": "id_pai",
+                "name": "id_cartao_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Cartão que contém o item de checklist. Referencia cartoes_kanban.id.",
                 "nullable": false,
                 "generated": false
             },
@@ -992,7 +983,7 @@
         "references": [
             {
                 "table": "cartoes_kanban",
-                "column": "id_pai",
+                "column": "id_cartao_kanban",
                 "target": "id"
             }
         ],
@@ -2005,11 +1996,11 @@
                 "generated": true
             },
             {
-                "name": "id_pai",
+                "name": "id_espaco_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Espaço pessoal ou compartilhado que contém o quadro. Referencia espacos_kanban.id_registro.",
                 "nullable": false,
                 "generated": false
             },
@@ -2063,7 +2054,7 @@
         "references": [
             {
                 "table": "espacos_kanban",
-                "column": "id_pai",
+                "column": "id_espaco_kanban",
                 "target": "id_registro"
             }
         ],
@@ -2162,11 +2153,11 @@
                 "generated": false
             },
             {
-                "name": "id_pai",
+                "name": "id_registro_pai",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Registro da aplicação ao qual este registro está vinculado. Referencia registros_aplicacao.id; nas mensagens de sugestão, identifica o registro da sugestão.",
                 "nullable": true,
                 "generated": false
             },
@@ -2193,7 +2184,7 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_pai",
+                "column": "id_registro_pai",
                 "target": "id"
             }
         ],
