@@ -27,8 +27,6 @@
 - id: colaboracao
   name: Sugestões e colaboração
   objects:
-    - name: sugestoes_atividade
-      title: Sugestões de novas atividades
     - name: sugestoes_melhoria
       title: Sugestões de melhoria da Agenda
 - id: kanban
@@ -57,8 +55,6 @@
       title: Papéis administrativos
     - name: perfis
       title: Perfis dos usuários
-    - name: pedidos_agenda
-      title: Pedidos de criação de agenda
     - name: pedidos_representacao
       title: Solicitações de representantes
     - name: visitas_aos_sites

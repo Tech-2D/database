@@ -287,7 +287,6 @@
       "horarios_aula",
       "limpeza_anexos_kanban",
       "participantes_kanban",
-      "pedidos_agenda",
       "pedidos_kanban",
       "pedidos_representacao",
       "perfis_administrativos",
@@ -295,7 +294,6 @@
       "preferencias_resumo",
       "regras_recorrencia",
       "regras_retencao",
-      "sugestoes_atividade",
       "sugestoes_melhoria",
       "turmas_agenda"
     ],

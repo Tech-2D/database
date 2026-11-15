@@ -267,3 +267,38 @@
       description: Reconhece a repetição da mesma operação após uma falha de rede para evitar contar a mesma tentativa duas vezes.
       expiry: O recibo expira uma hora após a gravação.
       route: POST /api/internal/web-data · somente o backend
+
+- id: pedidos-temporarios
+  title: Sugestões e pedidos de Agenda
+  nav: Sugestões e pedidos
+  icon: clock
+  description: Substitui as tabelas sugestoes_atividade e pedidos_agenda. Guarda propostas de atividades e solicitações de abertura de Agenda por sete dias, mantendo o envio, a revisão e as permissões existentes.
+  source: temporary-requests.js
+  entries:
+    - id: pedidos-temporarios-valores
+      name: Conteúdo e versões das solicitações
+      key: 'tech2d:{temporary-requests}:item:{id_operacao}:{hash_caminho}'
+      type: String (JSON)
+      ttl: Até 7 dias
+      ttl_seconds: 604800
+      description: Guarda ID, caminho da API, dados, versão, expiração e referência ao recibo de confirmação SQL. Uma versão preparada só aparece após o recibo correspondente ser confirmado. Sugestões de melhoria continuam no PostgreSQL; este grupo trata das propostas de atividades.
+      expiry: Sete dias após o envio; editar, aprovar ou concluir não renova o prazo. Os nove registros copiados na versão 055 receberam sete dias a partir da migração.
+      route: POST /api/data — get, query e commit para suggestions e agendaClassRequests
+    - id: pedidos-temporarios-colecoes
+      name: Índice das duas coleções
+      key: 'tech2d:{temporary-requests}:collection:{colecao}'
+      type: Sorted Set
+      ttl: Até 7 dias
+      ttl_seconds: 604800
+      description: Lista as chaves de versões da coleção suggestions ou agendaClassRequests. A API seleciona a versão confirmada mais recente de cada registro e aplica os filtros e as permissões antes de devolver os resultados.
+      expiry: Expira no prazo do item mais recente do índice. Entradas vencidas são removidas nas gravações e ignoradas nas leituras.
+      route: POST /api/data — query
+    - id: pedidos-temporarios-caminhos
+      name: Índice por solicitação
+      key: 'tech2d:{temporary-requests}:path:{hash_caminho}'
+      type: Sorted Set
+      ttl: Até 7 dias
+      ttl_seconds: 604800
+      description: Localiza as versões de uma solicitação pelo hash de seu caminho. Uma gravação que falha no SQL não oculta a última versão confirmada; os dados preparados sem recibo válido são ignorados até expirarem.
+      expiry: Expira junto das versões da solicitação, sem estender sua validade original.
+      route: POST /api/data — get e commit

@@ -119,17 +119,6 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
-  "pedidos_agenda": {
-    "id_pedido_agenda": "Identificador numérico próprio de pedidos_agenda. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "nome_turma_solicitada": "Texto da sala solicitada. É uma proposta ainda sujeita à aprovação e pode não existir no catálogo; não criar uma turma fictícia apenas para satisfazer uma FK. A aprovação vincula a Agenda à turma real.",
-    "email": "Contato associado à solicitação de uma agenda. Ajuda a administração a identificar quem pediu a nova sala.",
-    "situacao": "Andamento da avaliação administrativa. Separa uma solicitação pendente de uma decisão já tomada.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "revisado_em": "Momento da avaliação administrativa da nova agenda. Registra quando houve uma decisão sobre a solicitação.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
   "pedidos_kanban": {
     "id_pedido_kanban": "Identificador numérico próprio de pedidos_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
@@ -145,7 +134,7 @@
   },
   "pedidos_representacao": {
     "id_pedido_representacao": "Identificador numérico próprio de pedidos_representacao. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "id_turma": "FK para turmas.id_turma. Identifica a turma existente que a pessoa pede para representar. É diferente de uma proposta de turma ainda não cadastrada em pedidos_agenda.",
+    "id_turma": "FK para turmas.id_turma. Identifica a turma existente que a pessoa pede para representar. É diferente de uma proposta de turma ainda não cadastrada no pedido temporário de Agenda armazenado no Redis.",
     "email": "E-mail informado para o futuro acesso. Permite relacionar o pedido ao convite aprovado para a mesma conta.",
     "situacao": "Andamento da análise do representante. Evita tratar um pedido pendente como permissão administrativa.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -248,25 +237,6 @@
     "ativa": "Indica se a regra ou configuração está ativa.",
     "alterado_por": "UID de quem modificou a política. Permite atribuir a responsabilidade pela configuração do expurgo.",
     "alterado_em": "Momento da última alteração, no formato ISO da API.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
-  "sugestoes_atividade": {
-    "id_sugestao_atividade": "Identificador numérico próprio de sugestoes_atividade. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "titulo": "Nome proposto para a nova atividade. Permite ao representante identificar o pedido na fila de avaliação.",
-    "descricao": "Instruções propostas pelo solicitante. Dá ao revisor o contexto necessário para decidir o cadastro no calendário.",
-    "tipo_atividade": "Categoria sugerida, como tarefa ou prova. Ajuda o revisor a classificar a eventual atividade.",
-    "id_disciplina": "FK para disciplinas.id_disciplina. Reutiliza a mesma matéria do catálogo de horários e Notas. A API reconstrói o nome para exibição; nulo significa atividade sem disciplina definida.",
-    "data_atividade": "Dia proposto para a atividade. Permite revisar a entrega antes de confirmar sua inclusão no calendário.",
-    "hora_atividade": "Horário local da atividade, quando informado.",
-    "id_turma": "FK para turmas.id_turma. Identifica a sala para a qual a atividade foi sugerida e permite ao representante revisar apenas sugestões da própria turma.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "alterado_em": "Momento da última alteração, no formato ISO da API.",
-    "situacao": "Estado da análise da proposta. Mantém sugestões pendentes separadas das já tratadas.",
-    "resolucao": "Resultado atribuído ao encerrar a análise. Explica o encaminhamento dado à proposta.",
-    "comentario_revisao": "Explicação escrita pelo responsável na avaliação. Permite ao solicitante entender a decisão.",
-    "encerrada_em": "Momento em que a sugestão foi encerrada.",
     "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."

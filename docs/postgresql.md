@@ -145,3 +145,7 @@ A versão `052_identidade_nas_entidades` removeu a tabela central de identidades
 ## Retirada da conversa de melhorias
 
 Na versão `053_retirar_conversas_sugestoes`, a tabela de mensagens privadas e suas rotas foram removidas. A tabela `sugestoes_melhoria` continua guardando os pedidos, o andamento e a autorização para crédito público.
+
+## Solicitações temporárias no Redis
+
+A versão `055_pedidos_temporarios_redis` removeu as tabelas de sugestões de atividades e pedidos de Agenda. Esses dois fluxos usam Redis com TTL fixo de 7 dias. A estrutura SQL atual possui 29 tabelas; a aprovação de uma turma continua sendo persistida em `turmas_agenda`.

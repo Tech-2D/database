@@ -149,8 +149,8 @@ A versão 048 substitui os nomes repetidos por vínculos com as entidades existe
 
 | Tabelas | FK | Catálogo ou entidade de destino |
 | --- | --- | --- |
-| atividades, regras_recorrencia, sugestoes_atividade | id_disciplina | disciplinas.id_disciplina |
-| atividades, regras_recorrencia, regras_retencao, sugestoes_atividade, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, preferencias_resumo, turmas_agenda | id_turma | turmas.id_turma |
+| atividades, regras_recorrencia | id_disciplina | disciplinas.id_disciplina |
+| atividades, regras_recorrencia, regras_retencao, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, preferencias_resumo, turmas_agenda | id_turma | turmas.id_turma |
 | atividades | id_regra_recorrencia | regras_recorrencia.id_regra_recorrencia |
 
 Por exemplo, o horário de **2º Tec D** e uma atividade de **2° TECH D** compartilham o mesmo `id_turma`. A forma usada pela Agenda fica uma única vez em `turmas.referencia_agenda`. Para matérias, os rótulos de Notas já existentes são usados para localizar o cadastro correto; não se cria outra disciplina por uma diferença conhecida de exibição.
@@ -163,7 +163,7 @@ As duplicatas comprovadas de Língua Inglesa e Língua Portuguesa 2 são consoli
 
 ### Onde texto continua correto
 
-- `pedidos_agenda.nome_turma_solicitada` é uma proposta que pode ainda não ter correspondente aprovado.
+- O nome informado em um pedido de Agenda fica no Redis, pois a turma pode ainda não ter cadastro aprovado.
 - `perfis.turma_informada`, empresa, sala e andar são informações livres da pessoa, sem catálogo obrigatório.
 - UIDs do Firebase Authentication não apontam para `perfis`: nem toda conta publica um perfil.
 - Nome e e-mail de um participante do Kanban são informações de identificação do acesso, não uma FK para um perfil público opcional.
@@ -186,3 +186,9 @@ Recuperação de senha, anexos e fotos usam contadores no Redis com janela de um
 ## Perfil do usuário
 
 `perfis` é a tabela de dados do perfil, usada na edição e apresentação de nome, empresa, turma informada, sala, andar e foto. A PK `id_perfil` identifica a linha e `referencia_api` preserva o UID da conta esperado pela API. Os dados existentes e suas versões foram preservados na renomeação da versão 054. A senha permanece no Firebase Authentication. Preferências específicas, como receber o resumo semanal, continuam em suas tabelas próprias.
+
+## Sugestões de atividades e pedidos de Agenda no Redis
+
+As coleções da API `suggestions` e `agendaClassRequests` usam Redis com TTL de 7 dias. A versão 055 removeu `sugestoes_atividade` e `pedidos_agenda` do PostgreSQL após copiar e conferir 8 sugestões e 1 pedido. Esses registros copiados receberam 7 dias a partir da migração. Novos registros expiram 7 dias após o envio; edição, aprovação ou conclusão preservam o prazo original.
+
+As permissões continuam na API: representantes revisam sugestões da própria turma e administradores revisam pedidos de novas Agendas. A aprovação pode gravar a habilitação permanente em `turmas_agenda`; essa habilitação permanece após o pedido expirar. A API prepara a versão no Redis e só a considera válida depois da confirmação do recibo no SQL. Uma falha mantém a versão anterior visível e reverte a liberação da turma. Os recibos não guardam o conteúdo do pedido.

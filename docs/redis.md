@@ -13,6 +13,7 @@ database: redis
   <dl>
     <div><dt>Cache de consultas</dt><dd>60 segundos a 5 minutos</dd></div>
     <div><dt>Comunicados e avisos</dt><dd>7 dias</dd></div>
+    <div><dt>Sugestões e pedidos de Agenda</dt><dd>7 dias</dd></div>
     <div><dt>Atualizações da Agenda</dt><dd>14 dias</dd></div>
     <div><dt>Bloqueios de conta</dt><dd>Prazo configurável</dd></div>
   </dl>
@@ -62,7 +63,7 @@ database: redis
   </div>
   <div>
     <dt>Quando o Redis fica indisponível</dt>
-    <dd>A API busca atividades, turmas e horários no PostgreSQL. O calendário abre sem o comunicado geral e sem as publicações de atualização enquanto o Redis estiver indisponível. O quadro de avisos indica falha na consulta. Gravações de comunicados, atualizações e avisos retornam erro. A Agenda também retorna indisponibilidade nas rotas protegidas quando a validação de bloqueio falha.</dd>
+    <dd>A API busca atividades, turmas e horários no PostgreSQL. O calendário abre sem o comunicado geral e sem as publicações de atualização enquanto o Redis estiver indisponível. O quadro de avisos indica falha na consulta. Gravações de comunicados, atualizações e avisos retornam erro. Consultas e gravações de sugestões de atividades e pedidos de Agenda também retornam indisponibilidade, sem recorrer a uma cópia SQL. A Agenda também retorna indisponibilidade nas rotas protegidas quando a validação de bloqueio falha.</dd>
   </div>
   <div>
     <dt>Como diagnosticar o cache</dt>

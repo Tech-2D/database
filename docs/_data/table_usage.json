@@ -47,10 +47,6 @@
     "feature": "Kanban compartilhado · Membros autorizados",
     "description": "Registra as contas que podem participar de um quadro compartilhado. A política de acesso consulta os vínculos; um pedido pendente em pedidos_kanban não equivale a uma participação aprovada."
   },
-  "pedidos_agenda": {
-    "feature": "Menu · Pedir agenda para minha turma",
-    "description": "Registra a proposta de abrir uma Agenda. nome_turma_solicitada é texto porque a turma pode ainda não existir ou não ter sido aprovada. Após a decisão administrativa, a habilitação em turmas_agenda usa uma FK para a turma real, sem confundir a proposta com o catálogo."
-  },
   "pedidos_kanban": {
     "feature": "Kanban compartilhado · Solicitações de acesso",
     "description": "Representa os pedidos de entrada em um quadro compartilhado. O proprietário revisa esses pedidos no fluxo de compartilhamento antes de criar a participação autorizada."
@@ -98,10 +94,6 @@
   "regras_retencao": {
     "feature": "Representantes · Expurgo da turma",
     "description": "Define por quanto tempo cada turma mantém as atividades no calendário. Na rotina diária, a API aplica a regra da turma, exclui os anexos do R2 e remove a atividade e seus metadados do PostgreSQL. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
-  },
-  "sugestoes_atividade": {
-    "feature": "Menu · Sugerir atividade",
-    "description": "Recebe propostas de atividades enviadas pelos usuários para avaliação de representantes e administradores. A revisão decide o encaminhamento; a sugestão não aparece automaticamente como atividade confirmada do calendário. Disciplina e turma são FKs para os catálogos compartilhados, sem cópia dos nomes."
   },
   "sugestoes_melhoria": {
     "feature": "Comentar melhoria · Minhas sugestões e administração",
