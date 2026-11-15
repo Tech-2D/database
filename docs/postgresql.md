@@ -141,3 +141,7 @@ A versão **051** remove `limites_servico`. Os contadores de recuperação de se
 ## Identidade nas próprias entidades
 
 A versão `052_identidade_nas_entidades` removeu a tabela central de identidades. As 17 entidades mantêm os IDs existentes e passam a guardar sua própria versão e referência. As views e funções SQL continuam entregando o contrato da API, preservando os links e a detecção de conflitos. A conferência da troca preservou 1.561 documentos e o resultado de cinco views.
+
+## Retirada da conversa de melhorias
+
+Na versão `053_retirar_conversas_sugestoes`, a tabela de mensagens privadas e suas rotas foram removidas. A tabela `sugestoes_melhoria` continua guardando os pedidos, o andamento e a autorização para crédito público.

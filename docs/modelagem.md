@@ -71,9 +71,9 @@ Cada entidade guarda seu próprio ID numérico, como `atividades.id_atividade`, 
 
 O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do Cloudflare R2 e, após a confirmação, remove a atividade e seus metadados do PostgreSQL. Uma falha no R2 mantém a atividade para nova tentativa.
 
-## Sugestões e conversas
+## Sugestões de melhoria
 
-`sugestoes_melhoria` registra o feedback autenticado. Cada linha de `mensagens_sugestao` se liga à sugestão pela FK direta `mensagens_sugestao.id_sugestao_melhoria`. O campo `referencia_sugestao` conserva o endereço externo da conversa mesmo se a sugestão for excluída. A API limita a conversa ao autor da sugestão e aos administradores.
+`sugestoes_melhoria` registra o feedback autenticado, sua situação e a autorização opcional de crédito público nas atualizações. O autor continua podendo enviar sugestões e os administradores podem marcá-las como concluídas. A conversa privada foi removida na versão 053.
 
 ## Kanban
 
@@ -87,7 +87,7 @@ A tabela [recibos_gravacao]({{ '/postgresql.html#obj-recibos_gravacao' | relativ
 | --- | --- |
 | Criar e editar atividades | A fila da interface mantém o ID do lote ao tentar o envio novamente. Se a gravação já foi confirmada, a API reconhece o reenvio sem recriar a atividade ou repetir a edição. |
 | Meu Kanban | As alterações enviadas pelo fluxo de documentos, como salvar cartões e reorganizar quadros, usam a mesma confirmação de lotes. Isso complementa o controle de versão que detecta edições concorrentes. |
-| Sugestões e conversas | As gravações que passam pelo mesmo endpoint também recebem recibo, evitando repetir operações quando a resposta não chega ao navegador. |
+| Sugestões | As gravações que passam pelo mesmo endpoint também recebem recibo, evitando repetir operações quando a resposta não chega ao navegador. |
 | Aprovação de representantes | A aprovação SQL e seu recibo são confirmados juntos. O convite preparado no Redis só é aceito quando seu ID de operação, autor e hash correspondem ao recibo confirmado. Um convite preparado antes de uma transação revertida não libera acesso. |
 
 Por exemplo: o representante salva uma atividade, o banco confirma a transação e a conexão cai antes de a resposta chegar. O navegador tenta novamente com o mesmo `commit.id`. A API encontra o recibo, confere o autor e o conteúdo e responde `replay:true`, sem repetir o lote. Se alguém reutilizar o mesmo ID com conteúdo diferente ou outra identidade, recebe HTTP 409.
@@ -126,11 +126,10 @@ Os antigos campos `id_pai` foram substituídos por nomes que indicam o destino d
 | colunas_kanban | id_quadro_kanban | quadros_kanban.id_quadro_kanban |
 | cartoes_kanban | id_quadro_kanban | quadros_kanban.id_quadro_kanban |
 | itens_checklist | id_cartao_kanban | cartoes_kanban.id_cartao_kanban |
-| mensagens_sugestao | id_sugestao_melhoria | sugestoes_melhoria.id_sugestao_melhoria |
 
 Em `cartoes_kanban`, `(id_quadro_kanban, referencia_coluna)` também referencia `(id_quadro_kanban, referencia)` de `colunas_kanban`, garantindo que a coluna pertença ao mesmo quadro.
 
-As chaves primárias pertencem às próprias entidades. As FKs representam vínculos de negócio, como o anexo com sua atividade, o cartão com sua coluna e a mensagem com sua sugestão.
+As chaves primárias pertencem às próprias entidades. As FKs representam vínculos de negócio, como o anexo com sua atividade, o cartão com sua coluna.
 
 ## Convenção de nomes dos campos
 

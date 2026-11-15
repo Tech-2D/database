@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `052_identidade_nas_entidades` está instalada no banco.
+A versão `053_retirar_conversas_sugestoes` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |
@@ -47,8 +47,12 @@ O histórico dos scripts fica no Git. A versão instalada fica no comentário de
 
 ## Recurso retirado: enquetes
 
-A versão 033 removeu as enquetes da Agenda, suas opções e votos e a aprovação de eleitores. As quatro tabelas e as funções exclusivas foram retiradas; os caminhos antigos da API recusam consultas e gravações. O quadro de avisos, as sugestões e suas conversas continuam disponíveis.
+A versão 033 removeu as enquetes da Agenda, suas opções e votos e a aprovação de eleitores. As quatro tabelas e as funções exclusivas foram retiradas; os caminhos antigos da API recusam consultas e gravações. O quadro de avisos e as sugestões continuam disponíveis.
 
 ## Recurso retirado: anotações de estudo
 
 A versão 034 removeu a tabela `anotacoes` do antigo Caderno Infinito, que estava vazia, e suas duas funções SQL exclusivas. O caminho `notebookNotes` foi retirado das permissões de leitura e gravação da API. Os cadernos, notas e recuperações da área de Notas continuam descritos no catálogo de notas escolares.
+
+## Conversas de sugestões removidas
+
+A versão 053 removeu a tabela `mensagens_sugestao`, suas funções exclusivas e a conversa privada no site. As rotas antigas de mensagens são rejeitadas, e a view da API deixou de expor essas conversas. As sugestões, a conclusão pelo administrador e a autorização de crédito público permanecem disponíveis.

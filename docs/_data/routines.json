@@ -90,15 +90,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_mensagens_sugestao",
-        "anchor": "rotina-gravar_mensagens_sugestao-a45b467e",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
-        "procedure": false
-    },
-    {
         "name": "gravar_participantes_kanban",
         "anchor": "rotina-gravar_participantes_kanban-a45b467e",
         "result": "void",
@@ -326,15 +317,6 @@
     {
         "name": "ler_limpeza_anexos_kanban",
         "anchor": "rotina-ler_limpeza_anexos_kanban-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_mensagens_sugestao",
-        "anchor": "rotina-ler_mensagens_sugestao-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

@@ -43,10 +43,6 @@
     "feature": "Automação · Limpeza de arquivos do Kanban",
     "description": "Fila os identificadores de cartões removidos para que a API localize e limpe seus anexos no armazenamento. Separar a limpeza da edição do quadro permite tratar falhas do R2 sem restaurar o cartão excluído."
   },
-  "mensagens_sugestao": {
-    "feature": "Minhas sugestões · Conversa com a administração",
-    "description": "Guarda as mensagens privadas vinculadas a uma sugestão de melhoria. A ligação com o registro pai permite à API restringir a conversa ao autor da sugestão e aos administradores."
-  },
   "participantes_kanban": {
     "feature": "Kanban compartilhado · Membros autorizados",
     "description": "Registra as contas que podem participar de um quadro compartilhado. A política de acesso consulta os vínculos; um pedido pendente em pedidos_kanban não equivale a uma participação aprovada."
@@ -97,7 +93,7 @@
   },
   "recibos_gravacao": {
     "feature": "API · Reenvios seguros e confirmação de convites",
-    "description": "Usada por commitDocuments, na ação commit de /api/data, para confirmar lotes como criação e edição de atividades, alterações do Kanban e gravações de sugestões e conversas. Se a resposta se perder e o site reenviar o mesmo lote, a API compara o ID, o autor e o hash e devolve replay:true sem executar as alterações novamente; reutilizar o ID com outro autor ou conteúdo gera HTTP 409. Na aprovação de representantes, o convite é preparado no Redis e só pode ser utilizado se existir um recibo SQL com o mesmo ID, autor e hash. O recibo é inserido na mesma transação das alterações: ambos são confirmados ou ambos são revertidos. Não guarda o conteúdo das tarefas, não é histórico de visitas e não atende automaticamente todos os endpoints; o salvamento de Notas, por exemplo, usa uma transação e versão próprias. A tabela permanece no PostgreSQL porque uma chave Redis separada não confirma atomicamente uma gravação SQL."
+    "description": "Usada por commitDocuments, na ação commit de /api/data, para confirmar lotes como criação e edição de atividades, alterações do Kanban e gravações de sugestões. Se a resposta se perder e o site reenviar o mesmo lote, a API compara o ID, o autor e o hash e devolve replay:true sem executar as alterações novamente; reutilizar o ID com outro autor ou conteúdo gera HTTP 409. Na aprovação de representantes, o convite é preparado no Redis e só pode ser utilizado se existir um recibo SQL com o mesmo ID, autor e hash. O recibo é inserido na mesma transação das alterações: ambos são confirmados ou ambos são revertidos. Não guarda o conteúdo das tarefas, não é histórico de visitas e não atende automaticamente todos os endpoints; o salvamento de Notas, por exemplo, usa uma transação e versão próprias. A tabela permanece no PostgreSQL porque uma chave Redis separada não confirma atomicamente uma gravação SQL."
   },
   "regras_recorrencia": {
     "feature": "Representantes · Atividades recorrentes",

@@ -31,8 +31,6 @@
       title: Sugestões de novas atividades
     - name: sugestoes_melhoria
       title: Sugestões de melhoria da Agenda
-    - name: mensagens_sugestao
-      title: Mensagens privadas sobre sugestões
 - id: kanban
   name: Kanban
   objects:

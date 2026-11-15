@@ -108,17 +108,6 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
-  "mensagens_sugestao": {
-    "id_mensagem_sugestao": "Identificador numérico próprio de mensagens_sugestao. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "mensagem": "Texto trocado na conversa privada da sugestão. Permite esclarecer detalhes do pedido entre o autor e a administração.",
-    "remetente": "UID do autor desta mensagem. Permite distinguir a resposta da administração da mensagem enviada pelo dono da sugestão.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações.",
-    "id_sugestao_melhoria": "FK direta para sugestoes_melhoria.id_sugestao_melhoria. Identifica a sugestão da conversa; fica nula se a sugestão for excluída, preservando a mensagem.",
-    "referencia_sugestao": "Referência externa da sugestão que compõe o endereço da conversa. Preserva os links das mensagens mesmo se a sugestão deixar de existir."
-  },
   "participantes_kanban": {
     "id_participante_kanban": "Identificador numérico próprio de participantes_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
@@ -297,7 +286,7 @@
   },
   "sugestoes_melhoria": {
     "id_sugestao_melhoria": "Identificador numérico próprio de sugestoes_melhoria. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "mensagem": "Descrição da melhoria ou do problema enviada pela conta autenticada. É a base da análise e da conversa com a administração.",
+    "mensagem": "Descrição da melhoria ou do problema enviada pela conta autenticada. É a base da análise e da decisão da administração sobre o pedido.",
     "id_turma": "FK para turmas.id_turma. Conserva a turma de origem do feedback e seu contexto para a administração, sem copiar o nome da sala.",
     "criado_por": "UID da conta que criou o registro.",
     "email_criador": "E-mail da conta que criou o registro.",
