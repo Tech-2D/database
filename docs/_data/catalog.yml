@@ -69,8 +69,6 @@
       title: Convites de representantes
     - name: visitas_aos_sites
       title: Visitas aos sites
-    - name: acessos_recentes
-      title: Acessos recentes da Agenda, do Cadê o professor e do Pegaki
     - name: bloqueios_agenda
       title: Bloqueios de acesso à Agenda
 - id: operacao

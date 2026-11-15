@@ -610,5 +610,23 @@
         "language": "plpgsql",
         "arguments": "catalogo character varying",
         "procedure": false
+    },
+    {
+        "name": "vincular_disciplina_notaki",
+        "anchor": "rotina-vincular_disciplina_notaki-39108927",
+        "result": "void",
+        "comment": null,
+        "language": "sql",
+        "arguments": "turma_id bigint, disciplina_id bigint",
+        "procedure": false
+    },
+    {
+        "name": "vincular_nova_disciplina_notaki",
+        "anchor": "rotina-vincular_nova_disciplina_notaki-d41d8cd9",
+        "result": "trigger",
+        "comment": null,
+        "language": "plpgsql",
+        "arguments": "",
+        "procedure": false
     }
 ]

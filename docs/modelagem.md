@@ -86,9 +86,9 @@ Os eventos de auditoria guardam a ação, a autoria e o momento da alteração. 
 ## Visitas e permissões
 
 - [Visitas aos sites]({{ '/postgresql.html#obj-visitas_aos_sites' | relative_url }}) separa as visitas por site e deduplica acessos dentro de intervalos de 30 minutos.
-- [Acessos recentes]({{ '/postgresql.html#obj-acessos_recentes' | relative_url }}) guarda o último acesso autenticado da Agenda e do Cadê o professor por site e conta. A chave de rede só é usada na Agenda. O Pegaki mantém seu próprio registro.
+  O painel de usuários também usa essas visitas para mostrar a data mais recente de cada conta na Agenda.
 - [Perfis de acesso administrativo]({{ '/postgresql.html#obj-perfis_administrativos' | relative_url }}) guarda uma projeção do papel e da turma. A identidade da conta vem do Firebase Authentication.
-- [Bloqueios de acesso à Agenda]({{ '/postgresql.html#obj-bloqueios_agenda' | relative_url }}) guarda os bloqueios por e-mail ou rede aplicados à Agenda.
+- [Bloqueios de acesso à Agenda]({{ '/postgresql.html#obj-bloqueios_agenda' | relative_url }}) guarda os bloqueios por e-mail aplicados à Agenda.
 
 Os vínculos de horários usam chaves estrangeiras no PostgreSQL. Os vínculos entre documentos, contas e atividades usam identificadores que a API valida.
 

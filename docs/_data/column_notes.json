@@ -1,11 +1,4 @@
 {
-  "acessos_recentes": {
-    "site": "Origem da visita: agenda, professores ou pegaki. Compõe a chave com id_usuario para que a mesma conta tenha um último acesso independente em cada site.",
-    "id_usuario": "UID confirmado pelo Firebase Authentication. Identifica a conta sem usar o e-mail como chave, pois o e-mail pode mudar.",
-    "email": "E-mail observado na conta, quando disponível. Ajuda o administrador a reconhecer o usuário sem definir a identidade do registro.",
-    "ultimo_acesso_em": "Momento da visita mais recente. Alimenta a listagem administrativa e a retenção de 90 dias; uma visita atrasada não deve substituir uma mais nova.",
-    "chave_rede": "Código derivado da rede para moderação da Agenda; não é um IP em texto aberto. Fica nulo nos acessos dos professores e do Pegaki."
-  },
   "anexos_atividade": {
     "id": "Identificador numérico gerado pelo banco.",
     "id_pai": "Identifica a linha de atividades que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",
@@ -42,8 +35,8 @@
   },
   "bloqueios_agenda": {
     "id": "Identificador único da regra de bloqueio.",
-    "tipo": "Tipo de bloqueio, por e-mail ou rede.",
-    "alvo": "E-mail normalizado ou código de rede derivado do IP.",
+    "tipo": "Tipo aceito pelo banco e pela API. O valor é email.",
+    "alvo": "E-mail normalizado da conta bloqueada.",
     "criado_em": "Data e hora da criação da regra.",
     "criado_por": "UID da conta administrativa que criou a regra."
   },

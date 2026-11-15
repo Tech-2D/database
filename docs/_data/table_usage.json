@@ -1,8 +1,4 @@
 {
-  "acessos_recentes": {
-    "feature": "Administração · Usuários e estatísticas",
-    "description": "Usada pela API de acessos e pela moderação para mostrar a última visita autenticada da conta em cada site. A chave composta preserva acessos independentes na Agenda, no Cadê o professor e no Pegaki. Não armazena todas as visitas; esse histórico agregado fica em visitas_aos_sites."
-  },
   "anexos_atividade": {
     "feature": "Atividade · Materiais e downloads",
     "description": "Usada ao criar, editar e abrir os materiais de uma atividade. Guarda os metadados e a ordem dos anexos; o conteúdo binário permanece no Cloudflare R2, com download autorizado pela API."
@@ -17,7 +13,7 @@
   },
   "bloqueios_agenda": {
     "feature": "Administração · Bloquear e desbloquear acessos",
-    "description": "Consultada pela moderação antes das operações protegidas da Agenda. Administradores cadastram e removem bloqueios por e-mail ou identificador de rede; a API não expõe esses dados no catálogo do calendário."
+    "description": "Consultada pela moderação antes das operações protegidas da Agenda. Superadministradores gerenciam os bloqueios por e-mail no painel Usuários e bloqueios."
   },
   "cartoes_kanban": {
     "feature": "Meu Kanban · Tarefas pessoais e compartilhadas",
@@ -165,6 +161,6 @@
   },
   "visitas_aos_sites": {
     "feature": "Administração · Estatísticas de acesso",
-    "description": "Alimenta os totais e a comparação de uso entre sites. A combinação de data, intervalo, visitante e site evita contar várias vezes a mesma visita dentro de uma janela de meia hora. A retenção é de 90 dias."
+    "description": "Alimenta os totais, a comparação entre sites e a data da última visita de cada conta à Agenda. A combinação de data, intervalo, visitante e site evita contar várias vezes a mesma visita dentro de uma janela de meia hora. A retenção é de 90 dias."
   }
 }

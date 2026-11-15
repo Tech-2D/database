@@ -1,65 +1,6 @@
 [
     {
         "kind": "table",
-        "name": "acessos_recentes",
-        "columns": [
-            {
-                "name": "site",
-                "type": "character varying(16)",
-                "check": true,
-                "unique": false,
-                "comment": "Origem do acesso: agenda, professores ou pegaki. Compõe a chave com id_usuario para preservar acessos da mesma conta em sites diferentes.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "id_usuario",
-                "type": "character varying(128)",
-                "check": false,
-                "unique": false,
-                "comment": "UID da conta autenticada.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "email",
-                "type": "character varying(320)",
-                "check": false,
-                "unique": false,
-                "comment": "E-mail da conta, quando disponível.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "ultimo_acesso_em",
-                "type": "timestamp with time zone",
-                "check": false,
-                "unique": false,
-                "comment": "Momento do último acesso autenticado ao site.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "chave_rede",
-                "type": "character varying(64)",
-                "check": true,
-                "unique": false,
-                "comment": "Identificador de rede derivado para moderação da Agenda.",
-                "nullable": true,
-                "generated": false
-            }
-        ],
-        "comment": "Último acesso autenticado por site e conta: Agenda, Cadê o professor e Pegaki. Retenção de 90 dias; chave de rede apenas para moderação da Agenda.",
-        "references": [
-        ],
-        "primary_key": [
-            "site",
-            "id_usuario"
-        ],
-        "foreign_key_count": 0
-    },
-    {
-        "kind": "table",
         "name": "anexos_atividade",
         "columns": [
             {
@@ -377,16 +318,16 @@
                 "type": "character varying(32)",
                 "check": true,
                 "unique": false,
-                "comment": null,
+                "comment": "Tipo de bloqueio aceito pela API: email.",
                 "nullable": false,
                 "generated": false
             },
             {
                 "name": "alvo",
                 "type": "character varying(320)",
-                "check": true,
+                "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "E-mail normalizado da conta bloqueada.",
                 "nullable": false,
                 "generated": false
             },
@@ -409,7 +350,7 @@
                 "generated": false
             }
         ],
-        "comment": "Bloqueios por e-mail ou rede aplicados à Agenda.",
+        "comment": "Bloqueios de acesso à Agenda por e-mail, gerenciados por superadministradores.",
         "references": [
         ],
         "primary_key": [

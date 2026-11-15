@@ -249,13 +249,13 @@
         "name": "kind",
         "source": "tipo",
         "type": "character varying(32)",
-        "note": "Tipo de bloqueio, por e-mail ou rede."
+        "note": "Tipo aceito pelo banco e pela API. O valor é email."
       },
       {
         "name": "target",
         "source": "alvo",
         "type": "character varying(320)",
-        "note": "E-mail normalizado ou código de rede derivado do IP."
+        "note": "E-mail normalizado da conta bloqueada."
       },
       {
         "name": "created_at",

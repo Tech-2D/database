@@ -112,6 +112,8 @@ Os catálogos públicos passam por projeções que selecionam os campos da respo
 | 036 | Retira as tabelas de arquivo após a adoção do expurgo direto |
 | 037 | Move o histórico público de atualizações para o Redis com prazo de 14 dias por publicação |
 | 038 | Move os avisos das turmas para o Redis com prazo de sete dias por publicação |
+| 039 | Disponibiliza as disciplinas do Notaki por turma |
+| 040 | Retira os acessos recentes e limita os bloqueios da Agenda ao e-mail |
 
 Em um banco local vazio, siga os passos em [Consultas SQL]({{ '/consultas.html' | relative_url }}). O script de instalação aplica as migrações na ordem acima.
 

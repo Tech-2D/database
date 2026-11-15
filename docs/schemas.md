@@ -33,11 +33,11 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `039_disciplinas_notaki_por_turma` está instalada no banco.
+A versão `040_retirar_acessos_recentes` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |
-| Acessos recentes da Agenda e dos professores | Uma tabela, `acessos_recentes`, com chave composta por `site` e `id_usuario`. O campo site também identifica os acessos do Pegaki. |
+| Visitas aos sites | `visitas_aos_sites` reúne as contagens e a última data registrada na Agenda. A moderação da Agenda aplica bloqueios por e-mail. |
 | Catálogo de matérias | O Pegaki reutiliza disciplinas; disciplinas_series associa matérias e séries sem repetir nomes. visao_disciplinas_pegaki preserva os rótulos usados pela interface. |
 | Expurgo de atividades | O Worker exclui os anexos do R2 antes de remover a atividade e seus metadados do PostgreSQL. A rotina não cria cópias. |
 | Auditoria da antiga rota de atividades | A tabela antiga foi retirada; as operações atuais usam `auditoria_aplicacao` e `valores_historico`. |
