@@ -302,3 +302,36 @@
       description: Localiza as versões de uma solicitação pelo hash de seu caminho. Uma gravação que falha no SQL não oculta a última versão confirmada; os dados preparados sem recibo válido são ignorados até expirarem.
       expiry: Expira junto das versões da solicitação, sem estender sua validade original.
       route: POST /api/data — get e commit
+
+- id: limpeza-kanban
+  title: Limpeza de anexos do Kanban
+  nav: Limpeza do Kanban
+  icon: clock
+  description: Guarda os identificadores de cartões removidos para que a rotina diária localize e apague seus arquivos no R2. A API confirma a operação no PostgreSQL e verifica se o cartão ainda está ausente antes de excluir arquivos.
+  source: kanban-cleanup-queue.js
+  entries:
+    - id: limpeza-kanban-pendentes
+      name: Limpezas pendentes
+      key: 'tech2d:{kanban-cleanup}:pending'
+      type: List
+      ttl: Sem TTL
+      description: Recebe as limpezas de cartões removidos. Falhas no R2 e listagens incompletas devolvem o item ao fim da fila.
+      expiry: Cada item é processado pela rotina diária. A lista desaparece quando fica vazia.
+      route: POST /api/data e rotina diária de limpeza
+    - id: limpeza-kanban-processamento
+      name: Limpezas em processamento
+      key: 'tech2d:{kanban-cleanup}:processing'
+      type: List
+      ttl: Sem TTL
+      description: Guarda os itens reservados antes de acessar o R2. A próxima execução recupera os itens deixados por uma rotina interrompida.
+      expiry: Ao confirmar a limpeza, a rotina remove o item. Se a limpeza ainda estiver pendente, o item volta à fila.
+      route: Rotina diária de limpeza
+    - id: limpeza-kanban-trava
+      name: Trava de processamento
+      key: 'tech2d:{kanban-cleanup}:lease'
+      type: String
+      ttl: 2 min
+      ttl_seconds: 120
+      description: Coordena a execução da rotina e permite retomada após uma interrupção.
+      expiry: Renovada durante o processamento e liberada ao encerrar.
+      route: Rotina diária de limpeza

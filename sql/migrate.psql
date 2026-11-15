@@ -1,3 +1,7 @@
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:057_limpeza_kanban_redis_list' AS latest_057 \gset
+\if :latest_057
+\echo Estrutura já instalada na versão 057.
+\else
 SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:056_resumo_no_perfil' AS latest_056 \gset
 \if :latest_056
 \echo Estrutura já instalada na versão 056.
@@ -292,4 +296,7 @@ COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:024_notas_p
 \endif
 
 \ir migrations/056_resumo_no_perfil.sql
+\endif
+
+\ir migrations/057_limpeza_kanban_redis_list.sql
 \endif

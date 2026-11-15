@@ -99,15 +99,6 @@
     "descricao": "Texto da etapa dentro do cartão. Define o que precisa ser feito antes de marcar este item como concluído.",
     "concluido": "Estado de conclusão desta etapa do cartão. Permite acompanhar o checklist sem marcar todo o cartão como concluído."
   },
-  "limpeza_anexos_kanban": {
-    "id_limpeza_anexo_kanban": "Identificador numérico próprio de limpeza_anexos_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "referencia_espaco": "Referência do espaço do Kanban usada para localizar arquivos no R2.",
-    "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
-    "referencia_cartao": "Identificador do cartão removido.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
   "participantes_kanban": {
     "id_participante_kanban": "Identificador numérico próprio de participantes_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",

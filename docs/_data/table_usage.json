@@ -39,10 +39,6 @@
     "feature": "Meu Kanban · Checklist de uma tarefa",
     "description": "Guarda as pequenas etapas de um cartão, separadas do texto da descrição. Permite ordenar os itens e marcar cada um como concluído sem perder sua relação com o cartão."
   },
-  "limpeza_anexos_kanban": {
-    "feature": "Automação · Limpeza de arquivos do Kanban",
-    "description": "Fila os identificadores de cartões removidos para que a API localize e limpe seus anexos no armazenamento. Separar a limpeza da edição do quadro permite tratar falhas do R2 sem restaurar o cartão excluído."
-  },
   "participantes_kanban": {
     "feature": "Kanban compartilhado · Membros autorizados",
     "description": "Registra as contas que podem participar de um quadro compartilhado. A política de acesso consulta os vínculos; um pedido pendente em pedidos_kanban não equivale a uma participação aprovada."

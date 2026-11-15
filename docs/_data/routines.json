@@ -1,14 +1,5 @@
 [
     {
-        "name": "adiar_limpeza_kanban",
-        "anchor": "rotina-adiar_limpeza_kanban-03b374bc",
-        "result": "void",
-        "comment": null,
-        "language": "sql",
-        "arguments": "chave text",
-        "procedure": false
-    },
-    {
         "name": "buscar_id_turma",
         "anchor": "rotina-buscar_id_turma-be490cdd",
         "result": "bigint",
@@ -33,15 +24,6 @@
         "comment": "Seleciona atividades gerais e da turma e reúne os documentos do catálogo em uma consulta limitada.",
         "language": "sql",
         "arguments": "p_turma text, p_incluir_atividades boolean",
-        "procedure": false
-    },
-    {
-        "name": "enfileirar_limpeza_kanban",
-        "anchor": "rotina-enfileirar_limpeza_kanban-d006a42d",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "lote jsonb",
         "procedure": false
     },
     {
@@ -74,15 +56,6 @@
     {
         "name": "gravar_horarios_aula",
         "anchor": "rotina-gravar_horarios_aula-a45b467e",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
-        "procedure": false
-    },
-    {
-        "name": "gravar_limpeza_anexos_kanban",
-        "anchor": "rotina-gravar_limpeza_anexos_kanban-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
@@ -290,15 +263,6 @@
     {
         "name": "ler_itens_checklist",
         "anchor": "rotina-ler_itens_checklist-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_limpeza_anexos_kanban",
-        "anchor": "rotina-ler_limpeza_anexos_kanban-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

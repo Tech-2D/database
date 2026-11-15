@@ -152,4 +152,8 @@ A versão `055_pedidos_temporarios_redis` removeu as tabelas de sugestões de at
 
 ## Preferências do resumo no perfil
 
-A versão `056_resumo_no_perfil` incorporou as inscrições do resumo semanal à tabela `perfis` e removeu `preferencias_resumo`. A estrutura atual possui 28 tabelas. As projeções da API continuam separando a apresentação pública da inscrição privada; os perfis e as preferências existentes foram preservados.
+A versão `056_resumo_no_perfil` incorporou as inscrições do resumo semanal à tabela `perfis` e removeu `preferencias_resumo`. A estrutura passou a ter 28 tabelas nessa versão. As projeções da API continuam separando a apresentação pública da inscrição privada; os perfis e as preferências existentes foram preservados.
+
+## Fila de anexos do Kanban no Redis
+
+A versão `057_limpeza_kanban_redis_list` removeu `limpeza_anexos_kanban` e deixou o PostgreSQL com 27 tabelas. As pendências usam duas Lists do Redis sem TTL. A rotina diária verifica o recibo da operação no PostgreSQL e se o cartão ainda está ausente antes de apagar arquivos no R2. A fila depende da persistência do serviço Redis para sobreviver a uma perda dos dados do servidor.

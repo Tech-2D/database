@@ -46,8 +46,6 @@
       title: Participantes de quadros compartilhados
     - name: pedidos_kanban
       title: Pedidos de acesso a quadros compartilhados
-    - name: limpeza_anexos_kanban
-      title: Fila de limpeza dos anexos de cartões removidos
 - id: acessos
   name: Contas, turmas e acessos
   objects:
