@@ -269,10 +269,10 @@
       route: POST /api/internal/web-data · somente o backend
 
 - id: pedidos-temporarios
-  title: Sugestões e pedidos de Agenda
+  title: Sugestões e pedidos temporários
   nav: Sugestões e pedidos
   icon: clock
-  description: Substitui as tabelas sugestoes_atividade e pedidos_agenda. Guarda propostas de atividades e solicitações de abertura de Agenda por sete dias, mantendo o envio, a revisão e as permissões existentes.
+  description: Substitui as tabelas sugestoes_atividade e pedidos_agenda. Guarda propostas de atividades, solicitações de abertura de Agenda e pedidos de acesso ao Kanban por sete dias.
   source: temporary-requests.js
   entries:
     - id: pedidos-temporarios-valores
@@ -281,9 +281,9 @@
       type: String (JSON)
       ttl: Até 7 dias
       ttl_seconds: 604800
-      description: Guarda ID, caminho da API, dados, versão, expiração e referência ao recibo de confirmação SQL. Uma versão preparada só aparece após o recibo correspondente ser confirmado. Sugestões de melhoria continuam no PostgreSQL; este grupo trata das propostas de atividades.
-      expiry: Sete dias após o envio; editar, aprovar ou concluir não renova o prazo. Os nove registros copiados na versão 055 receberam sete dias a partir da migração.
-      route: POST /api/data — get, query e commit para suggestions e agendaClassRequests
+      description: Guarda ID, caminho da API, dados, versão, expiração e referência ao recibo de confirmação SQL. Uma versão preparada só aparece após o recibo correspondente ser confirmado. O conteúdo inclui pedidos de acesso ao Kanban, além de sugestões de atividades e pedidos de abertura de Agenda.
+      expiry: Sugestões de atividades e pedidos de Agenda duram sete dias após o envio. Pedidos do Kanban duram sete dias após o envio ou a última mudança de estado. Registros migrados receberam o prazo a partir da migração.
+      route: POST /api/data — get, query e commit para suggestions, agendaClassRequests e kanbanRequests
     - id: pedidos-temporarios-colecoes
       name: Índice das duas coleções
       key: 'tech2d:{temporary-requests}:collection:{colecao}'
@@ -300,8 +300,18 @@
       ttl: Até 7 dias
       ttl_seconds: 604800
       description: Localiza as versões de uma solicitação pelo hash de seu caminho. Uma gravação que falha no SQL não oculta a última versão confirmada; os dados preparados sem recibo válido são ignorados até expirarem.
-      expiry: Expira junto das versões da solicitação, sem estender sua validade original.
+      expiry: Expira no prazo da versão mais recente da solicitação.
       route: POST /api/data — get e commit
+
+    - id: pedidos-kanban-escopo
+      name: Índices de acesso ao Kanban
+      key: 'tech2d:{temporary-requests}:kanban:{campo}:{hash_valor}'
+      type: Sorted Set
+      ttl: Até 7 dias
+      ttl_seconds: 604800
+      description: Localiza as versões dos pedidos por quadro ou solicitante. O proprietário pode listar os pedidos do quadro e cada solicitante pode consultar os próprios. Participações aprovadas ficam no PostgreSQL.
+      expiry: Expira no prazo da versão mais recente do índice. Pedidos vencidos são ignorados.
+      route: POST /api/data — query de kanbanRequests
 
 - id: limpeza-kanban
   title: Limpeza de anexos do Kanban

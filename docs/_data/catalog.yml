@@ -44,8 +44,6 @@
       title: Itens das listas dos cartões
     - name: participantes_kanban
       title: Participantes de quadros compartilhados
-    - name: pedidos_kanban
-      title: Pedidos de acesso a quadros compartilhados
 - id: acessos
   name: Contas, turmas e acessos
   objects:

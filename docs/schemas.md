@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `057_limpeza_kanban_redis_list` está instalada no banco.
+A versão `058_pedidos_kanban_redis` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

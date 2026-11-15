@@ -157,3 +157,7 @@ A versão `056_resumo_no_perfil` incorporou as inscrições do resumo semanal à
 ## Fila de anexos do Kanban no Redis
 
 A versão `057_limpeza_kanban_redis_list` removeu `limpeza_anexos_kanban` e deixou o PostgreSQL com 27 tabelas. As pendências usam duas Lists do Redis sem TTL. A rotina diária verifica o recibo da operação no PostgreSQL e se o cartão ainda está ausente antes de apagar arquivos no R2. A fila depende da persistência do serviço Redis para sobreviver a uma perda dos dados do servidor.
+
+## Solicitações de acesso no Kanban
+
+A versão `058_pedidos_kanban_redis` removeu a tabela `pedidos_kanban`. O PostgreSQL passou a ter 26 tabelas. Os pedidos ficam no Redis por sete dias após o envio ou a última mudança de estado. O vínculo que concede acesso fica em `participantes_kanban` e continua válido até ser removido. A API só mostra a aprovação no Redis após a confirmação do recibo SQL. A remoção de acesso funciona mesmo quando o pedido já expirou.

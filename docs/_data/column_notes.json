@@ -110,19 +110,6 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
-  "pedidos_kanban": {
-    "id_pedido_kanban": "Identificador numérico próprio de pedidos_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
-    "id_usuario": "UID da conta no Firebase Authentication.",
-    "email": "E-mail apresentado ao proprietário para reconhecer quem está solicitando entrada no quadro.",
-    "nome": "Nome apresentado no pedido de entrada. Ajuda o proprietário a reconhecer a pessoa antes de aprovar sua participação.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "situacao": "Decisão sobre a entrada no quadro. O pedido, por si só, não concede a participação registrada em participantes_kanban.",
-    "alterado_em": "Momento da última alteração, no formato ISO da API.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
   "pedidos_representacao": {
     "id_pedido_representacao": "Identificador numérico próprio de pedidos_representacao. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "id_turma": "FK para turmas.id_turma. Identifica a turma existente que a pessoa pede para representar. É diferente de uma proposta de turma ainda não cadastrada no pedido temporário de Agenda armazenado no Redis.",

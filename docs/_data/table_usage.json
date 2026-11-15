@@ -41,11 +41,7 @@
   },
   "participantes_kanban": {
     "feature": "Kanban compartilhado · Membros autorizados",
-    "description": "Registra as contas que podem participar de um quadro compartilhado. A política de acesso consulta os vínculos; um pedido pendente em pedidos_kanban não equivale a uma participação aprovada."
-  },
-  "pedidos_kanban": {
-    "feature": "Kanban compartilhado · Solicitações de acesso",
-    "description": "Representa os pedidos de entrada em um quadro compartilhado. O proprietário revisa esses pedidos no fluxo de compartilhamento antes de criar a participação autorizada."
+    "description": "Registra quais contas podem acessar um quadro compartilhado. A API usa este vínculo do PostgreSQL para autorizar o acesso. Solicitações de acesso ficam no Redis e sua expiração não revoga a participação."
   },
   "pedidos_representacao": {
     "feature": "Sou representante · Solicitar aprovação",

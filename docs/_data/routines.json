@@ -72,15 +72,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_pedidos_kanban",
-        "anchor": "rotina-gravar_pedidos_kanban-a45b467e",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
-        "procedure": false
-    },
-    {
         "name": "gravar_pedidos_representacao",
         "anchor": "rotina-gravar_pedidos_representacao-a45b467e",
         "result": "void",
@@ -272,15 +263,6 @@
     {
         "name": "ler_participantes_kanban",
         "anchor": "rotina-ler_participantes_kanban-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_pedidos_kanban",
-        "anchor": "rotina-ler_pedidos_kanban-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",
