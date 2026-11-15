@@ -90,11 +90,6 @@
     "descricao": "Texto da etapa dentro do cartão. Define o que precisa ser feito antes de marcar este item como concluído.",
     "concluido": "Estado de conclusão desta etapa do cartão. Permite acompanhar o checklist sem marcar todo o cartão como concluído."
   },
-  "limites_servico": {
-    "id_limite_servico": "Identificador de limites_servico, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "quantidade": "Número de ocorrências acumuladas na janela de limitação. O backend compara esse contador com o limite configurado para o serviço.",
-    "expira_em_ms": "Instante de expiração da janela, em milissegundos Unix. Define quando o contador deixa de restringir as novas tentativas."
-  },
   "limpeza_anexos_kanban": {
     "id_limpeza_anexo_kanban": "Identificador de limpeza_anexos_kanban, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "referencia_espaco": "Referência do espaço do Kanban usada para localizar arquivos no R2.",

@@ -39,10 +39,6 @@
     "feature": "Meu Kanban · Checklist de uma tarefa",
     "description": "Guarda as pequenas etapas de um cartão, separadas do texto da descrição. Permite ordenar os itens e marcar cada um como concluído sem perder sua relação com o cartão."
   },
-  "limites_servico": {
-    "feature": "Backend · Controle de uso dos serviços",
-    "description": "Representa contadores dos serviços de recuperação de senha e envio de arquivos ou fotos. Quantidade e expiração ajudam o backend a limitar tentativas dentro de uma janela de tempo; não é o histórico de visitas dos alunos."
-  },
   "limpeza_anexos_kanban": {
     "feature": "Automação · Limpeza de arquivos do Kanban",
     "description": "Fila os identificadores de cartões removidos para que a API localize e limpe seus anexos no armazenamento. Separar a limpeza da edição do quadro permite tratar falhas do R2 sem restaurar o cartão excluído."

@@ -81,15 +81,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_limites_servico",
-        "anchor": "rotina-gravar_limites_servico-65a7a60d",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
-        "procedure": false
-    },
-    {
         "name": "gravar_limpeza_anexos_kanban",
         "anchor": "rotina-gravar_limpeza_anexos_kanban-65a7a60d",
         "result": "void",
@@ -326,15 +317,6 @@
     {
         "name": "ler_itens_checklist",
         "anchor": "rotina-ler_itens_checklist-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_limites_servico",
-        "anchor": "rotina-ler_limites_servico-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

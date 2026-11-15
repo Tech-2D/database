@@ -135,3 +135,5 @@ A versão **048** cria FKs de disciplinas em três tabelas e de turmas em nove t
 A versão **049** transfere o controle de entregas do resumo semanal para o Redis e remove `entregas_resumo`. As preferências de recebimento continuam em `preferencias_resumo`.
 
 A versão **050** remove `envios_anexos`. Uploads pendentes ficam no Redis e os anexos confirmados continuam em `anexos_atividade`.
+
+A versão **051** remove `limites_servico`. Os contadores de recuperação de senha e upload de anexos e fotos ficam no Redis com expiração automática.

@@ -179,3 +179,7 @@ As preferências de turma e de recebimento ficam em `preferencias_resumo`. O con
 ## Preparação e limpeza de uploads
 
 A autorização de upload fica no Redis por meio de um registro pendente. É possível confirmar o arquivo durante uma hora. A confirmação grava `anexos_atividade` no PostgreSQL antes de remover a autorização. Envios abandonados mantêm a referência ao objeto até a limpeza do R2. A limpeza verifica se o objeto já está vinculado a uma atividade antes de apagar qualquer arquivo. [Chaves dos uploads pendentes]({{ '/redis.html#uploads-pendentes' | relative_url }})
+
+## Limites de serviço
+
+Recuperação de senha, anexos e fotos usam contadores no Redis com janela de uma hora. Uma gravação verifica a versão de todos os contadores antes de atualizar qualquer um. O prazo de expiração começa no primeiro uso da janela e permanece fixo. [Chaves dos limites de serviço]({{ '/redis.html#limites-de-servico' | relative_url }})

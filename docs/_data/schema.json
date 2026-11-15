@@ -856,51 +856,6 @@
     },
     {
         "kind": "table",
-        "name": "limites_servico",
-        "columns": [
-            {
-                "name": "id_limite_servico",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Identificador de limites_servico, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "quantidade",
-                "type": "integer",
-                "check": false,
-                "unique": false,
-                "comment": "Campo count no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "expira_em_ms",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Campo resetAt no contrato da API.",
-                "nullable": true,
-                "generated": false
-            }
-        ],
-        "comment": "Contadores de solicitações por janela",
-        "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_limite_servico",
-                "target": "id_registro"
-            }
-        ],
-        "primary_key": [
-            "id_limite_servico"
-        ],
-        "foreign_key_count": 1
-    },
-    {
-        "kind": "table",
         "name": "limpeza_anexos_kanban",
         "columns": [
             {

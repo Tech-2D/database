@@ -72,8 +72,6 @@
       title: Identidade e versão dos registros
     - name: recibos_gravacao
       title: Recibos de gravação
-    - name: limites_servico
-      title: Contadores de solicitações por janela
     - name: preferencias_resumo
       title: Preferências de e-mail por conta
 

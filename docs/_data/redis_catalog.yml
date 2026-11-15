@@ -241,3 +241,29 @@
       description: Ordena os uploads pendentes pela data de criação em milissegundos. O cron consulta os vencidos em lotes de até 100.
       expiry: A entrada sai do índice junto com o registro do upload.
       route: POST /api/internal/web-data · limpeza periódica
+
+- id: limites-de-servico
+  title: Limites de serviço
+  nav: Limites de serviço
+  icon: cache
+  description: Limita tentativas de recuperação de senha e de envio de anexos ou fotos. A API confere e atualiza em conjunto os contadores da mesma solicitação.
+  source: service-limits.js
+  entries:
+    - id: service-limit-counter
+      name: Contador por serviço e escopo
+      key: 'tech2d:{service-limits}:counter:{hash_do_escopo}'
+      type: String JSON
+      ttl: Até o fim da janela de uma hora
+      ttl_seconds: 3600
+      description: Guarda a quantidade de tentativas, a hora de expiração e a versão usada para detectar alterações simultâneas. O escopo depende do serviço, como conta ou limite global.
+      expiry: O primeiro uso inicia uma janela de uma hora. As próximas tentativas preservam o vencimento original, e o Redis apaga a chave ao fim da janela.
+      route: POST /api/internal/web-data · somente o backend
+    - id: service-limit-receipt
+      name: Recibo da atualização dos contadores
+      key: 'tech2d:{service-limits}:receipt:{id_operacao}'
+      type: String
+      ttl: 1 hora após a gravação
+      ttl_seconds: 3600
+      description: Reconhece a repetição da mesma operação após uma falha de rede para evitar contar a mesma tentativa duas vezes.
+      expiry: O recibo expira uma hora após a gravação.
+      route: POST /api/internal/web-data · somente o backend
