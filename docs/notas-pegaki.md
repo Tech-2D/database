@@ -35,7 +35,7 @@ A visão fornece dados estruturados e resultados reproduzíveis, com conta, ano 
 
 A série do caderno é o ano do Ensino Médio (1, 2 ou 3), usado para escolher as matérias e validar as notas. Ela não é uma sala como 2º TECH D. A área de Notas não mantém outra tabela de turmas.
 
-`turmas` identifica as salas dos horários. `turmas_agenda` registra a habilitação de uma agenda no fluxo de aprovação. A implementação atual mantém esses dois papéis separados; seus nomes não devem ser tratados como identificadores intercambiáveis.
+`turmas` identifica as salas dos horários. `turmas_agenda` registra a habilitação de uma agenda no fluxo de aprovação. Os papéis continuam separados, mas `turmas_agenda.id_turma` referencia o mesmo catálogo escolar usado pelos horários e pelas atividades. `turmas.referencia_agenda` preserva o identificador público da Agenda.
 
 ## Nomenclatura atual
 

@@ -45,7 +45,10 @@
     "dependencies": [
       "anexos_atividade",
       "atividades",
-      "registros_aplicacao"
+      "registros_aplicacao",
+      "turmas",
+      "disciplinas",
+      "regras_recorrencia"
     ],
     "columns": [
       {
@@ -56,9 +59,9 @@
       },
       {
         "name": "turma_id",
-        "source": "nome_turma",
+        "source": "id_turma",
         "type": "character varying(150)",
-        "note": "Turma associada ao registro."
+        "note": "Turma associada ao registro. O valor exibido é reconstruído a partir da FK, preservando o contrato da API."
       },
       {
         "name": "title",
@@ -80,9 +83,9 @@
       },
       {
         "name": "subject",
-        "source": "nome_disciplina",
+        "source": "id_disciplina",
         "type": "character varying(150)",
-        "note": "Nome da disciplina, quando informado."
+        "note": "Nome da disciplina, quando informado. O valor exibido é reconstruído a partir da FK, preservando o contrato da API."
       },
       {
         "name": "date",
@@ -110,9 +113,9 @@
       },
       {
         "name": "recurring_id",
-        "source": "referencia_recorrencia",
+        "source": "id_regra_recorrencia",
         "type": "character varying(320)",
-        "note": "Identificador da regra que gerou esta ocorrência."
+        "note": "Identificador da regra que gerou esta ocorrência. O valor exibido é reconstruído a partir da FK, preservando o contrato da API."
       },
       {
         "name": "attachments",
@@ -145,7 +148,10 @@
     "comment": "Atividades por turma, data e recorrência, com os dados usados pelas automações.",
     "dependencies": [
       "atividades",
-      "registros_aplicacao"
+      "registros_aplicacao",
+      "turmas",
+      "disciplinas",
+      "regras_recorrencia"
     ],
     "columns": [
       {
@@ -162,9 +168,9 @@
       },
       {
         "name": "turma",
-        "source": "nome_turma",
+        "source": "id_turma",
         "type": "character varying(150)",
-        "note": "Turma usada na seleção de atividades pelo job."
+        "note": "Turma usada na seleção de atividades pelo job. O valor exibido é reconstruído a partir da FK, preservando o contrato da API."
       },
       {
         "name": "data",
@@ -174,9 +180,9 @@
       },
       {
         "name": "referencia_recorrencia",
-        "source": "referencia_recorrencia",
+        "source": "id_regra_recorrencia",
         "type": "character varying(320)",
-        "note": "Identificador da regra que criou a ocorrência."
+        "note": "Identificador da regra que criou a ocorrência. O valor exibido é reconstruído a partir da FK, preservando o contrato da API."
       },
       {
         "name": "conteudo",
@@ -531,7 +537,8 @@
     "comment": "Papéis e turmas administrativas no formato consumido pela API.",
     "dependencies": [
       "perfis_administrativos",
-      "registros_aplicacao"
+      "registros_aplicacao",
+      "turmas"
     ],
     "columns": [
       {
@@ -548,9 +555,9 @@
       },
       {
         "name": "turma_id",
-        "source": "nome_turma",
+        "source": "id_turma",
         "type": "character varying(150)",
-        "note": "Turma associada ao registro."
+        "note": "Turma associada ao registro. O valor exibido é reconstruído a partir da FK, preservando o contrato da API."
       },
       {
         "name": "data",

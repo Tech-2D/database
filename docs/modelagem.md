@@ -65,9 +65,9 @@ A visão [Catálogo de horários]({{ '/views.html#view-catalogo_horarios' | rela
 
 ## Atividades e anexos
 
-`atividades` guarda título, descrição, disciplina, turma, data e hora. Uma turma nula indica atividade geral. `anexos_atividade` guarda os metadados dos arquivos. A FK `id_atividade` aponta para `atividades.id_atividade`, deixando explícito a qual atividade o anexo pertence. Não há coluna `ordem`: a API devolve os anexos em sequência estável pelo ID numérico.
+`atividades` guarda título, descrição, data e hora. `id_disciplina` referencia `disciplinas.id_disciplina` e `id_turma` referencia `turmas.id_turma`. Uma FK de turma nula indica atividade geral. Os nomes são reconstruídos a partir dos catálogos. `anexos_atividade` guarda os metadados dos arquivos. A FK `id_atividade` aponta para `atividades.id_atividade`, deixando explícito a qual atividade o anexo pertence. Não há coluna `ordem`: a API devolve os anexos em sequência estável pelo ID numérico.
 
-`atividades.nome_turma` usa a chave de turma da Agenda. `horarios_aula.id_turma` aponta para o identificador numérico do catálogo de aulas.
+`atividades.id_turma` e `horarios_aula.id_turma` apontam para a mesma turma escolar. `turmas.referencia_agenda` conserva o identificador textual esperado pelos links e pelas permissões, sem duplicá-lo em cada atividade.
 
 O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do Cloudflare R2 e, após a confirmação, remove a atividade e seus metadados do PostgreSQL. Uma falha no R2 mantém a atividade para nova tentativa.
 
@@ -137,9 +137,38 @@ Nas tabelas que usam uma PK específica da entidade e também FK, a chave refere
 - Os nomes físicos ficam em português, em `snake_case`, sem acentos.
 - PKs simples identificam a entidade: `id_atividade`, `id_anexo_atividade`, `id_quadro_kanban`, `id_professor`. As PKs compostas de Notas e visitas mantêm os campos que representam sua identidade real.
 - FKs identificam o destino: por exemplo, `anexos_atividade.id_atividade` referencia `atividades.id_atividade`. Uma PK que também é FK mantém o nome da entidade de negócio.
-- Texto que contém um nome usa `nome_turma` ou `nome_disciplina`; esses campos não são IDs numéricos nem FKs para os catálogos.
+- Vínculos com os catálogos usam `id_turma` e `id_disciplina`. Os nomes são obtidos na leitura. Texto livre e propostas ainda não cadastradas são identificados explicitamente como `turma_informada` e `nome_turma_solicitada`.
 - Campos de atividades usam `tipo_atividade`, `data_atividade` e `hora_atividade`. A recorrência usa `data_inicio` e `data_fim`.
 - Instantes usam o sufixo `_em`; contadores temporais em milissegundos mantêm `_em_ms`. As descrições informam unidade e significado.
 - `referencia_...` identifica um valor externo do contrato, separado da PK física.
 
 As views continuam expondo os aliases necessários ao contrato da API. Por exemplo, `visao_recibos_gravacao.id` vem de `recibos_gravacao.id_recibo_gravacao`. Essa compatibilidade evita alterar os sites e as automações junto com cada renomeação física.
+
+## Catálogos compartilhados e FKs reais
+
+A versão 048 substitui os nomes repetidos por vínculos com as entidades existentes:
+
+| Tabelas | FK | Catálogo ou entidade de destino |
+| --- | --- | --- |
+| atividades, regras_recorrencia, sugestoes_atividade | id_disciplina | disciplinas.id_disciplina |
+| atividades, regras_recorrencia, regras_retencao, sugestoes_atividade, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, preferencias_resumo, turmas_agenda | id_turma | turmas.id_turma |
+| atividades | id_regra_recorrencia | regras_recorrencia.id_regra_recorrencia |
+| envios_anexos | id_atividade | atividades.id_atividade |
+
+Por exemplo, o horário de **2º Tec D** e uma atividade de **2° TECH D** compartilham o mesmo `id_turma`. A forma usada pela Agenda fica uma única vez em `turmas.referencia_agenda`. Para matérias, os rótulos de Notas já existentes são usados para localizar o cadastro correto; não se cria outra disciplina por uma diferença conhecida de exibição.
+
+Os escritores SQL reutilizam o catálogo e rejeitam correspondências ambíguas. Nomes realmente novos, aceitos pelo fluxo autorizado da aplicação, podem ser cadastrados no catálogo compartilhado. Essas funções não substituem a autorização de usuários na API.
+
+As duplicatas comprovadas de Língua Inglesa e Língua Portuguesa 2 são consolidadas, mantendo os IDs que têm notas e redirecionando os horários. Uma duplicata que também tenha lançamentos de notas em outro ID exige revisão: a normalização aborta em vez de descartar esse histórico.
+
+`consultar_catalogo_agenda` filtra as atividades pelo ID de turma, com índices nas novas FKs. A revisão de cache inclui os catálogos, para que mudanças de nomes e referências também atualizem as respostas do Redis. Os nomes continuam sendo entregues à interface pela API.
+
+### Onde texto continua correto
+
+- `pedidos_agenda.nome_turma_solicitada` é uma proposta que pode ainda não ter correspondente aprovado.
+- `perfis_comunidade.turma_informada`, empresa, sala e andar são informações livres da pessoa, sem catálogo obrigatório.
+- UIDs do Firebase Authentication não apontam para `perfis_comunidade`: nem toda conta publica um perfil.
+- Nome e e-mail de um participante do Kanban são informações de identificação do acesso, não uma FK para um perfil público opcional.
+- Referências externas de cartões e quadros fazem parte do contrato do agregado do Kanban; não são nomes de disciplinas ou de turmas. A estrutura interna já tem FKs entre espaço, quadro, coluna, cartão e checklist.
+
+A FK dos uploads fica nula se a atividade é excluída, preservando os metadados temporários para limpeza. A exclusão física de uma regra de recorrência também desvincula suas ocorrências, sem apagar as atividades. Excluir uma disciplina ou turma ainda referenciada é impedido pelo banco.

@@ -139,15 +139,6 @@
                 "generated": false
             },
             {
-                "name": "nome_disciplina",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo subject no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "data_atividade",
                 "type": "date",
                 "check": false,
@@ -162,15 +153,6 @@
                 "check": false,
                 "unique": false,
                 "comment": "Campo time no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
                 "nullable": true,
                 "generated": false
             },
@@ -193,15 +175,6 @@
                 "generated": false
             },
             {
-                "name": "referencia_recorrencia",
-                "type": "character varying(320)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo recurringId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "criado_em",
                 "type": "character varying(40)",
                 "check": false,
@@ -218,6 +191,33 @@
                 "comment": "Campo updatedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_disciplina",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_regra_recorrencia",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK opcional para regras_recorrencia.id_regra_recorrencia. Identifica a regra que gerou a ocorrência; excluir fisicamente a regra desvincula a atividade sem excluí-la.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Atividades da Agenda",
@@ -226,12 +226,27 @@
                 "table": "registros_aplicacao",
                 "column": "id_atividade",
                 "target": "id_registro"
+            },
+            {
+                "table": "disciplinas",
+                "column": "id_disciplina",
+                "target": "id_disciplina"
+            },
+            {
+                "table": "regras_recorrencia",
+                "column": "id_regra_recorrencia",
+                "target": "id_regra_recorrencia"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_atividade"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 4
     },
     {
         "kind": "table",
@@ -595,15 +610,6 @@
                 "generated": false
             },
             {
-                "name": "referencia_atividade",
-                "type": "character varying(320)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo activityId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "nome",
                 "type": "character varying(500)",
                 "check": false,
@@ -656,10 +662,24 @@
                 "comment": "Campo createdAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_atividade",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para atividades.id_atividade. Vincula a preparação do upload à atividade existente; a exclusão da atividade desvincula o envio, preservando os metadados temporários necessários à limpeza do arquivo.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Envios pendentes de anexos",
         "references": [
+            {
+                "table": "atividades",
+                "column": "id_atividade",
+                "target": "id_atividade"
+            },
             {
                 "table": "registros_aplicacao",
                 "column": "id_envio_anexo",
@@ -669,7 +689,7 @@
         "primary_key": [
             "id_envio_anexo"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -1533,11 +1553,11 @@
                 "generated": false
             },
             {
-                "name": "nome_turma",
+                "name": "nome_turma_solicitada",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
-                "comment": "Campo className no contrato da API.",
+                "comment": "Texto da sala proposta por uma pessoa. Pode descrever uma turma que ainda não foi cadastrada ou aprovada; por isso não exige FK para turmas.",
                 "nullable": true,
                 "generated": false
             },
@@ -1695,15 +1715,6 @@
                 "generated": false
             },
             {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "email",
                 "type": "character varying(320)",
                 "check": false,
@@ -1738,6 +1749,15 @@
                 "comment": "Campo reviewedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Solicitações de representantes",
@@ -1746,12 +1766,17 @@
                 "table": "registros_aplicacao",
                 "column": "id_pedido_representacao",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_pedido_representacao"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -1776,20 +1801,20 @@
                 "generated": false
             },
             {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "criado_em",
                 "type": "character varying(40)",
                 "check": false,
                 "unique": false,
                 "comment": "Campo createdAt no contrato da API.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
             }
@@ -1800,12 +1825,17 @@
                 "table": "registros_aplicacao",
                 "column": "id_perfil_administrativo",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_perfil_administrativo"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -1839,11 +1869,11 @@
                 "generated": false
             },
             {
-                "name": "nome_turma",
+                "name": "turma_informada",
                 "type": "character varying(80)",
                 "check": false,
                 "unique": false,
-                "comment": "Campo className no contrato da API.",
+                "comment": "Texto livre publicado pelo dono do perfil, como 2ºD. Não é a turma de autorização do representante nem uma referência obrigatória ao catálogo escolar.",
                 "nullable": true,
                 "generated": false
             },
@@ -1920,20 +1950,20 @@
                 "generated": false
             },
             {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "alterada_em_ms",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
                 "comment": "Campo updatedAt no contrato da API.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
             }
@@ -1944,12 +1974,17 @@
                 "table": "registros_aplicacao",
                 "column": "id_preferencia_resumo",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_preferencia_resumo"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -2234,29 +2269,11 @@
                 "generated": false
             },
             {
-                "name": "nome_disciplina",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo subject no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "hora_atividade",
                 "type": "time without time zone",
                 "check": false,
                 "unique": false,
                 "comment": "Campo time no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
                 "nullable": true,
                 "generated": false
             },
@@ -2340,20 +2357,48 @@
                 "comment": "Campo weekdays no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_disciplina",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Regras de repetição",
         "references": [
             {
+                "table": "disciplinas",
+                "column": "id_disciplina",
+                "target": "id_disciplina"
+            },
+            {
                 "table": "registros_aplicacao",
                 "column": "id_regra_recorrencia",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_regra_recorrencia"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 3
     },
     {
         "kind": "table",
@@ -2366,15 +2411,6 @@
                 "unique": false,
                 "comment": "Identificador de regras_retencao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
-                "nullable": true,
                 "generated": false
             },
             {
@@ -2412,6 +2448,15 @@
                 "comment": "Campo updatedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Políticas de expurgo por turma",
@@ -2420,12 +2465,17 @@
                 "table": "registros_aplicacao",
                 "column": "id_regra_retencao",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_regra_retencao"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -2468,15 +2518,6 @@
                 "generated": false
             },
             {
-                "name": "nome_disciplina",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo subject no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
                 "name": "data_atividade",
                 "type": "date",
                 "check": false,
@@ -2491,15 +2532,6 @@
                 "check": false,
                 "unique": false,
                 "comment": "Campo time no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
                 "nullable": true,
                 "generated": false
             },
@@ -2556,20 +2588,48 @@
                 "comment": "Campo closedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_disciplina",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Sugestões de novas atividades",
         "references": [
             {
+                "table": "disciplinas",
+                "column": "id_disciplina",
+                "target": "id_disciplina"
+            },
+            {
                 "table": "registros_aplicacao",
                 "column": "id_sugestao_atividade",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_sugestao_atividade"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 3
     },
     {
         "kind": "table",
@@ -2590,15 +2650,6 @@
                 "check": false,
                 "unique": false,
                 "comment": "Campo message no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "nome_turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
                 "nullable": true,
                 "generated": false
             },
@@ -2673,6 +2724,15 @@
                 "comment": "Campo completedBy no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Sugestões de melhoria da Agenda",
@@ -2681,12 +2741,17 @@
                 "table": "registros_aplicacao",
                 "column": "id_sugestao_melhoria",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_sugestao_melhoria"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -2709,6 +2774,15 @@
                 "comment": null,
                 "nullable": false,
                 "generated": false
+            },
+            {
+                "name": "referencia_agenda",
+                "type": "character varying(150)",
+                "check": false,
+                "unique": true,
+                "comment": "Identificador textual estável da turma na Agenda, como 2° TECH D. É guardado uma única vez; os vínculos das tabelas usam id_turma.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Nomes das turmas do catálogo de horários.",
@@ -2730,15 +2804,6 @@
                 "unique": false,
                 "comment": "Identificador de turmas_agenda, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "nome",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo name no contrato da API.",
-                "nullable": true,
                 "generated": false
             },
             {
@@ -2767,6 +2832,15 @@
                 "comment": "Campo approvedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": true,
+                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
+                "nullable": true,
+                "generated": false
             }
         ],
         "comment": "Turmas habilitadas na Agenda",
@@ -2775,12 +2849,17 @@
                 "table": "registros_aplicacao",
                 "column": "id_turma_agenda",
                 "target": "id_registro"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
             }
         ],
         "primary_key": [
             "id_turma_agenda"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 2
     },
     {
         "kind": "table",

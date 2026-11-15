@@ -9,6 +9,24 @@
         "procedure": false
     },
     {
+        "name": "buscar_id_turma",
+        "anchor": "rotina-buscar_id_turma-be490cdd",
+        "result": "bigint",
+        "comment": "Busca sem gravar o ID de uma turma por referência estável da Agenda ou nome do catálogo. Usada nas consultas indexadas do calendário.",
+        "language": "sql",
+        "arguments": "valor text",
+        "procedure": false
+    },
+    {
+        "name": "chave_turma",
+        "anchor": "rotina-chave_turma-be490cdd",
+        "result": "character varying",
+        "comment": "Permite comparar rótulos da mesma turma, como 2° TECH D e 2º Tec D, sem criar outra turma.",
+        "language": "sql",
+        "arguments": "valor text",
+        "procedure": false
+    },
+    {
         "name": "consultar_catalogo_agenda",
         "anchor": "rotina-consultar_catalogo_agenda-1ef8c8f7",
         "result": "TABLE(activities jsonb, documents jsonb)",
@@ -504,6 +522,33 @@
         "procedure": false
     },
     {
+        "name": "nome_disciplina_agenda",
+        "anchor": "rotina-nome_disciplina_agenda-c9ce0023",
+        "result": "character varying",
+        "comment": "Reconstrói o rótulo da disciplina usando a convenção já compartilhada com Notas, sem duplicar disciplinas para diferenças de exibição.",
+        "language": "sql",
+        "arguments": "alvo bigint",
+        "procedure": false
+    },
+    {
+        "name": "nome_turma_agenda",
+        "anchor": "rotina-nome_turma_agenda-c9ce0023",
+        "result": "character varying",
+        "comment": "Reconstrói o identificador textual esperado pela Agenda a partir do ID escolar, mantendo as permissões e os links existentes.",
+        "language": "sql",
+        "arguments": "alvo bigint",
+        "procedure": false
+    },
+    {
+        "name": "normalizar_rotulo",
+        "anchor": "rotina-normalizar_rotulo-be490cdd",
+        "result": "character varying",
+        "comment": "Normaliza somente para localizar um rótulo existente, ignorando caixa, acentos e pontuação; não substitui os nomes guardados no catálogo.",
+        "language": "sql",
+        "arguments": "valor text",
+        "procedure": false
+    },
+    {
         "name": "padronizar_listas_registro",
         "anchor": "rotina-padronizar_listas_registro-e9eeac64",
         "result": "jsonb",
@@ -519,6 +564,15 @@
         "comment": null,
         "language": "sql",
         "arguments": "tipo character varying, pai character varying, referencia character varying",
+        "procedure": false
+    },
+    {
+        "name": "referencia_entidade",
+        "anchor": "rotina-referencia_entidade-c9ce0023",
+        "result": "character varying",
+        "comment": "Obtém a referência externa a partir da identidade numérica para preservar o contrato dos links e das automações.",
+        "language": "sql",
+        "arguments": "alvo bigint",
         "procedure": false
     },
     {
@@ -540,10 +594,37 @@
         "procedure": false
     },
     {
+        "name": "resolver_disciplina",
+        "anchor": "rotina-resolver_disciplina-be490cdd",
+        "result": "bigint",
+        "comment": "Reutiliza disciplinas por nome exato, rótulo de Notas ou correspondência única normalizada. Rejeita ambiguidades; cadastra uma matéria apenas quando ela ainda não existe. Não concede autorização.",
+        "language": "plpgsql",
+        "arguments": "valor text",
+        "procedure": false
+    },
+    {
+        "name": "resolver_referencia_entidade",
+        "anchor": "rotina-resolver_referencia_entidade-f6a298ba",
+        "result": "bigint",
+        "comment": "Converte uma referência externa para o ID de um registro de tipo específico. Ausência de correspondente é erro de relacionamento.",
+        "language": "plpgsql",
+        "arguments": "tipo_entidade character varying, valor text",
+        "procedure": false
+    },
+    {
+        "name": "resolver_turma",
+        "anchor": "rotina-resolver_turma-13c136c8",
+        "result": "bigint",
+        "comment": "Reutiliza a turma existente por referência, nome ou correspondência única normalizada. Cadastra somente nomes novos e registra uma vez a referência da Agenda, quando solicitado. Não concede autorização.",
+        "language": "plpgsql",
+        "arguments": "valor text, agenda boolean",
+        "procedure": false
+    },
+    {
         "name": "revisao_catalogo_publico",
         "anchor": "rotina-revisao_catalogo_publico-60391726",
         "result": "character varying",
-        "comment": "Calcula a revisão dos catálogos públicos para invalidar cópias Redis após inclusões, alterações e exclusões.",
+        "comment": "Calcula a revisão do catálogo com as versões dos registros e os nomes/referências de disciplinas e turmas; alterações nesses catálogos também invalidam o cache Redis.",
         "language": "plpgsql",
         "arguments": "catalogo character varying",
         "procedure": false

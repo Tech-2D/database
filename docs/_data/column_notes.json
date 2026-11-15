@@ -15,13 +15,13 @@
     "titulo": "Nome da entrega ou compromisso mostrado no calendário, nos detalhes e nos resumos. Permite identificar rapidamente a atividade.",
     "descricao": "Instruções e detalhes da atividade.",
     "tipo_atividade": "Categoria da atividade, como tarefa, trabalho, prova ou evento.",
-    "nome_disciplina": "Nome da disciplina, quando informado.",
+    "id_disciplina": "FK para disciplinas.id_disciplina. Reutiliza a mesma matéria do catálogo de horários e Notas. A API reconstrói o nome para exibição; nulo significa atividade sem disciplina definida.",
     "data_atividade": "Dia usado para posicionar a atividade no calendário e selecionar entregas nos resumos e no expurgo.",
     "hora_atividade": "Horário opcional exibido nos detalhes e na ordenação das atividades do dia. Sem valor, a atividade continua tendo uma data.",
-    "nome_turma": "Sala que recebe a atividade. Nulo representa atividade geral; a API usa esse valor para filtrar o calendário e restringir edições do representante.",
+    "id_turma": "FK para turmas.id_turma, a mesma entidade usada pelos horários. Define a sala que vê a atividade e delimita a edição do representante. Nulo indica atividade geral. O identificador textual é reconstruído por turmas.referencia_agenda.",
     "criado_por": "UID de quem criou a atividade, quando disponível.",
     "email_criador": "E-mail de quem criou a atividade, usado internamente.",
-    "referencia_recorrencia": "Identifica a regra que gerou a ocorrência. Permite à automação reconhecer atividades já geradas e evitar novas cópias da mesma ocorrência.",
+    "id_regra_recorrencia": "FK opcional para regras_recorrencia.id_regra_recorrencia. Liga a ocorrência à regra que a gerou; a API reconstrói recurringId pela referência externa do registro. Excluir fisicamente a regra desvincula a atividade, preservando seu conteúdo.",
     "criado_em": "Momento de criação da atividade. Conserva a origem temporal do cadastro para o histórico e as respostas da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
@@ -65,7 +65,7 @@
   },
   "envios_anexos": {
     "id_envio_anexo": "Identificador de envios_anexos, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "referencia_atividade": "ID externo da atividade que receberá o material. Permite conferir se o upload pertence ao destino autorizado.",
+    "id_atividade": "FK para atividades.id_atividade. A preparação de upload precisa de uma atividade existente. Se ela for excluída, a FK fica nula e os metadados temporários permanecem disponíveis para a limpeza do arquivo; o envio não pode ser vinculado a uma atividade inexistente.",
     "nome": "Nome informado na preparação do upload. Ajuda a conferir e apresentar o arquivo que será vinculado à atividade.",
     "tipo_mime": "Tipo declarado do material. Permite ao backend conferir o formato aceito antes de finalizar o anexo.",
     "tamanho_bytes": "Tamanho esperado do upload em bytes. Permite aplicar os limites do serviço e conferir o objeto recebido.",
@@ -134,7 +134,7 @@
   },
   "pedidos_agenda": {
     "id_pedido_agenda": "Identificador de pedidos_agenda, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "nome_turma": "Sala que o solicitante quer incluir no sistema. É o nome avaliado pela administração antes da habilitação da agenda.",
+    "nome_turma_solicitada": "Texto da sala solicitada. É uma proposta ainda sujeita à aprovação e pode não existir no catálogo; não criar uma turma fictícia apenas para satisfazer uma FK. A aprovação vincula a Agenda à turma real.",
     "email": "Contato associado à solicitação de uma agenda. Ajuda a administração a identificar quem pediu a nova sala.",
     "situacao": "Andamento da avaliação administrativa. Separa uma solicitação pendente de uma decisão já tomada.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -152,7 +152,7 @@
   },
   "pedidos_representacao": {
     "id_pedido_representacao": "Identificador de pedidos_representacao, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "nome_turma": "Sala que o solicitante pretende representar; é o escopo da aprovação que será revisada.",
+    "id_turma": "FK para turmas.id_turma. Identifica a turma existente que a pessoa pede para representar. É diferente de uma proposta de turma ainda não cadastrada em pedidos_agenda.",
     "email": "E-mail informado para o futuro acesso. Permite relacionar o pedido ao convite aprovado para a mesma conta.",
     "situacao": "Andamento da análise do representante. Evita tratar um pedido pendente como permissão administrativa.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -190,14 +190,14 @@
   "perfis_administrativos": {
     "id_perfil_administrativo": "Identificador de perfis_administrativos, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "papel": "Papel usado nas verificações de autorização da API. Distingue o acesso administrativo global do acesso restrito do representante.",
-    "nome_turma": "Sala que delimita a atuação do representante. Não deve ser interpretada como autorização para editar todas as turmas.",
+    "id_turma": "FK para turmas.id_turma. Delimita a sala de um representante. Papéis que administram o sistema inteiro podem não ter turma; a API reconstrói turmaId para aplicar as mesmas permissões existentes.",
     "criado_em": "Momento de criação, no formato ISO da API."
   },
   "perfis_comunidade": {
     "id_perfil_comunidade": "Identificador de perfis_comunidade, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",
     "empresa": "Empresa informada pela pessoa no perfil público. Dá contexto profissional no diretório da comunidade.",
-    "nome_turma": "Sala que a pessoa escolheu mostrar no perfil. É informação pública de apresentação, sem conceder permissões de representante.",
+    "turma_informada": "Texto livre informado pelo dono do perfil, como 2ºD. É informação de apresentação e não define a turma autorizada de um representante. Por não exigir uma turma escolar cadastrada, permanece textual.",
     "sala": "Descrição da sala ou localização.",
     "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
     "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
@@ -206,7 +206,7 @@
   "preferencias_resumo": {
     "id_preferencia_resumo": "Identificador de preferencias_resumo, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "ativo": "Escolha de receber o resumo. O serviço usa esse estado para decidir se deve incluir a conta nos envios.",
-    "nome_turma": "Sala cujas atividades devem compor o resumo da conta. Evita enviar entregas de uma sala diferente.",
+    "id_turma": "FK para turmas.id_turma. Seleciona as atividades da sala usadas no resumo semanal da conta. O nome exibido é consultado no catálogo, sem duplicação.",
     "alterada_em_ms": "Momento da atualização em milissegundos desde o Unix epoch."
   },
   "professores": {
@@ -242,9 +242,9 @@
     "titulo": "Título do modelo copiado para cada ocorrência gerada. Evita precisar cadastrar o nome novamente em cada semana.",
     "descricao": "Instruções copiadas para as atividades geradas. Mantém um texto comum para a repetição planejada.",
     "tipo_atividade": "Categoria aplicada a cada ocorrência, como tarefa ou evento. Mantém as atividades geradas classificadas no calendário.",
-    "nome_disciplina": "Matéria que será copiada para cada atividade gerada pela regra.",
+    "id_disciplina": "FK para disciplinas.id_disciplina. Reutiliza a mesma matéria do catálogo de horários e Notas. A API reconstrói o nome para exibição; nulo significa atividade sem disciplina definida.",
     "hora_atividade": "Horário local da atividade, quando informado.",
-    "nome_turma": "Sala de destino das ocorrências e escopo de gerenciamento do representante.",
+    "id_turma": "FK para turmas.id_turma. Define a sala das ocorrências geradas pela regra; reutiliza o catálogo escolar, sem repetir o nome da turma no agendamento.",
     "criado_por": "UID da conta que criou o registro.",
     "email_criador": "E-mail da conta que criou o registro.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -257,7 +257,7 @@
   },
   "regras_retencao": {
     "id_regra_retencao": "Identificador de regras_retencao, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "nome_turma": "Sala cuja retenção esta política controla. Evita aplicar a configuração de um representante a outra sala.",
+    "id_turma": "FK para turmas.id_turma. Define em qual sala a regra de retenção se aplica; o cron remove atividades dessa turma conforme o prazo configurado.",
     "dias": "Quantidade de dias que a turma mantém as atividades no calendário. Define a data de corte para a exclusão da atividade e dos anexos.",
     "ativa": "Indica se a regra ou configuração está ativa.",
     "alterado_por": "UID de quem modificou a política. Permite atribuir a responsabilidade pela configuração do expurgo.",
@@ -268,10 +268,10 @@
     "titulo": "Nome proposto para a nova atividade. Permite ao representante identificar o pedido na fila de avaliação.",
     "descricao": "Instruções propostas pelo solicitante. Dá ao revisor o contexto necessário para decidir o cadastro no calendário.",
     "tipo_atividade": "Categoria sugerida, como tarefa ou prova. Ajuda o revisor a classificar a eventual atividade.",
-    "nome_disciplina": "Matéria proposta para a atividade; orienta a avaliação e o eventual cadastro no calendário.",
+    "id_disciplina": "FK para disciplinas.id_disciplina. Reutiliza a mesma matéria do catálogo de horários e Notas. A API reconstrói o nome para exibição; nulo significa atividade sem disciplina definida.",
     "data_atividade": "Dia proposto para a atividade. Permite revisar a entrega antes de confirmar sua inclusão no calendário.",
     "hora_atividade": "Horário local da atividade, quando informado.",
-    "nome_turma": "Sala à qual a proposta se destina. Delimita a revisão pelo representante competente.",
+    "id_turma": "FK para turmas.id_turma. Identifica a sala para a qual a atividade foi sugerida e permite ao representante revisar apenas sugestões da própria turma.",
     "criado_em": "Momento de criação, no formato ISO da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API.",
     "situacao": "Estado da análise da proposta. Mantém sugestões pendentes separadas das já tratadas.",
@@ -282,7 +282,7 @@
   "sugestoes_melhoria": {
     "id_sugestao_melhoria": "Identificador de sugestoes_melhoria, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "mensagem": "Descrição da melhoria ou do problema enviada pela conta autenticada. É a base da análise e da conversa com a administração.",
-    "nome_turma": "Sala informada com o feedback. Ajuda a contextualizar o pedido, sem substituir a autoria autenticada.",
+    "id_turma": "FK para turmas.id_turma. Conserva a turma de origem do feedback e seu contexto para a administração, sem copiar o nome da sala.",
     "criado_por": "UID da conta que criou o registro.",
     "email_criador": "E-mail da conta que criou o registro.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -294,11 +294,12 @@
   },
   "turmas": {
     "id_turma": "Identificador de turmas. É a chave primária da entidade. Identidade numérica da turma nos horários. As aulas referenciam esta chave para reutilizar o cadastro da sala.",
-    "nome": "Nome da sala no catálogo de horários. Não concede automaticamente acesso administrativo nem habilita uma agenda."
+    "nome": "Nome da sala no catálogo de horários. Não concede automaticamente acesso administrativo nem habilita uma agenda.",
+    "referencia_agenda": "Identificador externo estável usado pela Agenda, como 2° TECH D. É único e opcional. Permite que a turma escolar 2º Tec D e a Agenda usem o mesmo id_turma, preservando os links e as permissões existentes. Não se repete nas tabelas que referenciam a turma."
   },
   "turmas_agenda": {
     "id_turma_agenda": "Identificador de turmas_agenda, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "nome": "Nome da sala apresentado no catálogo da Agenda. Identifica a agenda habilitada pelo fluxo administrativo.",
+    "id_turma": "FK única para turmas.id_turma. Vincula a aprovação da Agenda à turma escolar já cadastrada. A unicidade impede habilitar duas Agendas diferentes para a mesma turma.",
     "ativa": "Habilitação da agenda no catálogo. Permite suspender sua disponibilidade sem apagar seu cadastro.",
     "referencia_pedido": "Solicitação que originou a agenda aprovada. Mantém a rastreabilidade da decisão administrativa.",
     "aprovada_em": "Momento em que a agenda foi aprovada. Conserva a data da liberação da sala no sistema."

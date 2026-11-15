@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `047_nomenclatura_colunas` está instalada no banco.
+A versão `048_relacionamentos_catalogos` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

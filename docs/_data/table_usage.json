@@ -5,7 +5,7 @@
   },
   "atividades": {
     "feature": "Calendário · Dia, semana, mês e detalhes",
-    "description": "Alimenta o calendário, os links diretos de atividades e as consultas das automações. Representantes editam atividades da própria turma; administradores têm o acesso permitido pela política da API."
+    "description": "Alimenta o calendário, os links diretos e as automações. id_disciplina referencia o catálogo de disciplinas; id_turma referencia o mesmo catálogo escolar usado pelos horários. id_regra_recorrencia liga uma ocorrência à regra que a gerou. Os nomes exibidos são reconstruídos pelas funções SQL, sem repetir nomes de catálogos no registro."
   },
   "cartoes_kanban": {
     "feature": "Meu Kanban · Tarefas pessoais e compartilhadas",
@@ -17,7 +17,7 @@
   },
   "disciplinas": {
     "feature": "Catálogo compartilhado · Horários e notas",
-    "description": "Concentra os nomes de matérias usados pelos horários dos professores e, por meio de disciplinas_series, pela área de Notas. O nome não precisa ser copiado para um catálogo próprio de notas."
+    "description": "Catálogo único de matérias reutilizado por horários, atividades, recorrências, sugestões e Notas. Os vínculos usam id_disciplina. Rótulos equivalentes são resolvidos para o cadastro existente; a nomenclatura de exibição da Agenda e de Notas é reconstruída na leitura."
   },
   "disciplinas_series": {
     "feature": "Catálogo compartilhado · Matérias por série",
@@ -65,7 +65,7 @@
   },
   "pedidos_agenda": {
     "feature": "Menu · Pedir agenda para minha turma",
-    "description": "Guarda a solicitação de uma nova agenda e sua avaliação administrativa. Permite acompanhar a decisão sem habilitar automaticamente qualquer nome de sala enviado pelo público."
+    "description": "Registra a proposta de abrir uma Agenda. nome_turma_solicitada é texto porque a turma pode ainda não existir ou não ter sido aprovada. Após a decisão administrativa, a habilitação em turmas_agenda usa uma FK para a turma real, sem confundir a proposta com o catálogo."
   },
   "pedidos_kanban": {
     "feature": "Kanban compartilhado · Solicitações de acesso",
@@ -73,7 +73,7 @@
   },
   "pedidos_representacao": {
     "feature": "Sou representante · Solicitar aprovação",
-    "description": "Armazena o pedido do aluno para representar uma turma. A administração revisa a solicitação e pode gerar o convite que será usado para liberar a conta."
+    "description": "Armazena o pedido do aluno para representar uma turma. A administração revisa a solicitação e pode gerar o convite que será usado para liberar a conta. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
   "notas_cadernos": {
     "feature": "Notas · Meu caderno de notas",
@@ -89,15 +89,15 @@
   },
   "perfis_administrativos": {
     "feature": "Login · Permissões de administradores e representantes",
-    "description": "Consultada na autenticação das áreas administrativas e nas verificações de gravação. Define o papel da conta e a turma sobre a qual um representante pode atuar; não armazena a senha do Firebase Authentication."
+    "description": "Consultada na autenticação das áreas administrativas e nas verificações de gravação. Define o papel da conta e a turma sobre a qual um representante pode atuar; não armazena a senha do Firebase Authentication. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
   "perfis_comunidade": {
     "feature": "Menu · Perfis da comunidade",
-    "description": "Fornece os dados que a pessoa escolheu publicar na Agenda e no Cadê o professor. A foto é referenciada por URL; o arquivo é armazenado no Cloudinary, não nesta tabela."
+    "description": "Guarda os dados que a pessoa escolheu publicar, como nome, empresa, foto, sala e turma_informada. Essa turma é texto livre de apresentação; não concede acesso nem substitui o id_turma do perfil administrativo. Contas autenticadas não precisam ter perfil público."
   },
   "preferencias_resumo": {
     "feature": "Configurações · Resumo semanal por e-mail",
-    "description": "Registra a participação da conta no resumo e a turma selecionada para o envio. O serviço usa essa preferência para montar um resumo pertinente à sala do destinatário."
+    "description": "Registra a participação da conta no resumo e a turma selecionada para o envio. O serviço usa essa preferência para montar um resumo pertinente à sala do destinatário. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
   "professores": {
     "feature": "Cadê o professor · Catálogo de docentes",
@@ -117,27 +117,27 @@
   },
   "regras_recorrencia": {
     "feature": "Representantes · Atividades recorrentes",
-    "description": "Guarda o modelo da atividade e o calendário de repetição escolhido. A automação de recorrências consulta as regras ativas e cria as ocorrências na tabela atividades respeitando dias da semana, intervalo e prazo final."
+    "description": "Guarda o modelo da atividade e o calendário de repetição escolhido. A automação de recorrências consulta as regras ativas e cria as ocorrências na tabela atividades respeitando dias da semana, intervalo e prazo final. Disciplina e turma são FKs para os catálogos compartilhados, sem cópia dos nomes."
   },
   "regras_retencao": {
     "feature": "Representantes · Expurgo da turma",
-    "description": "Define por quanto tempo cada turma mantém as atividades no calendário. Na rotina diária, a API aplica a regra da turma, exclui os anexos do R2 e remove a atividade e seus metadados do PostgreSQL."
+    "description": "Define por quanto tempo cada turma mantém as atividades no calendário. Na rotina diária, a API aplica a regra da turma, exclui os anexos do R2 e remove a atividade e seus metadados do PostgreSQL. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
   "sugestoes_atividade": {
     "feature": "Menu · Sugerir atividade",
-    "description": "Recebe propostas de atividades enviadas pelos usuários para avaliação de representantes e administradores. A revisão decide o encaminhamento; a sugestão não aparece automaticamente como atividade confirmada do calendário."
+    "description": "Recebe propostas de atividades enviadas pelos usuários para avaliação de representantes e administradores. A revisão decide o encaminhamento; a sugestão não aparece automaticamente como atividade confirmada do calendário. Disciplina e turma são FKs para os catálogos compartilhados, sem cópia dos nomes."
   },
   "sugestoes_melhoria": {
     "feature": "Comentar melhoria · Minhas sugestões e administração",
-    "description": "Guarda o feedback autenticado sobre o sistema, seu andamento e a autorização de crédito público. Administradores acompanham e concluem as sugestões e podem vinculá-las a um aviso de atualização."
+    "description": "Guarda o feedback autenticado sobre o sistema, seu andamento e a autorização de crédito público. Administradores acompanham e concluem as sugestões e podem vinculá-las a um aviso de atualização. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
   "turmas": {
     "feature": "Catálogo compartilhado · Salas dos horários",
-    "description": "Identifica as turmas físicas referenciadas por horarios_aula. Os nomes do catálogo de horários não representam, por si só, aprovação de uma agenda nem a série usada na fórmula da área de Notas."
+    "description": "Catálogo único de turmas reutilizado por horários, atividades, representantes, sugestões e resumo semanal. O nome escolar e a referencia_agenda ficam aqui uma única vez; id_turma é a FK usada nos vínculos. Por exemplo, 2º Tec D e o identificador 2° TECH D apontam para a mesma turma."
   },
   "turmas_agenda": {
     "feature": "Agenda · Turmas habilitadas pela administração",
-    "description": "Guarda o nome e a habilitação de agendas aprovadas pelo fluxo de pedidos. Trata da disponibilidade da agenda, enquanto turmas identifica salas dos horários; esses papéis são distintos na implementação atual."
+    "description": "Guarda a habilitação de uma Agenda para uma turma escolar existente, por id_turma, além da aprovação e de sua origem. Não mantém outro cadastro de nomes: turmas é o catálogo e referencia_agenda preserva o identificador público. Há no máximo uma habilitação por turma."
   },
   "visitas_aos_sites": {
     "feature": "Administração · Estatísticas de acesso",
