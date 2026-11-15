@@ -25,7 +25,7 @@
   },
   "espacos_kanban": {
     "feature": "Meu Kanban · Espaços pessoais e compartilhados",
-    "description": "É o ponto de entrada do conteúdo de Kanban associado a registros_aplicacao. Reúne os quadros de um espaço e identifica o proprietário; participantes e pedidos complementam o controle dos espaços compartilhados."
+    "description": "Armazena espaços pessoais e compartilhados do Kanban, seus proprietários, referências externas e versões de edição. Os quadros pertencem ao espaço; participantes e pedidos controlam o acesso compartilhado."
   },
   "faixas_horario": {
     "feature": "Cadê o professor · Intervalos das aulas",
@@ -98,10 +98,6 @@
   "recibos_gravacao": {
     "feature": "API · Reenvios seguros e confirmação de convites",
     "description": "Usada por commitDocuments, na ação commit de /api/data, para confirmar lotes como criação e edição de atividades, alterações do Kanban e gravações de sugestões e conversas. Se a resposta se perder e o site reenviar o mesmo lote, a API compara o ID, o autor e o hash e devolve replay:true sem executar as alterações novamente; reutilizar o ID com outro autor ou conteúdo gera HTTP 409. Na aprovação de representantes, o convite é preparado no Redis e só pode ser utilizado se existir um recibo SQL com o mesmo ID, autor e hash. O recibo é inserido na mesma transação das alterações: ambos são confirmados ou ambos são revertidos. Não guarda o conteúdo das tarefas, não é histórico de visitas e não atende automaticamente todos os endpoints; o salvamento de Notas, por exemplo, usa uma transação e versão próprias. A tabela permanece no PostgreSQL porque uma chave Redis separada não confirma atomicamente uma gravação SQL."
-  },
-  "registros_aplicacao": {
-    "feature": "API · Identidade e versão dos registros",
-    "description": "Fornece uma identidade numérica compartilhada pelas entidades do contrato de documentos. Tipo, referência externa e versão permitem atender links existentes, relações pai-filho e gravações com detecção de conflito."
   },
   "regras_recorrencia": {
     "feature": "Representantes · Atividades recorrentes",

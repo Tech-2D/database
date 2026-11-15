@@ -61,7 +61,7 @@ A visão [Catálogo de horários]({{ '/views.html#view-catalogo_horarios' | rela
 
 ## Identidade e links
 
-`registros_aplicacao.id_registro` é um `bigint` gerado pelo banco. Cada tabela de negócio usa uma PK com o nome da entidade, como `atividades.id_atividade` ou `espacos_kanban.id_espaco_kanban`. Essas PKs também são FKs para o registro compartilhado. A API continua aceitando referências como `activities/ABC` para localizar uma atividade aberta por link; essa referência externa é diferente do ID numérico.
+Cada entidade guarda seu próprio ID numérico, como `atividades.id_atividade`, e sua referência externa em `referencia_api`. Os horários preservam a referência textual em `id_horario_aula`. A sequência `ids_entidades` gera novos números; ela não armazena registros. Os campos `versao` e `atualizado_em` ficam na própria entidade e permitem detectar conflitos de edição. Os IDs e links existentes foram preservados.
 
 ## Atividades e anexos
 
@@ -73,7 +73,7 @@ O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do 
 
 ## Sugestões e conversas
 
-`sugestoes_melhoria` registra o feedback autenticado. Cada linha de `mensagens_sugestao` se liga à sugestão por `registros_aplicacao.id_registro_pai`. A API limita a conversa ao autor da sugestão e aos administradores.
+`sugestoes_melhoria` registra o feedback autenticado. Cada linha de `mensagens_sugestao` se liga à sugestão pela FK direta `mensagens_sugestao.id_sugestao_melhoria`. O campo `referencia_sugestao` conserva o endereço externo da conversa mesmo se a sugestão for excluída. A API limita a conversa ao autor da sugestão e aos administradores.
 
 ## Kanban
 
@@ -126,11 +126,11 @@ Os antigos campos `id_pai` foram substituídos por nomes que indicam o destino d
 | colunas_kanban | id_quadro_kanban | quadros_kanban.id_quadro_kanban |
 | cartoes_kanban | id_quadro_kanban | quadros_kanban.id_quadro_kanban |
 | itens_checklist | id_cartao_kanban | cartoes_kanban.id_cartao_kanban |
-| registros_aplicacao | id_registro_pai | registros_aplicacao.id_registro |
+| mensagens_sugestao | id_sugestao_melhoria | sugestoes_melhoria.id_sugestao_melhoria |
 
 Em `cartoes_kanban`, `(id_quadro_kanban, referencia_coluna)` também referencia `(id_quadro_kanban, referencia)` de `colunas_kanban`, garantindo que a coluna pertença ao mesmo quadro.
 
-Nas tabelas que usam uma PK específica da entidade e também FK, a chave referencia `registros_aplicacao.id_registro`: é a identidade compartilhada do registro, diferente dos vínculos com atividade, quadro ou cartão acima.
+As chaves primárias pertencem às próprias entidades. As FKs representam vínculos de negócio, como o anexo com sua atividade, o cartão com sua coluna e a mensagem com sua sugestão.
 
 ## Convenção de nomes dos campos
 

@@ -22,14 +22,12 @@ SELECT obj_description('tech2d'::regnamespace, 'pg_namespace') AS versao_do_sche
 
 ## Localizar uma atividade por link
 
-O valor após `#atividade=` no endereço da Agenda é a referência externa. Use a tabela de identidades para encontrá-la e juntar os dados da atividade.
+O valor após `#atividade=` no endereço da Agenda é a referência externa. Consulte essa referência diretamente na tabela de atividades.
 
 ```sql
-SELECT r.id, r.referencia, a.titulo, a.data, a.hora
-FROM tech2d.registros_aplicacao AS r
-JOIN tech2d.atividades AS a ON a.id_registro = r.id
-WHERE r.tipo = 'activities' AND r.referencia_pai = ''
-  AND r.referencia = 'ID-EXEMPLO';
+SELECT id_atividade, referencia_api, titulo, data_atividade, hora_atividade, versao
+FROM tech2d.atividades
+WHERE referencia_api = 'ID-EXEMPLO';
 ```
 
 ## Buscar horários por turma

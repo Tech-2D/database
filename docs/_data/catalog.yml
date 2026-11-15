@@ -68,8 +68,6 @@
 - id: operacao
   name: Operação e histórico
   objects:
-    - name: registros_aplicacao
-      title: Identidade e versão dos registros
     - name: recibos_gravacao
       title: Recibos de gravação
     - name: preferencias_resumo

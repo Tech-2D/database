@@ -46,119 +46,119 @@
     },
     {
         "name": "gravar_atividades",
-        "anchor": "rotina-gravar_atividades-65a7a60d",
+        "anchor": "rotina-gravar_atividades-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_conteudo",
-        "anchor": "rotina-gravar_conteudo-40971084",
+        "anchor": "rotina-gravar_conteudo-165d5f4f",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, tipo character varying, objeto jsonb",
+        "arguments": "alvo bigint, tipo character varying, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_espacos_kanban",
-        "anchor": "rotina-gravar_espacos_kanban-65a7a60d",
+        "anchor": "rotina-gravar_espacos_kanban-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_horarios_aula",
-        "anchor": "rotina-gravar_horarios_aula-65a7a60d",
+        "anchor": "rotina-gravar_horarios_aula-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_limpeza_anexos_kanban",
-        "anchor": "rotina-gravar_limpeza_anexos_kanban-65a7a60d",
+        "anchor": "rotina-gravar_limpeza_anexos_kanban-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_mensagens_sugestao",
-        "anchor": "rotina-gravar_mensagens_sugestao-65a7a60d",
+        "anchor": "rotina-gravar_mensagens_sugestao-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_participantes_kanban",
-        "anchor": "rotina-gravar_participantes_kanban-65a7a60d",
+        "anchor": "rotina-gravar_participantes_kanban-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_pedidos_agenda",
-        "anchor": "rotina-gravar_pedidos_agenda-65a7a60d",
+        "anchor": "rotina-gravar_pedidos_agenda-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_pedidos_kanban",
-        "anchor": "rotina-gravar_pedidos_kanban-65a7a60d",
+        "anchor": "rotina-gravar_pedidos_kanban-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_pedidos_representacao",
-        "anchor": "rotina-gravar_pedidos_representacao-65a7a60d",
+        "anchor": "rotina-gravar_pedidos_representacao-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_perfis_administrativos",
-        "anchor": "rotina-gravar_perfis_administrativos-65a7a60d",
+        "anchor": "rotina-gravar_perfis_administrativos-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_perfis_comunidade",
-        "anchor": "rotina-gravar_perfis_comunidade-65a7a60d",
+        "anchor": "rotina-gravar_perfis_comunidade-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_preferencias_resumo",
-        "anchor": "rotina-gravar_preferencias_resumo-65a7a60d",
+        "anchor": "rotina-gravar_preferencias_resumo-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
@@ -172,47 +172,47 @@
     },
     {
         "name": "gravar_regras_recorrencia",
-        "anchor": "rotina-gravar_regras_recorrencia-65a7a60d",
+        "anchor": "rotina-gravar_regras_recorrencia-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_regras_retencao",
-        "anchor": "rotina-gravar_regras_retencao-65a7a60d",
+        "anchor": "rotina-gravar_regras_retencao-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_sugestoes_atividade",
-        "anchor": "rotina-gravar_sugestoes_atividade-65a7a60d",
+        "anchor": "rotina-gravar_sugestoes_atividade-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_sugestoes_melhoria",
-        "anchor": "rotina-gravar_sugestoes_melhoria-65a7a60d",
+        "anchor": "rotina-gravar_sugestoes_melhoria-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
         "name": "gravar_turmas_agenda",
-        "anchor": "rotina-gravar_turmas_agenda-65a7a60d",
+        "anchor": "rotina-gravar_turmas_agenda-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
         "procedure": false
     },
     {
@@ -513,15 +513,6 @@
         "procedure": false
     },
     {
-        "name": "referencia_entidade",
-        "anchor": "rotina-referencia_entidade-c9ce0023",
-        "result": "character varying",
-        "comment": "Obtém a referência externa a partir da identidade numérica para preservar o contrato dos links e das automações.",
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
         "name": "remover_nulos_raiz",
         "anchor": "rotina-remover_nulos_raiz-400403d3",
         "result": "jsonb",
@@ -549,12 +540,12 @@
         "procedure": false
     },
     {
-        "name": "resolver_referencia_entidade",
-        "anchor": "rotina-resolver_referencia_entidade-f6a298ba",
+        "name": "resolver_regra_recorrencia",
+        "anchor": "rotina-resolver_regra_recorrencia-be490cdd",
         "result": "bigint",
-        "comment": "Converte uma referência externa para o ID de um registro de tipo específico. Ausência de correspondente é erro de relacionamento.",
+        "comment": null,
         "language": "plpgsql",
-        "arguments": "tipo_entidade character varying, valor text",
+        "arguments": "valor text",
         "procedure": false
     },
     {

@@ -107,7 +107,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de atividades, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -218,15 +218,37 @@
                 "comment": "FK opcional para regras_recorrencia.id_regra_recorrencia. Identifica a regra que gerou a ocorrência; excluir fisicamente a regra desvincula a atividade sem excluí-la.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Atividades da Agenda",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_atividade",
-                "target": "id_registro"
-            },
             {
                 "table": "disciplinas",
                 "column": "id_disciplina",
@@ -246,7 +268,7 @@
         "primary_key": [
             "id_atividade"
         ],
-        "foreign_key_count": 4
+        "foreign_key_count": 3
     },
     {
         "kind": "table",
@@ -542,7 +564,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de espacos_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -581,20 +603,51 @@
                 "comment": "Campo updatedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": false,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "compartilhado",
+                "type": "boolean",
+                "check": false,
+                "unique": false,
+                "comment": "Distingue espaços pessoais e compartilhados no contrato da API.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Espaços pessoais e compartilhados do Kanban",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_espaco_kanban",
-                "target": "id_registro"
-            }
         ],
         "primary_key": [
             "id_espaco_kanban"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -645,7 +698,7 @@
                 "type": "character varying(320)",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador textual do horário de aula, preservado nos links e no contrato da API. id_registro_aplicacao identifica separadamente o registro interno.",
+                "comment": "Identificador textual do horário preservado no contrato da API. id_horario_interno identifica o mesmo horário internamente.",
                 "nullable": false,
                 "generated": false
             },
@@ -704,11 +757,11 @@
                 "generated": false
             },
             {
-                "name": "id_registro_aplicacao",
+                "name": "id_horario_interno",
                 "type": "bigint",
                 "check": false,
                 "unique": true,
-                "comment": "Identidade numérica do registro na API.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -747,15 +800,28 @@
                 "comment": null,
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Liga professor, disciplina, turma e faixa de horário a um dia da semana.",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_registro_aplicacao",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -780,7 +846,7 @@
         "primary_key": [
             "id_horario_aula"
         ],
-        "foreign_key_count": 5
+        "foreign_key_count": 4
     },
     {
         "kind": "table",
@@ -863,7 +929,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de limpeza_anexos_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -893,20 +959,42 @@
                 "comment": "Campo task no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Fila de limpeza dos anexos de cartões removidos",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_limpeza_anexo_kanban",
-                "target": "id_registro"
-            }
         ],
         "primary_key": [
             "id_limpeza_anexo_kanban"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -917,7 +1005,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de mensagens_sugestao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -947,14 +1035,59 @@
                 "comment": "Campo createdAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": false,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "id_sugestao_melhoria",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK direta para a sugestão. Ao excluir a sugestão, a mensagem histórica fica desvinculada.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "referencia_sugestao",
+                "type": "character varying(320)",
+                "check": false,
+                "unique": false,
+                "comment": "Referência externa usada no caminho da conversa, preservada após excluir a sugestão.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Mensagens privadas sobre sugestões",
         "references": [
             {
-                "table": "registros_aplicacao",
-                "column": "id_mensagem_sugestao",
-                "target": "id_registro"
+                "table": "sugestoes_melhoria",
+                "column": "id_sugestao_melhoria",
+                "target": "id_sugestao_melhoria"
             }
         ],
         "primary_key": [
@@ -1273,7 +1406,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de participantes_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1321,20 +1454,42 @@
                 "comment": "Campo createdAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Participantes de quadros compartilhados",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_participante_kanban",
-                "target": "id_registro"
-            }
         ],
         "primary_key": [
             "id_participante_kanban"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -1345,7 +1500,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de pedidos_agenda, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1393,20 +1548,42 @@
                 "comment": "Campo reviewedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Pedidos de criação de agenda",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_pedido_agenda",
-                "target": "id_registro"
-            }
         ],
         "primary_key": [
             "id_pedido_agenda"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -1417,7 +1594,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de pedidos_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1483,20 +1660,42 @@
                 "comment": "Campo updatedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Pedidos de acesso a quadros compartilhados",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_pedido_kanban",
-                "target": "id_registro"
-            }
         ],
         "primary_key": [
             "id_pedido_kanban"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -1507,7 +1706,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de pedidos_representacao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1555,15 +1754,37 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Solicitações de representantes",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_pedido_representacao",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -1573,7 +1794,7 @@
         "primary_key": [
             "id_pedido_representacao"
         ],
-        "foreign_key_count": 2
+        "foreign_key_count": 1
     },
     {
         "kind": "table",
@@ -1584,7 +1805,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de perfis_administrativos, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1614,15 +1835,37 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Papéis administrativos",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_perfil_administrativo",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -1632,7 +1875,7 @@
         "primary_key": [
             "id_perfil_administrativo"
         ],
-        "foreign_key_count": 2
+        "foreign_key_count": 1
     },
     {
         "kind": "table",
@@ -1643,7 +1886,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de perfis_comunidade, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1709,20 +1952,42 @@
                 "comment": "Campo updatedAt no contrato da API.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Perfis públicos da comunidade",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_perfil_comunidade",
-                "target": "id_registro"
-            }
         ],
         "primary_key": [
             "id_perfil_comunidade"
         ],
-        "foreign_key_count": 1
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -1733,7 +1998,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de preferencias_resumo, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -1763,15 +2028,37 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Preferências de e-mail por conta",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_preferencia_resumo",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -1781,7 +2068,7 @@
         "primary_key": [
             "id_preferencia_resumo"
         ],
-        "foreign_key_count": 2
+        "foreign_key_count": 1
     },
     {
         "kind": "table",
@@ -1946,87 +2233,6 @@
     },
     {
         "kind": "table",
-        "name": "registros_aplicacao",
-        "columns": [
-            {
-                "name": "id_registro",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Identificador numérico do registro da aplicação. As tabelas de negócio referenciam esta chave usando nomes específicos de cada entidade.",
-                "nullable": false,
-                "generated": true
-            },
-            {
-                "name": "tipo",
-                "type": "character varying(40)",
-                "check": true,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "referencia",
-                "type": "character varying(320)",
-                "check": false,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "referencia_pai",
-                "type": "character varying(320)",
-                "check": true,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "id_registro_pai",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Registro da aplicação ao qual este registro está vinculado. Referencia registros_aplicacao.id_registro; nas mensagens de sugestão, identifica o registro da sugestão.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "versao",
-                "type": "bigint",
-                "check": true,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "atualizado_em",
-                "type": "timestamp with time zone",
-                "check": false,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            }
-        ],
-        "comment": "Identidade numérica e versão dos registros. As referências textuais preservam os identificadores externos da API.",
-        "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_registro_pai",
-                "target": "id_registro"
-            }
-        ],
-        "primary_key": [
-            "id_registro"
-        ],
-        "foreign_key_count": 1
-    },
-    {
-        "kind": "table",
         "name": "regras_recorrencia",
         "columns": [
             {
@@ -2034,7 +2240,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de regras_recorrencia, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -2172,6 +2378,33 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Regras de repetição",
@@ -2182,11 +2415,6 @@
                 "target": "id_disciplina"
             },
             {
-                "table": "registros_aplicacao",
-                "column": "id_regra_recorrencia",
-                "target": "id_registro"
-            },
-            {
                 "table": "turmas",
                 "column": "id_turma",
                 "target": "id_turma"
@@ -2195,7 +2423,7 @@
         "primary_key": [
             "id_regra_recorrencia"
         ],
-        "foreign_key_count": 3
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -2206,7 +2434,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de regras_retencao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -2254,15 +2482,37 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Políticas de expurgo por turma",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_regra_retencao",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -2272,7 +2522,7 @@
         "primary_key": [
             "id_regra_retencao"
         ],
-        "foreign_key_count": 2
+        "foreign_key_count": 1
     },
     {
         "kind": "table",
@@ -2283,7 +2533,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de sugestoes_atividade, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -2403,6 +2653,33 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Sugestões de novas atividades",
@@ -2413,11 +2690,6 @@
                 "target": "id_disciplina"
             },
             {
-                "table": "registros_aplicacao",
-                "column": "id_sugestao_atividade",
-                "target": "id_registro"
-            },
-            {
                 "table": "turmas",
                 "column": "id_turma",
                 "target": "id_turma"
@@ -2426,7 +2698,7 @@
         "primary_key": [
             "id_sugestao_atividade"
         ],
-        "foreign_key_count": 3
+        "foreign_key_count": 2
     },
     {
         "kind": "table",
@@ -2437,7 +2709,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de sugestoes_melhoria, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -2530,15 +2802,37 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Sugestões de melhoria da Agenda",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_sugestao_melhoria",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -2548,7 +2842,7 @@
         "primary_key": [
             "id_sugestao_melhoria"
         ],
-        "foreign_key_count": 2
+        "foreign_key_count": 1
     },
     {
         "kind": "table",
@@ -2599,7 +2893,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Identificador de turmas_agenda, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
+                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
                 "nullable": false,
                 "generated": false
             },
@@ -2638,15 +2932,37 @@
                 "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
                 "nullable": true,
                 "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": "Instante da última gravação da entidade no contrato da API.",
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "referencia_api",
+                "type": "character varying(320)",
+                "check": true,
+                "unique": true,
+                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
+                "nullable": false,
+                "generated": false
             }
         ],
         "comment": "Turmas habilitadas na Agenda",
         "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_turma_agenda",
-                "target": "id_registro"
-            },
             {
                 "table": "turmas",
                 "column": "id_turma",
@@ -2656,7 +2972,7 @@
         "primary_key": [
             "id_turma_agenda"
         ],
-        "foreign_key_count": 2
+        "foreign_key_count": 1
     },
     {
         "kind": "table",

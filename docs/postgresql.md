@@ -4,7 +4,7 @@ description: Consulte tabelas, colunas, chaves e relações do esquema tech2d.
 wide: true
 ---
 
-Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os recursos para consulta, sem separar fisicamente o banco. As tabelas usam colunas tipadas e chaves estrangeiras. A tabela `registros_aplicacao` guarda a identidade numérica, a versão e a referência externa de cada registro. As views preparam o formato que a API entrega aos sites.
+Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os recursos para consulta, sem separar fisicamente o banco. As tabelas usam colunas tipadas e chaves estrangeiras. Cada entidade guarda sua identidade numérica, referência externa, versão e data de atualização. A sequência `ids_entidades` gera os novos IDs. As views preparam o formato que a API entrega aos sites.
 
 ## Tabelas por área
 
@@ -137,3 +137,7 @@ A versão **049** transfere o controle de entregas do resumo semanal para o Redi
 A versão **050** remove `envios_anexos`. Uploads pendentes ficam no Redis e os anexos confirmados continuam em `anexos_atividade`.
 
 A versão **051** remove `limites_servico`. Os contadores de recuperação de senha e upload de anexos e fotos ficam no Redis com expiração automática.
+
+## Identidade nas próprias entidades
+
+A versão `052_identidade_nas_entidades` removeu a tabela central de identidades. As 17 entidades mantêm os IDs existentes e passam a guardar sua própria versão e referência. As views e funções SQL continuam entregando o contrato da API, preservando os links e a detecção de conflitos. A conferência da troca preservou 1.561 documentos e o resultado de cinco views.

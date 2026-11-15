@@ -45,7 +45,6 @@
     "dependencies": [
       "anexos_atividade",
       "atividades",
-      "registros_aplicacao",
       "turmas",
       "disciplinas",
       "regras_recorrencia"
@@ -53,7 +52,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "referencia",
+        "source": "referencia_api",
         "type": "character varying(320)",
         "note": "Identificador externo esperado pelo site."
       },
@@ -148,7 +147,6 @@
     "comment": "Atividades por turma, data e recorrência, com os dados usados pelas automações.",
     "dependencies": [
       "atividades",
-      "registros_aplicacao",
       "turmas",
       "disciplinas",
       "regras_recorrencia"
@@ -156,7 +154,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "referencia",
+        "source": "referencia_api",
         "type": "character varying(320)",
         "note": "Identificador externo da atividade."
       },
@@ -282,44 +280,60 @@
   },
   {
     "name": "visao_documentos_aplicacao",
-    "comment": "Contrato de leitura da API. Reconstrói os objetos a partir das tabelas tipadas.",
+    "comment": "Reúne as entidades tipadas com UNION ALL. Reconstrói referências, conteúdo e versões sem uma tabela central de identidades.",
     "dependencies": [
-      "registros_aplicacao"
+      "atividades",
+      "espacos_kanban",
+      "horarios_aula",
+      "limpeza_anexos_kanban",
+      "mensagens_sugestao",
+      "participantes_kanban",
+      "pedidos_agenda",
+      "pedidos_kanban",
+      "pedidos_representacao",
+      "perfis_administrativos",
+      "perfis_comunidade",
+      "preferencias_resumo",
+      "regras_recorrencia",
+      "regras_retencao",
+      "sugestoes_atividade",
+      "sugestoes_melhoria",
+      "turmas_agenda"
     ],
     "columns": [
       {
         "name": "path",
-        "source": "path",
+        "source": "referência composta da entidade",
         "type": "text",
         "note": "Referência externa composta para o contrato da API."
       },
       {
         "name": "collection",
-        "source": "collection",
+        "source": "tipo da entidade",
         "type": "text",
         "note": "Nome da coleção conforme o contrato da API."
       },
       {
         "name": "id",
-        "source": "id",
+        "source": "referencia_api / id_horario_aula",
         "type": "character varying(320)",
         "note": "Identificador externo esperado pelo site."
       },
       {
         "name": "data",
-        "source": "data",
+        "source": "colunas tipadas da entidade",
         "type": "jsonb",
         "note": "Objeto montado na consulta a partir das colunas tipadas."
       },
       {
         "name": "version",
-        "source": "version",
+        "source": "versao",
         "type": "bigint",
         "note": "Versão do registro usada para detectar conflitos."
       },
       {
         "name": "updated_at",
-        "source": "updated_at",
+        "source": "atualizado_em",
         "type": "timestamp with time zone",
         "note": "Data e hora da última alteração."
       }
@@ -329,7 +343,8 @@
     "name": "visao_documentos_catalogo",
     "comment": "Catálogo calculado a partir das tabelas tipadas.",
     "dependencies": [
-      "registros_aplicacao"
+      "horarios_aula",
+      "turmas_agenda"
     ],
     "columns": [
       {
@@ -537,13 +552,12 @@
     "comment": "Papéis e turmas administrativas no formato consumido pela API.",
     "dependencies": [
       "perfis_administrativos",
-      "registros_aplicacao",
       "turmas"
     ],
     "columns": [
       {
         "name": "uid",
-        "source": "referencia",
+        "source": "referencia_api",
         "type": "character varying(320)",
         "note": "UID da conta no Firebase Authentication."
       },
