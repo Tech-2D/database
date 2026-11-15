@@ -56,13 +56,6 @@
     "id_disciplina": "Referência à matéria em disciplinas. Permite reutilizar a mesma matéria em várias séries sem cadastrar novamente o nome.",
     "ano_serie": "Série de 1 a 3 em que a matéria pode receber notas. Compõe a chave e valida a compatibilidade entre a disciplina e o caderno."
   },
-  "entregas_resumo": {
-    "id_entrega_resumo": "Identificador de entregas_resumo, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "situacao": "Estado de processamento do envio, distinguindo reserva e conclusão. Ajuda a coordenar tentativas sem duplicar um resumo já enviado.",
-    "inicio_semana": "Data que identifica a semana resumida. Evita confundir o envio desta semana com o de outro período.",
-    "criada_em_ms": "Momento da reserva em milissegundos desde o Unix epoch.",
-    "concluida_em_ms": "Momento da conclusão em milissegundos desde o Unix epoch."
-  },
   "envios_anexos": {
     "id_envio_anexo": "Identificador de envios_anexos, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "id_atividade": "FK para atividades.id_atividade. A preparação de upload precisa de uma atividade existente. Se ela for excluída, a FK fica nula e os metadados temporários permanecem disponíveis para a limpeza do arquivo; o envio não pode ser vinculado a uma atividade inexistente.",

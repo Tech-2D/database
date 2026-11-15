@@ -198,3 +198,20 @@
       description: Localiza os convites do e-mail autenticado. O sufixo usa SHA-256 do e-mail normalizado serializado em JSON, para formar a chave.
       expiry: A chave expira na data do convite mais recente desse e-mail. Convites vencidos deixam de autorizar a ativação.
       route: POST /api/data · consulta e ativação da própria conta
+
+- id: reservas-resumo-semanal
+  title: Envios do resumo semanal
+  nav: Envios do resumo semanal
+  icon: clock
+  description: O serviço de e-mail registra uma reserva por conta e semana antes de enviar o resumo. O Worker coordena as reservas no Redis para impedir que duas execuções do cron enviem o mesmo e-mail.
+  source: digest-deliveries.js
+  entries:
+    - id: digest-delivery
+      name: Reserva de envio por conta e semana
+      key: 'tech2d:{digest-deliveries}:item:{hash_semana_e_conta}'
+      type: String JSON
+      ttl: Até 28 dias após o início da semana
+      ttl_seconds: dinamico
+      description: O sufixo deriva do caminho do registro, que identifica a conta e a segunda-feira do resumo. A chave guarda a reserva e o resultado da tentativa, sem o e-mail do destinatário nem o conteúdo da mensagem.
+      expiry: Expira 28 dias após a segunda-feira do resumo, à meia-noite UTC. Uma atualização de status preserva o prazo. Uma tentativa incerta permanece bloqueada contra reenvios automáticos até a expiração.
+      route: POST /api/internal/web-data · somente o serviço de e-mail

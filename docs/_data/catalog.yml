@@ -78,8 +78,6 @@
       title: Contadores de solicitações por janela
     - name: preferencias_resumo
       title: Preferências de e-mail por conta
-    - name: entregas_resumo
-      title: Reservas de envio do resumo semanal
 
 - id: notas
   name: Notas e médias

@@ -172,3 +172,7 @@ As duplicatas comprovadas de Língua Inglesa e Língua Portuguesa 2 são consoli
 - Referências externas de cartões e quadros fazem parte do contrato do agregado do Kanban; não são nomes de disciplinas ou de turmas. A estrutura interna já tem FKs entre espaço, quadro, coluna, cartão e checklist.
 
 A FK dos uploads fica nula se a atividade é excluída, preservando os metadados temporários para limpeza. A exclusão física de uma regra de recorrência também desvincula suas ocorrências, sem apagar as atividades. Excluir uma disciplina ou turma ainda referenciada é impedido pelo banco.
+
+## Resumo semanal por e-mail
+
+As preferências de turma e de recebimento ficam em `preferencias_resumo`. O controle temporário de entrega usa uma reserva por conta e semana no Redis. O serviço cria a reserva antes de tentar enviar o e-mail e atualiza seu estado depois. A reserva expira 28 dias após o início da semana resumida. [Chave e prazo de expiração]({{ '/redis.html#reservas-resumo-semanal' | relative_url }})

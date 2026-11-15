@@ -535,69 +535,6 @@
     },
     {
         "kind": "table",
-        "name": "entregas_resumo",
-        "columns": [
-            {
-                "name": "id_entrega_resumo",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Identificador de entregas_resumo, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "situacao",
-                "type": "character varying(32)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo status no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "inicio_semana",
-                "type": "date",
-                "check": false,
-                "unique": false,
-                "comment": "Campo weekStart no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "criada_em_ms",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Campo createdAt no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "concluida_em_ms",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Campo completedAt no contrato da API.",
-                "nullable": true,
-                "generated": false
-            }
-        ],
-        "comment": "Reservas de envio do resumo semanal",
-        "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_entrega_resumo",
-                "target": "id_registro"
-            }
-        ],
-        "primary_key": [
-            "id_entrega_resumo"
-        ],
-        "foreign_key_count": 1
-    },
-    {
-        "kind": "table",
         "name": "envios_anexos",
         "columns": [
             {
