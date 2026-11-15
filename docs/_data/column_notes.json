@@ -51,7 +51,7 @@
   },
   "disciplinas": {
     "id": "Identidade numérica da matéria no catálogo compartilhado. Horários e disciplinas_series reutilizam esta chave, evitando nomes duplicados por aplicativo.",
-    "nome": "Nome canônico da matéria. É apresentado nos horários e projetado pela view do Pegaki, que mantém os rótulos compatíveis com as notas existentes."
+    "nome": "Nome canônico da matéria. É apresentado nos horários e projetado pela view da área de Notas, que mantém os rótulos compatíveis com as notas existentes."
   },
   "disciplinas_series": {
     "id_disciplina": "Referência à matéria em disciplinas. Permite reutilizar a mesma matéria em várias séries sem cadastrar novamente o nome.",
@@ -159,7 +159,7 @@
     "criado_em": "Momento de criação, no formato ISO da API.",
     "revisado_em": "Momento da avaliação do candidato a representante. Distingue o pedido aguardando análise de um pedido já tratado."
   },
-  "pegaki_cadernos": {
+  "notas_cadernos": {
     "id_usuario": "UID do dono do caderno confirmado pelo token. As políticas RLS usam essa identidade para impedir acesso às notas de outra conta.",
     "ano_letivo": "Ano escolar a que as notas pertencem. Compõe a identidade do caderno para separar anos diferentes da mesma conta.",
     "ano_serie": "Série de 1 a 3 do caderno. As chaves estrangeiras validam se a matéria é oferecida para essa série.",
@@ -170,7 +170,7 @@
     "criado_em": "Momento em que a conta criou este caderno do ano letivo. Conserva a origem temporal das notas.",
     "alterado_em": "Último salvamento do caderno. A API devolve esse instante para informar a atualização dos dados."
   },
-  "pegaki_notas": {
+  "notas_lancamentos": {
     "id_usuario": "UID do dono do caderno confirmado pelo token. As políticas RLS usam essa identidade para impedir acesso às notas de outra conta.",
     "ano_letivo": "Ano escolar a que as notas pertencem. Compõe a identidade do caderno para separar anos diferentes da mesma conta.",
     "ano_serie": "Série de 1 a 3 do caderno. As chaves estrangeiras validam se a matéria é oferecida para essa série.",
@@ -181,7 +181,7 @@
     "media_informada": "Média semestral preenchida diretamente. A visão usa este valor quando o caderno está no modo media.",
     "peso_n1": "Peso percentual da N1, de 10 a 90 em passos de 5. O restante até 100 é aplicado à N2 para calcular a média."
   },
-  "pegaki_recuperacoes": {
+  "notas_recuperacoes": {
     "id_usuario": "UID do dono do caderno confirmado pelo token. As políticas RLS usam essa identidade para impedir acesso às notas de outra conta.",
     "ano_letivo": "Ano escolar a que as notas pertencem. Compõe a identidade do caderno para separar anos diferentes da mesma conta.",
     "ano_serie": "Série de 1 a 3 do caderno. As chaves estrangeiras validam se a matéria é oferecida para essa série.",
@@ -309,6 +309,6 @@
     "intervalo_meia_hora": "Identifica a janela de 30 minutos usada para deduplicar visitas. Recarregar o site dentro da mesma janela não cria outra visita para a mesma chave.",
     "tipo_visitante": "Categoria da chave de visitante. O registro atual exige autenticação; a categoria anônima preserva a leitura do histórico existente.",
     "chave_visitante": "UID para acessos autenticados ou código derivado para o histórico anônimo. Permite deduplicar visitas sem guardar um IP literal.",
-    "site": "Origem da visita: agenda, professores ou pegaki. Permite comparar o uso de cada site no mesmo painel."
+    "site": "Origem da visita: agenda, professores ou pegaki (identificador técnico da área de Notas). Permite comparar o uso de cada site no mesmo painel."
   }
 }

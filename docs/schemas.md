@@ -1,6 +1,6 @@
 ---
 title: Organização por áreas
-description: Localize as tabelas da Agenda, dos professores, do Kanban e do Pegaki em um único banco.
+description: Localize as tabelas da Agenda, dos professores, do Kanban e da área de Notas em um único banco.
 ---
 
 Todas as tabelas da aplicação permanecem no schema `tech2d`, dentro do banco `defaultdb`. Não há uma divisão física por aplicativo. Em uma consulta como `tech2d.atividades`, o prefixo identifica onde a tabela está no PostgreSQL.
@@ -20,7 +20,7 @@ As áreas abaixo servem para navegar na documentação. Elas não criam schemas 
 - **Agenda:** atividades, anexos, avisos, sugestões, representantes e resumos por e-mail.
 - **Cadê o professor:** horários de aula e os catálogos de professores, disciplinas, turmas e faixas de horário.
 - **Kanban:** espaços, quadros, colunas, cartões, checklists, participantes e pedidos de acesso.
-- **Pegaki:** disciplinas, cadernos, notas e recuperações. As notas são protegidas por conta com RLS.
+- **Notas:** disciplinas, cadernos, notas e recuperações. As notas são protegidas por conta com RLS.
 - **Dados compartilhados:** perfis, identidade e versão dos registros, acessos, auditoria e controles dos serviços.
 
 As tabelas podem se relacionar entre áreas por chaves estrangeiras. O [explorador de relações]({{ '/modelagem.html' | relative_url }}) mostra esses vínculos usando as definições do PostgreSQL.
@@ -33,12 +33,12 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `044_convites_representacao_no_redis` está instalada no banco.
+A versão `045_nomenclatura_notas` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |
 | Visitas aos sites | `visitas_aos_sites` reúne as contagens e a última data registrada na Agenda. A moderação usa bloqueios por UID no Redis, com prazo configurável. |
-| Catálogo de matérias | O Pegaki reutiliza disciplinas; disciplinas_series associa matérias e séries sem repetir nomes. visao_disciplinas_pegaki preserva os rótulos usados pela interface. |
+| Catálogo de matérias | A área de Notas reutiliza disciplinas; disciplinas_series associa matérias e séries sem repetir nomes. visao_disciplinas_notas preserva os rótulos usados pela interface. |
 | Expurgo de atividades | O Worker exclui os anexos do R2 antes de remover a atividade e seus metadados do PostgreSQL. A rotina não cria cópias. |
 | Gravações da aplicação | Os recibos ajudam a reconhecer requisições repetidas. O histórico de auditoria foi retirado. |
 | Listas e agrupamentos | Foram removidos os marcadores `grupo` e `listas_presentes`. A ordem continua explícita nas tabelas filhas, e a API devolve listas vazias como `[]`. |
@@ -51,4 +51,4 @@ A versão 033 removeu as enquetes da Agenda, suas opções e votos e a aprovaç�
 
 ## Recurso retirado: anotações de estudo
 
-A versão 034 removeu a tabela `anotacoes` do antigo Caderno Infinito, que estava vazia, e suas duas funções SQL exclusivas. O caminho `notebookNotes` foi retirado das permissões de leitura e gravação da API. Os cadernos, notas e recuperações do Pegaki continuam descritos no catálogo de notas escolares.
+A versão 034 removeu a tabela `anotacoes` do antigo Caderno Infinito, que estava vazia, e suas duas funções SQL exclusivas. O caminho `notebookNotes` foi retirado das permissões de leitura e gravação da API. Os cadernos, notas e recuperações da área de Notas continuam descritos no catálogo de notas escolares.

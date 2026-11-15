@@ -81,14 +81,14 @@
     - name: entregas_resumo
       title: Reservas de envio do resumo semanal
 
-- id: pegaki
-  name: Notas e médias do Pegaki
+- id: notas
+  name: Notas e médias
   objects:
     - name: disciplinas_series
       title: Disciplinas do catálogo compartilhado por série
-    - name: pegaki_cadernos
+    - name: notas_cadernos
       title: Cadernos por conta e ano letivo
-    - name: pegaki_notas
+    - name: notas_lancamentos
       title: Notas e pesos por semestre
-    - name: pegaki_recuperacoes
+    - name: notas_recuperacoes
       title: Recuperação final

@@ -100,12 +100,12 @@ Os catálogos públicos passam por projeções que selecionam os campos da respo
 | 021 | Centraliza o catálogo e o arquivamento de atividades em funções e cria a view usada pelos jobs |
 | 022 | Remove `campos_nulos` das tabelas e ajusta a serialização dos registros |
 | 023 | Expõe a revisão restrita dos catálogos públicos para o cache Redis |
-| 024 | Adiciona cadernos privados de notas do Pegaki |
+| 024 | Adiciona cadernos privados de notas da área de Notas |
 | 025 | Remove a tabela e a view de revisões da migração para PostgreSQL |
-| 026 | Adiciona o registro de acessos autenticados ao Pegaki |
+| 026 | Adiciona o registro de acessos autenticados à área de Notas |
 | 027 | Consolida os acessos recentes da Agenda e dos professores por site e conta |
 | 028 | Unifica o arquivo de atividades, remove marcadores de listas e aposenta a auditoria antiga |
-| 029–032 | Unifica os acessos dos três sites e faz o Pegaki reutilizar o catálogo geral de disciplinas |
+| 029–032 | Unifica os acessos dos três sites e faz a área de Notas reutilizar o catálogo geral de disciplinas |
 | 033 | Retira enquetes, opções, votos, autorizações de eleitores e as funções exclusivas do recurso |
 | 034 | Retira a tabela de anotações do antigo Caderno Infinito e o contrato notebookNotes da API |
 | 035 | Retira a tabela de comunicados gerais após a mudança para Redis |
@@ -122,3 +122,5 @@ Os catálogos públicos passam por projeções que selecionam os campos da respo
 Em um banco local vazio, siga os passos em [Consultas SQL]({{ '/consultas.html' | relative_url }}). O script de instalação aplica as migrações na ordem acima.
 
 [Ver arquivos SQL](https://github.com/Tech-2D/database/tree/main/sql/migrations) · [Rodar em um banco local](https://github.com/Tech-2D/database#rodar-o-sql-localmente) · [Consultas de exemplo](https://github.com/Tech-2D/database/blob/main/sql/examples/consultas.sql)
+
+A versão **045** padroniza os nomes da área de Notas: `notas_cadernos`, `notas_lancamentos`, `notas_recuperacoes`, `visao_disciplinas_notas` e `visao_notas_resultados`. O rename preserva dados, permissões, vínculos e RLS.

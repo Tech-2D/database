@@ -59,7 +59,7 @@ psql -d tech2d_local -v ON_ERROR_STOP=1 -At -f sql/routines.psql > docs/_data/ro
 
 As âncoras das rotinas usam nome e assinatura, mantendo os links estáveis quando novos objetos são incluídos.
 
-## Notas do Pegaki
+## Notas
 
 A [modelagem de notas](docs/notas-pegaki.md) descreve os cadernos, notas e recuperações privados, o catálogo compartilhado e a visão de resultados, com RLS e fórmulas versionadas para futuras análises. A migration 024 foi aplicada ao PostgreSQL centralizado em 13/11/2026. O cálculo e o isolamento por conta foram conferidos no banco real assumindo o papel limitado da API em uma transação revertida.
 
@@ -67,7 +67,7 @@ A [modelagem de notas](docs/notas-pegaki.md) descreve os cadernos, notas e recup
 
 Cada card do catálogo e do explorador apresenta onde a tabela é usada no sistema. O arquivo `docs/_data/table_usage.json` mantém a área e a descrição desse uso. `docs/_data/column_notes.json` explica a finalidade de cada campo. Ao alterar o inventário, atualize as duas fontes para que uma tabela ou coluna nova não apareça sem explicação.
 
-Todas as tabelas permanecem em `tech2d`. As áreas do site organizam a navegação; não são schemas separados. A versão 032 consolida os acessos dos três sites e reutiliza o catálogo geral de disciplinas no Pegaki. As migrations 029 e 030 preparam a compatibilidade; publique a API atualizada antes de aplicar 031 e 032.
+Todas as tabelas permanecem em `tech2d`. As áreas do site organizam a navegação; não são schemas separados. A versão 032 consolida os acessos dos três sites e reutiliza o catálogo geral de disciplinas na área de Notas. As migrations 029 e 030 preparam a compatibilidade; publique a API atualizada antes de aplicar 031 e 032.
 
 Antes de publicar a documentação, confira a cobertura e gere o CSS:
 

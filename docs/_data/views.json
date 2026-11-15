@@ -247,8 +247,8 @@
     ]
   },
   {
-    "name": "visao_disciplinas_pegaki",
-    "comment": "Projeção do catálogo compartilhado para o Pegaki. Conserva os rótulos que o frontend usa como chaves, sem armazenar outro catálogo de nomes.",
+    "name": "visao_disciplinas_notas",
+    "comment": "Projeção do catálogo compartilhado para a área de Notas. Conserva os rótulos que o frontend usa como chaves, sem armazenar outro catálogo de nomes.",
     "dependencies": [
       "disciplinas",
       "disciplinas_series"
@@ -270,7 +270,7 @@
         "name": "nome",
         "source": "nome",
         "type": "character varying(160)",
-        "note": "Rótulo apresentado pelo Pegaki para manter as chaves de notas compatíveis."
+        "note": "Rótulo apresentado pela área de Notas para manter as chaves de notas compatíveis."
       }
     ]
   },
@@ -425,13 +425,13 @@
     ]
   },
   {
-    "name": "visao_pegaki_resultados",
+    "name": "visao_notas_resultados",
     "comment": "Médias por conta e disciplina do catálogo compartilhado; aplica as fórmulas tech-2026-v1 e preserva RLS nas tabelas de notas.",
     "dependencies": [
-      "pegaki_cadernos",
-      "pegaki_notas",
-      "pegaki_recuperacoes",
-      "visao_disciplinas_pegaki"
+      "notas_cadernos",
+      "notas_lancamentos",
+      "notas_recuperacoes",
+      "visao_disciplinas_notas"
     ],
     "columns": [
       {
@@ -474,7 +474,7 @@
         "name": "nome",
         "source": "nome",
         "type": "character varying(160)",
-        "note": "Rótulo apresentado pelo Pegaki para manter as chaves de notas compatíveis."
+        "note": "Rótulo apresentado pela área de Notas para manter as chaves de notas compatíveis."
       },
       {
         "name": "media_primeiro",

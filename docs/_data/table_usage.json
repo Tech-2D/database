@@ -17,11 +17,11 @@
   },
   "disciplinas": {
     "feature": "Catálogo compartilhado · Horários e notas",
-    "description": "Concentra os nomes de matérias usados pelos horários dos professores e, por meio de disciplinas_series, pelo Pegaki. O nome não precisa ser copiado para um catálogo próprio de notas."
+    "description": "Concentra os nomes de matérias usados pelos horários dos professores e, por meio de disciplinas_series, pela área de Notas. O nome não precisa ser copiado para um catálogo próprio de notas."
   },
   "disciplinas_series": {
     "feature": "Catálogo compartilhado · Matérias por série",
-    "description": "Relaciona uma disciplina já existente à série em que ela pode receber notas no Pegaki. É uma associação, sem outro nome de matéria. As chaves estrangeiras das notas impedem usar disciplinas de uma série diferente."
+    "description": "Relaciona uma disciplina já existente à série em que ela pode receber notas na área de Notas. É uma associação, sem outro nome de matéria. As chaves estrangeiras das notas impedem usar disciplinas de uma série diferente."
   },
   "entregas_resumo": {
     "feature": "Automação · Resumo semanal por e-mail",
@@ -75,16 +75,16 @@
     "feature": "Sou representante · Solicitar aprovação",
     "description": "Armazena o pedido do aluno para representar uma turma. A administração revisa a solicitação e pode gerar o convite que será usado para liberar a conta."
   },
-  "pegaki_cadernos": {
-    "feature": "Pegaki · Meu caderno de notas",
+  "notas_cadernos": {
+    "feature": "Notas · Meu caderno de notas",
     "description": "Guarda a configuração privada do caderno da conta para um ano letivo. A API usa sua versão para evitar que uma aba sobrescreva notas salvas por outra; RLS limita a leitura e a escrita ao próprio usuário."
   },
-  "pegaki_notas": {
-    "feature": "Pegaki · Notas por matéria e semestre",
+  "notas_lancamentos": {
+    "feature": "Notas · Notas por matéria e semestre",
     "description": "Armazena as notas e os pesos informados na calculadora autenticada. A visão de resultados calcula as médias a partir destes valores e do modo de entrada do caderno. RLS mantém as notas privadas."
   },
-  "pegaki_recuperacoes": {
-    "feature": "Pegaki · Recuperação final",
+  "notas_recuperacoes": {
+    "feature": "Notas · Recuperação final",
     "description": "Guarda a nota de recuperação final separada das avaliações semestrais. A visão de resultados combina esse valor com a média anual conforme a regra do caderno. RLS mantém o isolamento por conta."
   },
   "perfis_administrativos": {
@@ -133,7 +133,7 @@
   },
   "turmas": {
     "feature": "Catálogo compartilhado · Salas dos horários",
-    "description": "Identifica as turmas físicas referenciadas por horarios_aula. Os nomes do catálogo de horários não representam, por si só, aprovação de uma agenda nem a série usada na fórmula do Pegaki."
+    "description": "Identifica as turmas físicas referenciadas por horarios_aula. Os nomes do catálogo de horários não representam, por si só, aprovação de uma agenda nem a série usada na fórmula da área de Notas."
   },
   "turmas_agenda": {
     "feature": "Agenda · Turmas habilitadas pela administração",
