@@ -224,10 +224,10 @@
     "compacto": "Preferência de visualização compacta do quadro. Muda a densidade dos cartões, sem alterar o conteúdo ou as permissões."
   },
   "recibos_gravacao": {
-    "id": "ID de uma solicitação de gravação.",
-    "autor": "Conta ou serviço que enviou a solicitação.",
-    "hash_requisicao": "Hash do conteúdo, usado para detectar reuso do ID com dados diferentes.",
-    "confirmado_em": "Data e hora em que o lote de gravações foi confirmado."
+    "id": "Identificador estável do lote, recebido em commit.id. Uma nova operação recebe outro ID; uma tentativa de reenviar a mesma operação conserva este ID para localizar a confirmação anterior. Também corresponde ao operationId do convite preparado no Redis.",
+    "autor": "UID da conta autenticada ou identificação service:<nome> do serviço que enviou o lote. É calculado pela API a partir da identidade validada, não escolhido pelo corpo da requisição. Impede que outra identidade reutilize o mesmo recibo.",
+    "hash_requisicao": "Resumo criptográfico do lote recebido. A API compara esse valor e o autor antes de tratar o pedido como repetição; o mesmo ID com conteúdo diferente recebe HTTP 409. Também confere se o convite no Redis corresponde exatamente à aprovação confirmada no SQL.",
+    "confirmado_em": "Momento registrado ao inserir o recibo. O registro só fica visível após o COMMIT da mesma transação das alterações. É a referência temporal da confirmação, não um prazo de expiração; atualmente a tabela não possui TTL nem limpeza automática por idade."
   },
   "registros_aplicacao": {
     "id": "Identificador numérico gerado pelo PostgreSQL.",

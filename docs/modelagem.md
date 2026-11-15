@@ -79,6 +79,29 @@ O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do 
 
 `espacos_kanban` identifica o proprietário e agrupa quadros pessoais ou compartilhados. Quadros, colunas, cartões e itens de checklist ficam em tabelas relacionadas. O vínculo entre cartão e coluna exige que os dois pertençam ao mesmo quadro. Participantes e pedidos de acesso ficam em tabelas próprias.
 
+## Recibos de gravação: onde são usados
+
+A tabela [recibos_gravacao]({{ '/postgresql.html#obj-recibos_gravacao' | relative_url }}) confirma lotes processados pela ação `commit` de `/api/data`. A API acessa a tabela pela [visao_recibos_gravacao]({{ '/views.html#view-visao_recibos_gravacao' | relative_url }}); essa view é uma projeção dos mesmos registros, sem outra cópia dos dados.
+
+| Parte do sistema | Como usa o recibo |
+| --- | --- |
+| Criar e editar atividades | A fila da interface mantém o ID do lote ao tentar o envio novamente. Se a gravação já foi confirmada, a API reconhece o reenvio sem recriar a atividade ou repetir a edição. |
+| Meu Kanban | As alterações enviadas pelo fluxo de documentos, como salvar cartões e reorganizar quadros, usam a mesma confirmação de lotes. Isso complementa o controle de versão que detecta edições concorrentes. |
+| Sugestões e conversas | As gravações que passam pelo mesmo endpoint também recebem recibo, evitando repetir operações quando a resposta não chega ao navegador. |
+| Aprovação de representantes | A aprovação SQL e seu recibo são confirmados juntos. O convite preparado no Redis só é aceito quando seu ID de operação, autor e hash correspondem ao recibo confirmado. Um convite preparado antes de uma transação revertida não libera acesso. |
+
+Por exemplo: o representante salva uma atividade, o banco confirma a transação e a conexão cai antes de a resposta chegar. O navegador tenta novamente com o mesmo `commit.id`. A API encontra o recibo, confere o autor e o conteúdo e responde `replay:true`, sem repetir o lote. Se alguém reutilizar o mesmo ID com conteúdo diferente ou outra identidade, recebe HTTP 409.
+
+### Por que permanece no PostgreSQL
+
+O recibo é inserido **na mesma transação das alterações**. O banco confirma tudo junto ou reverte tudo. Mover somente o recibo para o Redis permitiria confirmar a atividade no PostgreSQL e falhar ao registrar sua confirmação no Redis, deixando o próximo envio sem prova de que a operação já terminou. O convite de representante também depende dessa prova SQL.
+
+O recibo não contém o texto da atividade ou as mensagens, não substitui uma auditoria e não conta visitas. Ele contém apenas o ID do lote, a identidade de quem o enviou, o hash da requisição e a data de confirmação. Atualmente **não há TTL nem limpeza automática por idade** nessa tabela. Uma retenção futura precisa considerar o prazo de reenvio dos clientes e a validade dos convites.
+
+Esse mecanismo não atende automaticamente todas as rotas: o salvamento de Notas, por exemplo, usa transação e controle de versão próprios; os avisos armazenados diretamente no Redis têm seu próprio fluxo de gravação.
+
+No código da API, os pontos principais são [commitDocuments em document-store.js](https://github.com/Tech-2D/api/blob/main/src/document-store.js), [o encaminhamento em data-route.js](https://github.com/Tech-2D/api/blob/main/src/data-route.js) e [a validação dos convites em representative-invites.js](https://github.com/Tech-2D/api/blob/main/src/representative-invites.js). Na interface, [queuedWrites.ts](https://github.com/Tech-2D/web/blob/main/src/queuedWrites.ts) mantém o lote da fila para as tentativas de envio.
+
 ## Visitas e permissões
 
 - [Visitas aos sites]({{ '/postgresql.html#obj-visitas_aos_sites' | relative_url }}) separa as visitas por site e deduplica acessos dentro de intervalos de 30 minutos.

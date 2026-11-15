@@ -583,7 +583,7 @@
   },
   {
     "name": "visao_recibos_gravacao",
-    "comment": "Interface SQL de compatibilidade para recibos_gravacao",
+    "comment": "Projeção de recibos_gravacao usada por commitDocuments para reconhecer reenvios e por representativeInvites.query para validar convites preparados no Redis. Não armazena outra cópia dos recibos.",
     "dependencies": [
       "recibos_gravacao"
     ],
@@ -592,25 +592,25 @@
         "name": "id",
         "source": "id",
         "type": "character varying(128)",
-        "note": "ID de uma solicitação de gravação."
+        "note": "Identificador estável do lote, recebido em commit.id. Uma nova operação recebe outro ID; uma tentativa de reenviar a mesma operação conserva este ID para localizar a confirmação anterior. Também corresponde ao operationId do convite preparado no Redis."
       },
       {
         "name": "actor",
         "source": "autor",
         "type": "character varying(256)",
-        "note": "Conta ou serviço que enviou a solicitação."
+        "note": "UID da conta autenticada ou identificação service:<nome> do serviço que enviou o lote. É calculado pela API a partir da identidade validada, não escolhido pelo corpo da requisição. Impede que outra identidade reutilize o mesmo recibo."
       },
       {
         "name": "digest",
         "source": "hash_requisicao",
         "type": "character varying(64)",
-        "note": "Hash do conteúdo, usado para detectar reuso do ID com dados diferentes."
+        "note": "Resumo criptográfico do lote recebido. A API compara esse valor e o autor antes de tratar o pedido como repetição; o mesmo ID com conteúdo diferente recebe HTTP 409. Também confere se o convite no Redis corresponde exatamente à aprovação confirmada no SQL."
       },
       {
         "name": "committed_at",
         "source": "confirmado_em",
         "type": "timestamp with time zone",
-        "note": "Data e hora em que o lote de gravações foi confirmado."
+        "note": "Momento registrado ao inserir o recibo. O registro só fica visível após o COMMIT da mesma transação das alterações. É a referência temporal da confirmação, não um prazo de expiração; atualmente a tabela não possui TTL nem limpeza automática por idade."
       }
     ]
   },
