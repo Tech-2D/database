@@ -63,8 +63,6 @@
       title: Pedidos de criação de agenda
     - name: pedidos_representacao
       title: Solicitações de representantes
-    - name: convites_representacao
-      title: Convites de representantes
     - name: visitas_aos_sites
       title: Visitas aos sites
 - id: operacao

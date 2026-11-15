@@ -461,69 +461,6 @@
     },
     {
         "kind": "table",
-        "name": "convites_representacao",
-        "columns": [
-            {
-                "name": "id_registro",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "email",
-                "type": "character varying(320)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo email no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "turma",
-                "type": "character varying(150)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo turmaId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "referencia_pedido",
-                "type": "character varying(180)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo requestId no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "aprovado_em",
-                "type": "character varying(40)",
-                "check": false,
-                "unique": false,
-                "comment": "Campo approvedAt no contrato da API.",
-                "nullable": true,
-                "generated": false
-            }
-        ],
-        "comment": "Convites de representantes",
-        "references": [
-            {
-                "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
-            }
-        ],
-        "primary_key": [
-            "id_registro"
-        ],
-        "foreign_key_count": 1
-    },
-    {
-        "kind": "table",
         "name": "disciplinas",
         "columns": [
             {

@@ -15,10 +15,6 @@
     "feature": "Meu Kanban · Etapas do quadro",
     "description": "Define as etapas que recebem os cartões e a ordem em que aparecem. A indicação de conclusão alimenta o cálculo de progresso; mover uma coluna altera sua posição, não o conteúdo das tarefas."
   },
-  "convites_representacao": {
-    "feature": "Representantes · Liberação por e-mail",
-    "description": "Registra o e-mail aprovado e a turma autorizada para o cadastro do representante. O fluxo de autenticação usa a aprovação para vincular o acesso à conta correta."
-  },
   "disciplinas": {
     "feature": "Catálogo compartilhado · Horários e notas",
     "description": "Concentra os nomes de matérias usados pelos horários dos professores e, por meio de disciplinas_series, pelo Pegaki. O nome não precisa ser copiado para um catálogo próprio de notas."

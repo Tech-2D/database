@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `043_retirar_chat_representantes` está instalada no banco.
+A versão `044_convites_representacao_no_redis` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

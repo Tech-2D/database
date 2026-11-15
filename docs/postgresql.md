@@ -117,6 +117,7 @@ Os catálogos públicos passam por projeções que selecionam os campos da respo
 | 041 | Retira o histórico de auditoria e os valores anteriores das alterações |
 | 042 | Move os bloqueios temporários da Agenda para o Redis, por UID da conta |
 | 043 | Retira o chat dos representantes e suas mensagens |
+| 044 | Move os convites de representantes para o Redis com prazo de sete dias |
 
 Em um banco local vazio, siga os passos em [Consultas SQL]({{ '/consultas.html' | relative_url }}). O script de instalação aplica as migrações na ordem acima.
 

@@ -49,13 +49,6 @@
     "cor": "Cor de apresentação escolhida no Kanban.",
     "concluida": "Marca a coluna como etapa final. Os cartões nela colocados contam como concluídos no progresso do quadro."
   },
-  "convites_representacao": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
-    "email": "E-mail aprovado pela administração. Vincula a liberação à conta correspondente no cadastro do representante.",
-    "turma": "Sala que a pessoa poderá representar. Evita que a aprovação conceda acesso geral ao sistema.",
-    "referencia_pedido": "Pedido de representação que originou a aprovação; conserva a ligação entre solicitação e convite.",
-    "aprovado_em": "Momento da aprovação do convite."
-  },
   "disciplinas": {
     "id": "Identidade numérica da matéria no catálogo compartilhado. Horários e disciplinas_series reutilizam esta chave, evitando nomes duplicados por aplicativo.",
     "nome": "Nome canônico da matéria. É apresentado nos horários e projetado pela view do Pegaki, que mantém os rótulos compatíveis com as notas existentes."

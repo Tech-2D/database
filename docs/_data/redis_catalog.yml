@@ -163,3 +163,38 @@
       description: Reconhece uma repetição da mesma operação e evita que um reenvio renove o prazo do bloqueio.
       expiry: O prazo começa na primeira gravação bem-sucedida.
       route: POST /api/admin/agenda-users
+
+- id: convites-de-representantes
+  title: Convites de representantes
+  nav: Convites de representantes
+  icon: key
+  description: A aprovação libera o e-mail para ativar a conta como representante da turma em até sete dias. A ativação grava o papel no PostgreSQL, que continua válido depois que o convite expira.
+  source: representative-invites.js
+  entries:
+    - id: invite-item
+      name: Convite por operação de aprovação
+      key: 'tech2d:{representative-invites}:item:{id_operacao}'
+      type: String JSON
+      ttl: 7 dias
+      ttl_seconds: 604800
+      description: Guarda e-mail, turma, pedido de origem, data de aprovação e expiração. Também vincula a aprovação ao recibo da gravação.
+      expiry: Sete dias a partir da aprovação. Repetir uma operação já confirmada mantém o prazo original. A API só aceita convites cujo recibo SQL esteja confirmado.
+      route: POST /api/data · ativação do representante
+    - id: invite-index
+      name: Índice de convites vigentes
+      key: 'tech2d:{representative-invites}:index'
+      type: ZSET
+      ttl: Até a última expiração
+      ttl_seconds: dinamico
+      description: Organiza as operações pela expiração e permite listar os convites vigentes no painel de representantes.
+      expiry: A chave expira na data do último convite registrado. Cada item tem o próprio prazo de sete dias.
+      route: POST /api/data · lista administrativa
+    - id: invite-email
+      name: Índice por e-mail aprovado
+      key: 'tech2d:{representative-invites}:email:{hash_email}'
+      type: ZSET
+      ttl: Até a última expiração do e-mail
+      ttl_seconds: dinamico
+      description: Localiza os convites do e-mail autenticado. O sufixo usa SHA-256 do e-mail normalizado serializado em JSON, para formar a chave.
+      expiry: A chave expira na data do convite mais recente desse e-mail. Convites vencidos deixam de autorizar a ativação.
+      route: POST /api/data · consulta e ativação da própria conta
