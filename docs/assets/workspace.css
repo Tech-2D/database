@@ -107,3 +107,44 @@ h2[id], h3[id], details[id], [data-catalog-group] { scroll-margin-top: 6rem; }
 @media (prefers-reduced-motion: reduce) {
  .sidebar nav a, .sidebar nav summary, .doc-links a { transition: none; }
 }
+/* Catálogo Redis. O prazo acompanha cada chave na mesma linha. */
+.redis-guide { display: grid; gap: 1rem; padding: 1.15rem; border: 1px solid #bcd0fa; border-radius: .85rem; background: var(--tint); }
+.redis-guide h2, .redis-inventory-heading h2, .redis-group-heading h3 { display: flex; gap: .5rem; align-items: center; margin: 0; }
+.redis-guide .docs-icon, .redis-inventory-heading .docs-icon, .redis-group-heading .docs-icon { color: var(--accent); }
+.redis-guide p { margin: .45rem 0 0; color: var(--ink); }
+.redis-guide dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: .6rem; margin: 0; }
+.redis-guide dl > div { padding: .65rem .75rem; border: 1px solid #cddbf6; border-radius: .5rem; background: var(--paper); }
+.redis-guide dt, .redis-key-details dt { color: var(--muted); font-weight: 650; font-size: .75rem; }
+.redis-guide dd { margin: .12rem 0 0; color: var(--accent); font: 650 .83rem/1.35 var(--font-mono); }
+.redis-inventory { margin-top: 2rem; scroll-margin-top: 6rem; }
+.redis-inventory-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .25rem 1rem; }
+.redis-inventory-heading .catalog-status { margin: 0; }
+.redis-group { margin: 1.5rem 0 2rem; scroll-margin-top: 6rem; }
+.redis-group-heading { margin-bottom: .65rem; }
+.redis-group-heading p { margin: .3rem 0 0; color: var(--muted); }
+.redis-key-list { overflow: hidden; border: 1px solid var(--line); border-radius: .8rem; background: var(--paper); }
+.redis-key { padding: .9rem 1rem; scroll-margin-top: 6rem; }
+.redis-key + .redis-key { border-top: 1px solid var(--line); }
+.redis-key:nth-child(even) { background: #f8faff; }
+.redis-key:target { box-shadow: inset 3px 0 var(--accent); background: var(--tint); }
+.redis-key-heading { display: flex; justify-content: space-between; align-items: baseline; gap: .45rem .75rem; }
+.redis-key-heading h4 { margin: 0; font-size: 1rem; }
+.redis-ttl { flex: none; padding: .22rem .5rem; border: 1px solid #d2e1ff; border-radius: .4rem; background: var(--tint); color: #153b9b; font: 650 .75rem/1.35 var(--font-mono); }
+.redis-ttl span { color: #425c89; font-weight: 500; font-size: .68rem; }
+.redis-key > p { margin: .35rem 0; font-size: .9rem; }
+.redis-key-path code, .redis-key-details code { overflow-wrap: anywhere; }
+.redis-key-path code { color: #1944aa; }
+.redis-key-details { display: grid; gap: .35rem; margin: .7rem 0 0; }
+.redis-key-details > div { display: grid; grid-template-columns: 4.35rem minmax(0, 1fr); gap: .4rem; align-items: baseline; }
+.redis-key-details dd { margin: 0; color: var(--muted); font-size: .83rem; line-height: 1.6; }
+.redis-source { margin: .55rem 0 0; font-size: .8rem; }
+.redis-operations { border: 1px solid var(--line); border-radius: .8rem; background: var(--paper); }
+.redis-operations > div { padding: .9rem 1rem; }
+.redis-operations > div + div { border-top: 1px solid var(--line); }
+.redis-operations dt { color: var(--ink); font-weight: 680; }
+.redis-operations dd { margin: .25rem 0 0; color: var(--muted); }
+.redis-cache-states { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: .25rem 1rem; margin: .65rem 0 0; padding: 0; list-style: none; font-size: .83rem; }
+@media (max-width: 600px) {
+  .redis-key { padding-inline: .75rem; }
+  .redis-key-details > div { grid-template-columns: 3.9rem minmax(0, 1fr); }
+}

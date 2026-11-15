@@ -1,66 +1,82 @@
 ---
 title: Redis
-description: Cache de catálogos, comunicados de turma, comunicado geral e atualizações da Agenda.
+description: Chaves, prazos de expiração e pontos da aplicação que usam Redis.
+wide: true
+database: redis
 ---
 
-O Redis acelera as consultas públicas da API SQL. O PostgreSQL fornece a revisão dos catálogos de atividades, turmas e horários, usada para escolher a chave do cache. O comunicado geral, as atualizações e os avisos das turmas ficam no Redis com prazos próprios.
+<section class="redis-guide" aria-labelledby="como-redis-funciona">
+  <div>
+    <h2 id="como-redis-funciona">{% include doc-icon.html name="cache" %}Onde o Redis entra</h2>
+    <p>A API usa Redis para acelerar o calendário e os horários e para guardar publicações com prazo de validade. O TTL informa por quanto tempo uma chave existe. Ao fim do prazo, o Redis a remove.</p>
+  </div>
+  <dl>
+    <div><dt>Cache de consultas</dt><dd>60 segundos a 5 minutos</dd></div>
+    <div><dt>Comunicados e avisos</dt><dd>7 dias</dd></div>
+    <div><dt>Atualizações da Agenda</dt><dd>14 dias</dd></div>
+  </dl>
+</section>
 
-**Configuração atual:** o Worker SQL usa `REDIS_CACHE_ENABLED=true`. O resultado de cada consulta aparece no header `X-Catalog-Cache`; em caso de falha ou indisponibilidade do Redis, a API consulta o PostgreSQL. As rotas continuam exigindo a autenticação e as permissões verificadas pelo Worker.
+<section class="redis-inventory" id="catalogo-redis" aria-labelledby="chaves">
+  <div class="redis-inventory-heading">
+    <h2 id="chaves">{% include doc-icon.html name="key" %}Chaves do Redis</h2>
+    <div data-catalog-controls hidden><p class="catalog-status" data-catalog-status role="status"></p></div>
+  </div>
+  <p>Os nomes abaixo são padrões. Nas chaves <code>tech2d:sql:public:v2</code>, <code>{revisao}</code> é o valor calculado no PostgreSQL e <code>{hash_filtros}</code> é o SHA-256 dos filtros da consulta. Nos outros grupos, <code>{announcement}</code>, <code>{agenda-updates}</code> e <code>{board-notices}</code> são partes literais da chave.</p>
 
-## Catálogos e chaves
+  {% for group in site.data.redis_catalog %}
+  <section class="redis-group" id="{{ group.id }}" data-catalog-group="{{ group.id }}" aria-labelledby="{{ group.id }}-titulo">
+    <header class="redis-group-heading">
+      <h3 id="{{ group.id }}-titulo">{% include doc-icon.html name=group.icon %}{{ group.title }}</h3>
+      <p>{{ group.description | escape }}</p>
+    </header>
+    <div class="redis-key-list">
+      {% for item in group.entries %}
+      <article class="redis-key" id="{{ item.id }}" data-catalog-object data-ttl-seconds="{{ item.ttl_seconds }}" aria-labelledby="{{ item.id }}-titulo">
+        <div class="redis-key-heading">
+          <h4 id="{{ item.id }}-titulo">{{ item.name | escape }}</h4>
+          <span class="redis-ttl" title="{{ item.ttl_seconds }} segundos"><span>TTL</span> {{ item.ttl }}</span>
+        </div>
+        <p class="redis-key-path"><code>{{ item.key | escape }}</code></p>
+        <p>{{ item.description | escape }}</p>
+        <dl class="redis-key-details">
+          <div><dt>Tipo</dt><dd>{{ item.type }}</dd></div>
+          <div><dt>Expiração</dt><dd>{{ item.expiry | escape }}</dd></div>
+          <div><dt>Rotas</dt><dd><code>{{ item.route | escape }}</code></dd></div>
+        </dl>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="redis-source"><a href="https://github.com/Tech-2D/api/blob/main/src/{{ group.source }}">Ver {{ group.source }} na API</a></p>
+  </section>
+  {% endfor %}
+</section>
 
-| Catálogo | Conteúdo público | TTL |
-| --- | --- | --- |
-| agenda | Atividades e turmas | 60 segundos |
-| updates | Turmas | 60 segundos |
-| schedules | Horários ativos, com filtros de turma, dia e busca | 300 segundos |
+<h2 id="operacao">Comportamento da API</h2>
 
-Formato: <code>tech2d:sql:public:v2:CATALOGO:REVISAO:HASH_FILTROS</code>.
+<dl class="redis-operations">
+  <div>
+    <dt>Quando os dados mudam</dt>
+    <dd>A API calcula a revisão do catálogo no PostgreSQL antes de ler o cache. Uma alteração muda a revisão e direciona a consulta para outra chave. A cópia da revisão anterior expira pelo TTL.</dd>
+  </div>
+  <div>
+    <dt>Quando o Redis fica indisponível</dt>
+    <dd>A API busca atividades, turmas e horários no PostgreSQL. O calendário abre sem o comunicado geral e sem as publicações de atualização enquanto o Redis estiver indisponível. O quadro de avisos indica falha na consulta. Gravações de comunicados, atualizações e avisos retornam erro.</dd>
+  </div>
+  <div>
+    <dt>Como diagnosticar o cache</dt>
+    <dd>Confira o header <code>X-Catalog-Cache</code> nas rotas de cache. O Worker limita cada operação Redis a 700 ms.</dd>
+    <dd><ul class="redis-cache-states">
+      <li><code>HIT</code> Resposta servida do cache.</li>
+      <li><code>MISS</code> Resposta gerada pelo PostgreSQL.</li>
+      <li><code>BYPASS</code> Cache desativado ou conexão sem configuração.</li>
+      <li><code>UNAVAILABLE</code> Falha na revisão do catálogo ou no acesso ao Redis.</li>
+    </ul></dd>
+  </div>
+  <div>
+    <dt>Quem acessa as chaves</dt>
+    <dd>O navegador consulta a API com a sessão do Firebase Authentication. O Worker usa as credenciais do Redis guardadas nos secrets e verifica permissões no PostgreSQL antes de gravar.</dd>
+  </div>
+</dl>
 
-A revisão identifica os registros e suas versões. O hash dos filtros separa consultas de turmas, dias e buscas diferentes. As cópias antigas expiram pelo TTL.
-
-## Invalidação após alterações
-
-1. A API verifica acesso e filtros.
-2. A função SQL <code>revisao_catalogo_publico</code> calcula a revisão dos registros.
-3. A API procura a chave correspondente à revisão e aos filtros no Redis.
-4. Se não encontra uma cópia, consulta o SQL e guarda somente a resposta pública no cache.
-
-Inclusões, alterações e exclusões feitas pela interface de gravação da aplicação mudam a revisão. A próxima consulta usa uma chave nova. Alterações diretas nas tabelas devem atualizar a versão do registro; o TTL também limita a retenção de cada cópia.
-
-## Indisponibilidade e acesso
-
-Os catálogos continuam disponíveis pelo PostgreSQL quando o Redis falha. Cada operação de rede do cache tem limite de 700 ms. O header <code>X-Catalog-Cache</code> informa HIT, MISS, BYPASS ou UNAVAILABLE.
-
-Contas, tokens, permissões, mensagens privadas e quadros pessoais não entram no cache. As credenciais ficam nos secrets do Worker SQL; os navegadores acessam somente a API.
-
-
-## Comunicado geral da Agenda
-
-Quando um superadministrador usa **Aviso para todos**, a API substitui o comunicado atual e reinicia o prazo de sete dias (604.800 segundos). A chave `tech2d:{announcement}:latest` guarda a mensagem, a data da publicação e a versão usada na remoção. O Redis remove a chave ao fim do prazo. O superadministrador também pode remover o aviso manualmente.
-
-Os endpoints de Agenda e atualizações leem essa chave separadamente do cache de catálogos. Se o Redis estiver indisponível, o calendário carrega sem o comunicado e a API informa falha ao tentar publicar ou remover. Os recibos de publicação e remoção também expiram em sete dias e permitem repetir a mesma requisição sem republicar um aviso.
-
-## Atualizações da Agenda
-
-Os avisos publicados em **Atualizações** aparecem no histórico e no aviso de novidades por 14 dias (1.209.600 segundos), contados da publicação. O prazo é individual: publicar outro aviso, abrir o histórico ou repetir uma requisição já concluída mantém a expiração original.
-
-| Chave | Conteúdo |
-| --- | --- |
-| tech2d:{agenda-updates}:item:ID | Título, descrição, data e crédito público autorizado, quando informado |
-| tech2d:{agenda-updates}:index | Índice ordenado pelos prazos de expiração dos avisos |
-| tech2d:{agenda-updates}:commit:ID | Recibo de publicação para repetir a requisição sem duplicar o aviso |
-
-A API lê os avisos ativos diretamente do Redis nas rotas de catálogo da Agenda e de atualizações. O PostgreSQL continua a validar a permissão de publicação e a autorização de crédito de uma sugestão. Se o Redis ficar indisponível, o calendário continua carregando as atividades e turmas, e a interface indica falha ao tentar publicar.
-
-## Quadro de avisos das turmas
-
-Os avisos do quadro ficam disponíveis por sete dias (604.800 segundos) a partir da publicação. A API define o prazo na criação. Editar o aviso preserva a data original de expiração. Representantes podem editar e apagar avisos da própria turma, e superadministradores podem gerenciar qualquer turma.
-
-| Chave | Conteúdo |
-| --- | --- |
-| `tech2d:{board-notices}:item:ID` | Aviso, autoria, data de expiração e versão |
-| `tech2d:{board-notices}:class:TURMA` | Índice de avisos da turma por data de expiração |
-| `tech2d:{board-notices}:commit:ID` | Recibo temporário para reconhecer a repetição da mesma gravação |
-
-A leitura autenticada em `GET /api/catalog/notices?class=…` omite o e-mail e o identificador do autor. O painel administrativo consulta a mesma turma com as permissões de edição aplicadas. A API consulta o PostgreSQL para verificar papéis e turmas e grava os avisos somente no Redis.
+<p class="redis-source"><a href="https://redis.io/docs/latest/commands/expire/">Expiração no Redis</a> · <a href="https://redis.io/docs/latest/commands/set/">Gravação com prazo e preservação do TTL</a></p>

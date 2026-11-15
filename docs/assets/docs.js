@@ -16,7 +16,7 @@ if (toc && headings.length > 1) {
 
 const controls = document.querySelector('[data-catalog-controls]')
 if (controls) {
-  const search = controls.querySelector('input')
+  const search = controls.querySelector('input') || document.querySelector('[data-catalog-search]')
   search.value = new URLSearchParams(location.search).get('q') || ''
   const area = controls.querySelector('select')
   const status = controls.querySelector('[data-catalog-status]')
@@ -54,8 +54,20 @@ if (controls) {
       ? 'Fechar resultados' : 'Abrir resultados'
   }
 
+  function decodeHash() {
+    const hash = location.hash.slice(1)
+    try { return decodeURIComponent(hash) } catch { return hash }
+  }
+
   function openLinkedObject() {
-    const target = document.getElementById(location.hash.slice(1))
+    const target = document.getElementById(decodeHash())
+    if (groups.includes(target) && target.hidden) {
+      search.value = ''
+      if (area) area.value = ''
+      filterCatalog()
+      target.scrollIntoView({ block: 'start' })
+      return
+    }
     if (!entries.has(target)) return
     if (target.hidden || target.closest('[data-catalog-group]').hidden) {
       search.value = ''
@@ -67,6 +79,12 @@ if (controls) {
   }
 
   controls.hidden = false
+  if (!controls.contains(search)) {
+    search.form.addEventListener('submit', event => {
+      event.preventDefault()
+      controls.closest('section').scrollIntoView({ block: 'start' })
+    })
+  }
   search.addEventListener('input', filterCatalog)
   area?.addEventListener('change', filterCatalog)
   toggle?.addEventListener('click', () => {

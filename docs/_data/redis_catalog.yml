@@ -1,0 +1,130 @@
+- id: catalogos-e-chaves
+  title: Cache dos catálogos
+  nav: Cache dos catálogos
+  icon: cache
+  description: Guarda respostas de atividades, turmas e horários que podem ser reconstruídas pelo PostgreSQL.
+  source: redis-catalog.js
+  entries:
+    - id: cache-agenda
+      name: Calendário da Agenda
+      key: 'tech2d:sql:public:v2:agenda:{revisao}:{hash_filtros}'
+      type: String
+      ttl: 60 s
+      ttl_seconds: 60
+      description: Guarda as atividades da turma, as atividades gerais e a lista de turmas ativas.
+      expiry: O prazo começa quando a API gera uma nova cópia para a turma consultada.
+      route: GET /api/catalog/agenda
+    - id: cache-updates
+      name: Turmas no catálogo de atualizações
+      key: 'tech2d:sql:public:v2:updates:{revisao}:{hash_filtros}'
+      type: String
+      ttl: 60 s
+      ttl_seconds: 60
+      description: Guarda a lista de turmas ativas usada pela rota de atualizações. A rota busca as publicações diretamente nas chaves de agenda-updates.
+      expiry: O prazo começa quando a API grava a resposta gerada pelo PostgreSQL.
+      route: GET /api/catalog/updates
+    - id: cache-schedules
+      name: Horários do Cadê o professor
+      key: 'tech2d:sql:public:v2:schedules:{revisao}:{hash_filtros}'
+      type: String
+      ttl: 5 min
+      ttl_seconds: 300
+      description: Guarda os horários ativos selecionados pelos filtros de turma, dia e busca.
+      expiry: O prazo começa quando a API gera a resposta para aquela combinação de filtros.
+      route: GET /api/catalog/schedules
+
+- id: comunicado-geral-da-agenda
+  title: Comunicado geral da Agenda
+  nav: Comunicado geral
+  icon: home
+  description: Sustenta a opção Aviso para todos da administração. Há um comunicado geral vigente por vez.
+  source: announcement.js
+  entries:
+    - id: announcement-latest
+      name: Comunicado atual
+      key: 'tech2d:{announcement}:latest'
+      type: String JSON
+      ttl: 7 dias
+      ttl_seconds: 604800
+      description: Guarda a mensagem, a data e a versão do comunicado que aparece na Agenda.
+      expiry: Cada publicação substitui o texto e inicia um novo prazo. O superadministrador também pode removê-lo.
+      route: GET /api/catalog/agenda · GET /api/catalog/updates
+    - id: announcement-commit
+      name: Recibo do comunicado
+      key: 'tech2d:{announcement}:commit:{id_operacao}'
+      type: String
+      ttl: 7 dias
+      ttl_seconds: 604800
+      description: Guarda a assinatura da operação de publicar ou remover, para a API reconhecer uma tentativa repetida.
+      expiry: O prazo conta da primeira gravação bem-sucedida da operação.
+      route: POST /api/data
+
+- id: atualizações-da-agenda
+  title: Atualizações da Agenda
+  nav: Atualizações
+  icon: layers
+  description: Alimenta o histórico em Atualizações e o pop-up que aparece quando há uma publicação nova.
+  source: agenda-updates.js
+  entries:
+    - id: update-item
+      name: Publicação individual
+      key: 'tech2d:{agenda-updates}:item:{id_atualizacao}'
+      type: String JSON
+      ttl: 14 dias
+      ttl_seconds: 1209600
+      description: Guarda título, descrição, data e os dados do crédito da sugestão quando autorizado. A API seleciona os campos públicos antes de devolvê-los.
+      expiry: O prazo conta da publicação de cada item e continua correndo quando sai outra atualização.
+      route: GET /api/catalog/updates · GET /api/catalog/agenda
+    - id: update-index
+      name: Índice de atualizações
+      key: 'tech2d:{agenda-updates}:index'
+      type: ZSET
+      ttl: 14 dias
+      ttl_seconds: 1209600
+      description: Associa o ID de cada atualização à expiração em milissegundos desde a época Unix. A API lista até 100 publicações vigentes.
+      expiry: Uma publicação nova renova o prazo do índice. O prazo de cada publicação segue na chave do item.
+      route: GET /api/catalog/updates · GET /api/catalog/agenda
+    - id: update-commit
+      name: Recibo de publicação
+      key: 'tech2d:{agenda-updates}:commit:{id_operacao}'
+      type: String
+      ttl: 14 dias
+      ttl_seconds: 1209600
+      description: Guarda a assinatura da publicação para evitar duplicidade se a mesma requisição for reenviada.
+      expiry: O prazo conta da primeira gravação bem-sucedida.
+      route: POST /api/data
+
+- id: quadro-de-avisos-das-turmas
+  title: Quadro de avisos das turmas
+  nav: Avisos das turmas
+  icon: table
+  description: Alimenta o quadro de cada turma. Representantes gerenciam os avisos da própria turma e superadministradores podem gerenciar os de qualquer turma.
+  source: board-notices.js
+  entries:
+    - id: notice-item
+      name: Aviso individual
+      key: 'tech2d:{board-notices}:item:{id_aviso}'
+      type: String JSON
+      ttl: 7 dias
+      ttl_seconds: 604800
+      description: Guarda o texto, a turma, a autoria, a versão e a data de expiração. O e-mail e o UID do autor ficam fora da resposta para alunos.
+      expiry: O prazo conta da publicação. Edições preservam a expiração original e a exclusão remove o item imediatamente.
+      route: GET /api/catalog/notices?class=… · POST /api/data
+    - id: notice-index
+      name: Índice por turma
+      key: 'tech2d:{board-notices}:class:{turma}'
+      type: ZSET
+      ttl: 7 dias
+      ttl_seconds: 604800
+      description: Associa os IDs dos avisos da turma à expiração em milissegundos desde a época Unix. A API usa a data para recuperar só os avisos vigentes.
+      expiry: Uma publicação nova na turma renova o prazo do índice. Os avisos conservam a validade individual.
+      route: GET /api/catalog/notices?class=… · POST /api/data
+    - id: notice-commit
+      name: Recibo de gravação
+      key: 'tech2d:{board-notices}:commit:{id_operacao}'
+      type: String
+      ttl: 7 dias
+      ttl_seconds: 604800
+      description: Guarda a assinatura da criação, edição ou exclusão. A API usa o recibo para reconhecer o reenvio da mesma operação.
+      expiry: Cada operação bem-sucedida tem o seu próprio prazo.
+      route: POST /api/data
