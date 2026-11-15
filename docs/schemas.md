@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `038_avisos_turma_no_redis` está instalada no banco.
+A versão `039_disciplinas_notaki_por_turma` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |
