@@ -161,3 +161,7 @@ A versão `057_limpeza_kanban_redis_list` removeu `limpeza_anexos_kanban` e deix
 ## Solicitações de acesso no Kanban
 
 A versão `058_pedidos_kanban_redis` removeu a tabela `pedidos_kanban`. O PostgreSQL passou a ter 26 tabelas. Os pedidos ficam no Redis por sete dias após o envio ou a última mudança de estado. O vínculo que concede acesso fica em `participantes_kanban` e continua válido até ser removido. A API só mostra a aprovação no Redis após a confirmação do recibo SQL. A remoção de acesso funciona mesmo quando o pedido já expirou.
+
+## Pedidos de representação e recorrências
+
+A versão `060_pedidos_representacao_redis` moveu os pedidos de representação para o Redis com TTL de sete dias. O PostgreSQL passou a ter 25 tabelas. A versão `061_simplificar_recorrencias` removeu os campos `excluida` e `email_criador` das regras. Uma série encerrada é removida após a limpeza das próximas ocorrências, e as atividades antigas permanecem.

@@ -1,3 +1,15 @@
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:061_simplificar_recorrencias' AS latest_061 \gset
+\if :latest_061
+\echo Estrutura já instalada na versão 061.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:060_pedidos_representacao_redis' AS latest_060 \gset
+\if :latest_060
+\echo Estrutura já instalada na versão 060.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:059_acessos_kanban' AS latest_059 \gset
+\if :latest_059
+\echo Estrutura já instalada na versão 059.
+\else
 SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:058_pedidos_kanban_redis' AS latest_058 \gset
 \if :latest_058
 \echo Estrutura já instalada na versão 058.
@@ -306,4 +318,13 @@ COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:024_notas_p
 \endif
 
 \ir migrations/058_pedidos_kanban_redis.sql
+\endif
+
+\ir migrations/059_acessos_kanban.sql
+\endif
+
+\ir migrations/060_pedidos_representacao_redis.sql
+\endif
+
+\ir migrations/061_simplificar_recorrencias.sql
 \endif

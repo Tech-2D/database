@@ -150,7 +150,7 @@ A versão 048 substitui os nomes repetidos por vínculos com as entidades existe
 | Tabelas | FK | Catálogo ou entidade de destino |
 | --- | --- | --- |
 | atividades, regras_recorrencia | id_disciplina | disciplinas.id_disciplina |
-| atividades, regras_recorrencia, regras_retencao, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, turmas_agenda | id_turma | turmas.id_turma |
+| atividades, regras_recorrencia, regras_retencao, sugestoes_melhoria, perfis_administrativos, turmas_agenda | id_turma | turmas.id_turma |
 | perfis | id_turma_resumo | turmas.id_turma |
 | atividades | id_regra_recorrencia | regras_recorrencia.id_regra_recorrencia |
 
@@ -199,3 +199,9 @@ As permissões continuam na API: representantes revisam sugestões da própria t
 A versão 056 incorporou `preferencias_resumo` em `perfis`. `resumo_semanal_ativo` guarda a inscrição, `id_turma_resumo` referencia a turma escolar, e `resumo_alterado_em_ms` preserva a data usada pelo serviço de e-mail. `resumo_versao` e `resumo_atualizado_em` controlam a edição dessa seção sem alterar a versão do perfil público.
 
 Uma conta pode possuir apenas a preferência de resumo: nesse caso `versao` e `atualizado_em` ficam nulos, e o diretório público não mostra a linha. O contrato da API mantém `userProfiles/{uid}` e `_agendaDigestPreferences/{uid}` como projeções diferentes da mesma tabela; essas referências não representam tabelas separadas. Editar ou excluir os dados de apresentação preserva a inscrição, e alterar ou excluir a preferência preserva o perfil. As inscrições existentes, suas turmas e as versões foram conferidas durante a migração.
+
+## Solicitações de representação e recorrências
+
+Os pedidos de representação ficam no Redis por sete dias a partir do envio. A aprovação não renova esse prazo. O convite liberado tem sete dias a partir da aprovação, em chave própria. As permissões ativadas continuam em `perfis_administrativos`.
+
+As regras de recorrência guardam o ID da conta autora. A exclusão definitiva remove a regra depois da limpeza das ocorrências de hoje em diante. As anteriores permanecem no calendário e o vínculo com a regra removida é desfeito. Pausar continua disponível como ação temporária.

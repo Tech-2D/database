@@ -110,17 +110,6 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
-  "pedidos_representacao": {
-    "id_pedido_representacao": "Identificador numérico próprio de pedidos_representacao. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "id_turma": "FK para turmas.id_turma. Identifica a turma existente que a pessoa pede para representar. É diferente de uma proposta de turma ainda não cadastrada no pedido temporário de Agenda armazenado no Redis.",
-    "email": "E-mail informado para o futuro acesso. Permite relacionar o pedido ao convite aprovado para a mesma conta.",
-    "situacao": "Andamento da análise do representante. Evita tratar um pedido pendente como permissão administrativa.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "revisado_em": "Momento da avaliação do candidato a representante. Distingue o pedido aguardando análise de um pedido já tratado.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
   "notas_cadernos": {
     "id_usuario": "UID do dono do caderno confirmado pelo token. As políticas RLS usam essa identidade para impedir acesso às notas de outra conta.",
     "ano_letivo": "Ano escolar a que as notas pertencem. Compõe a identidade do caderno para separar anos diferentes da mesma conta.",
@@ -186,13 +175,11 @@
     "id_disciplina": "FK para disciplinas.id_disciplina. Reutiliza a mesma matéria do catálogo de horários e Notas. A API reconstrói o nome para exibição; nulo significa atividade sem disciplina definida.",
     "hora_atividade": "Horário local da atividade, quando informado.",
     "id_turma": "FK para turmas.id_turma. Define a sala das ocorrências geradas pela regra; reutiliza o catálogo escolar, sem repetir o nome da turma no agendamento.",
-    "criado_por": "UID da conta que criou o registro.",
-    "email_criador": "E-mail da conta que criou o registro.",
+    "criado_por": "Identificador da conta que criou a regra. É usado para atribuir autoria às atividades geradas pela automação.",
     "criado_em": "Momento de criação, no formato ISO da API.",
     "data_inicio": "Primeira data válida da recorrência.",
     "data_fim": "Última data permitida para gerar ocorrências. Limita o período de uma repetição personalizada.",
-    "ativa": "Indica se a regra ou configuração está ativa.",
-    "excluida": "Marca a regra como removida no contrato da aplicação. A automação deve desconsiderá-la ao gerar novas atividades.",
+    "ativa": "Controla a pausa temporária. O encerramento definitivo remove a regra após a limpeza das ocorrências futuras.",
     "intervalo_semanas": "Intervalo entre semanas de ocorrência. Distingue uma repetição semanal de uma repetição a cada duas ou mais semanas.",
     "dias_semana": "Dias selecionados para a repetição. Permite distribuir apresentações ou entregas em vários dias da mesma semana.",
     "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
@@ -246,7 +233,7 @@
     "intervalo_meia_hora": "Identifica a janela de 30 minutos usada para deduplicar visitas. Recarregar o site dentro da mesma janela não cria outra visita para a mesma chave.",
     "tipo_visitante": "Categoria da chave de visitante. O registro atual exige autenticação; a categoria anônima preserva a leitura do histórico existente.",
     "chave_visitante": "UID para acessos autenticados ou código derivado para o histórico anônimo. Permite deduplicar visitas sem guardar um IP literal.",
-    "site": "Origem da visita: agenda, professores ou pegaki (identificador técnico da área de Notas). Permite comparar o uso de cada site no mesmo painel."
+    "site": "Origem da visita: agenda, professores ou pegaki (identificador técnico da área de Notas). Permite comparar o uso de cada site no mesmo painel. O Kanban também pode ser contabilizado separadamente."
   },
   "perfis": {
     "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",

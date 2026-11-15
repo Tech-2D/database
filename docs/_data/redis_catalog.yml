@@ -272,7 +272,7 @@
   title: Sugestões e pedidos temporários
   nav: Sugestões e pedidos
   icon: clock
-  description: Substitui as tabelas sugestoes_atividade e pedidos_agenda. Guarda propostas de atividades, solicitações de abertura de Agenda e pedidos de acesso ao Kanban por sete dias.
+  description: Substitui as tabelas sugestoes_atividade e pedidos_agenda. Guarda propostas de atividades, solicitações de abertura de Agenda e pedidos de acesso ao Kanban e de representação por sete dias.
   source: temporary-requests.js
   entries:
     - id: pedidos-temporarios-valores
@@ -281,16 +281,16 @@
       type: String (JSON)
       ttl: Até 7 dias
       ttl_seconds: 604800
-      description: Guarda ID, caminho da API, dados, versão, expiração e referência ao recibo de confirmação SQL. Uma versão preparada só aparece após o recibo correspondente ser confirmado. O conteúdo inclui pedidos de acesso ao Kanban, além de sugestões de atividades e pedidos de abertura de Agenda.
-      expiry: Sugestões de atividades e pedidos de Agenda duram sete dias após o envio. Pedidos do Kanban duram sete dias após o envio ou a última mudança de estado. Registros migrados receberam o prazo a partir da migração.
-      route: POST /api/data — get, query e commit para suggestions, agendaClassRequests e kanbanRequests
+      description: Guarda ID, caminho da API, dados, versão, expiração e referência ao recibo de confirmação SQL. Uma versão preparada só aparece após o recibo correspondente ser confirmado. O conteúdo inclui sugestões de atividades, pedidos de Agenda, pedidos do Kanban e solicitações de representação.
+      expiry: Sugestões de atividades, pedidos de Agenda e solicitações de representação duram sete dias após o envio. Pedidos do Kanban duram sete dias após o envio ou a última mudança de estado. Registros migrados receberam o prazo a partir da migração.
+      route: POST /api/data — get, query e commit para suggestions, agendaClassRequests, kanbanRequests e representativeRequests
     - id: pedidos-temporarios-colecoes
-      name: Índice das duas coleções
+      name: Índice de solicitações por coleção
       key: 'tech2d:{temporary-requests}:collection:{colecao}'
       type: Sorted Set
       ttl: Até 7 dias
       ttl_seconds: 604800
-      description: Lista as chaves de versões da coleção suggestions ou agendaClassRequests. A API seleciona a versão confirmada mais recente de cada registro e aplica os filtros e as permissões antes de devolver os resultados.
+      description: Lista as chaves de versões da coleção suggestions, agendaClassRequests ou representativeRequests. A API seleciona a versão confirmada mais recente de cada registro e aplica os filtros e as permissões antes de devolver os resultados.
       expiry: Expira no prazo do item mais recente do índice. Entradas vencidas são removidas nas gravações e ignoradas nas leituras.
       route: POST /api/data — query
     - id: pedidos-temporarios-caminhos

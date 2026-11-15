@@ -51,8 +51,6 @@
       title: Papéis administrativos
     - name: perfis
       title: Perfis dos usuários
-    - name: pedidos_representacao
-      title: Solicitações de representantes
     - name: visitas_aos_sites
       title: Visitas aos sites
 - id: operacao

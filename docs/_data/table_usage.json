@@ -43,10 +43,6 @@
     "feature": "Kanban compartilhado · Membros autorizados",
     "description": "Registra quais contas podem acessar um quadro compartilhado. A API usa este vínculo do PostgreSQL para autorizar o acesso. Solicitações de acesso ficam no Redis e sua expiração não revoga a participação."
   },
-  "pedidos_representacao": {
-    "feature": "Sou representante · Solicitar aprovação",
-    "description": "Armazena o pedido do aluno para representar uma turma. A administração revisa a solicitação e pode gerar o convite que será usado para liberar a conta. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
-  },
   "notas_cadernos": {
     "feature": "Notas · Meu caderno de notas",
     "description": "Guarda a configuração privada do caderno da conta para um ano letivo. A API usa sua versão para evitar que uma aba sobrescreva notas salvas por outra; RLS limita a leitura e a escrita ao próprio usuário."
@@ -77,7 +73,7 @@
   },
   "regras_recorrencia": {
     "feature": "Representantes · Atividades recorrentes",
-    "description": "Guarda o modelo da atividade e o calendário de repetição escolhido. A automação de recorrências consulta as regras ativas e cria as ocorrências na tabela atividades respeitando dias da semana, intervalo e prazo final. Disciplina e turma são FKs para os catálogos compartilhados, sem cópia dos nomes."
+    "description": "Guarda o modelo da atividade e o calendário de repetição escolhido. A automação de recorrências consulta as regras ativas e cria as ocorrências na tabela atividades respeitando dias da semana, intervalo e prazo final. Disciplina e turma são FKs para os catálogos compartilhados, sem cópia dos nomes. A pausa é reversível. Encerrar a série exclui a regra e preserva as ocorrências anteriores."
   },
   "regras_retencao": {
     "feature": "Representantes · Expurgo da turma",
