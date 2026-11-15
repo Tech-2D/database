@@ -17,6 +17,7 @@ Busque por tabela, coluna ou tipo, ou filtre por área. Cada card explica onde a
   <label for="catalog-search"><span class="catalog-label-icon">{% include doc-icon.html name="search" %}Buscar no catálogo</span><input id="catalog-search" type="search" placeholder="Ex.: visitas, id_turma ou jsonb" autocomplete="off"></label>
   <label for="catalog-group">Área<select id="catalog-group"><option value="">Todas as áreas</option>{% for group in site.data.catalog %}<option value="{{ group.id }}">{{ group.name }}</option>{% endfor %}</select></label>
   <div class="catalog-actions">
+    <button type="button" data-catalog-back hidden>Ver todas as tabelas</button>
     <p class="catalog-status" data-catalog-status role="status"></p>
   </div>
 </div>

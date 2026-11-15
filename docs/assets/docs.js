@@ -21,25 +21,54 @@ if (controls) {
   const area = controls.querySelector('select')
   const status = controls.querySelector('[data-catalog-status]')
   const toggle = controls.querySelector('[data-catalog-toggle]')
+  const back = controls.querySelector('[data-catalog-back]')
+  const title = article.querySelector('.page-heading h1')
+  const originalTitle = title?.textContent
+  const contextVisibility = new Map()
+  const controlLabels = [...controls.querySelectorAll('label')]
+
+  function selectedTable() {
+    const target = document.getElementById(decodeHash())
+    return back && entries.has(target) && target.classList.contains('schema-card') ? target : null
+  }
+
+  function updateTableFocus(selected) {
+    if (!back) return
+    back.hidden = !selected
+    for (const label of controlLabels) label.hidden = Boolean(selected)
+    if (title) title.textContent = selected ? selected.querySelector('h4').textContent : originalTitle
+    if (selected) {
+      for (const element of article.children) {
+        if (element.matches('.page-heading, [data-catalog-controls], [data-catalog-group], script, link')) continue
+        if (!contextVisibility.has(element)) contextVisibility.set(element, element.hidden)
+        element.hidden = true
+      }
+    } else {
+      for (const [element, hidden] of contextVisibility) element.hidden = hidden
+      contextVisibility.clear()
+    }
+  }
   const groups = [...article.querySelectorAll('[data-catalog-group]')]
   const normalize = text => text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase('pt-BR')
   const entries = new Map(groups.flatMap(group => [...group.querySelectorAll('[data-catalog-object]')]
     .map(item => [item, normalize(item.textContent)])))
 
   function filterCatalog() {
+    const selected = selectedTable()
+    updateTableFocus(selected)
     const terms = normalize(search.value.trim()).split(/\s+/).filter(Boolean)
     let total = 0
     for (const group of groups) {
       const areaMatches = !area?.value || area.value === group.dataset.catalogGroup
       let groupTotal = 0
       for (const item of group.querySelectorAll('[data-catalog-object]')) {
-        item.hidden = !areaMatches || !terms.every(term => entries.get(item).includes(term))
+        item.hidden = selected ? item !== selected : !areaMatches || !terms.every(term => entries.get(item).includes(term))
         if (!item.hidden) groupTotal += 1
       }
       group.hidden = groupTotal === 0
       if (!group.hidden) total += groupTotal
     }
-    status.textContent = total === 0 ? 'Nenhum resultado. Tente outro termo.'
+    status.textContent = selected ? 'Detalhes de ' + selected.querySelector('h4').textContent : total === 0 ? 'Nenhum resultado. Tente outro termo.'
       : total === 1 ? '1 resultado' : total + ' resultados'
     updateToggle()
   }
@@ -61,6 +90,7 @@ if (controls) {
 
   function openLinkedObject() {
     const target = document.getElementById(decodeHash())
+    if (back) filterCatalog()
     if (groups.includes(target) && target.hidden) {
       search.value = ''
       if (area) area.value = ''
@@ -75,9 +105,19 @@ if (controls) {
       filterCatalog()
     }
     if (target.tagName === 'DETAILS') target.open = true
-    target.scrollIntoView({ block: 'start' })
+    const destination = selectedTable() ? article.querySelector('.page-heading') : target
+    destination.scrollIntoView({ block: 'start' })
   }
 
+  back?.addEventListener('click', () => {
+    search.value = ''
+    if (area) area.value = ''
+    history.pushState(null, '', location.pathname + location.search)
+    filterCatalog()
+    markExplorerObject()
+    article.querySelector('.page-heading').scrollIntoView({ block: 'start' })
+  })
+  window.addEventListener('popstate', openLinkedObject)
   controls.hidden = false
   if (!controls.contains(search)) {
     search.form.addEventListener('submit', event => {
