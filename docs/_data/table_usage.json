@@ -23,10 +23,6 @@
     "feature": "Catálogo compartilhado · Matérias por série",
     "description": "Relaciona uma disciplina já existente à série em que ela pode receber notas na área de Notas. É uma associação, sem outro nome de matéria. As chaves estrangeiras das notas impedem usar disciplinas de uma série diferente."
   },
-  "envios_anexos": {
-    "feature": "Atividade · Preparação do upload",
-    "description": "Registra a autorização temporária de um arquivo antes de ele se tornar anexo definitivo. A API de arquivos confere o usuário, a atividade, o tamanho e a chave do R2 durante o fluxo de envio."
-  },
   "espacos_kanban": {
     "feature": "Meu Kanban · Espaços pessoais e compartilhados",
     "description": "É o ponto de entrada do conteúdo de Kanban associado a registros_aplicacao. Reúne os quadros de um espaço e identifica o proprietário; participantes e pedidos complementam o controle dos espaços compartilhados."

@@ -63,15 +63,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_envios_anexos",
-        "anchor": "rotina-gravar_envios_anexos-65a7a60d",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
-        "procedure": false
-    },
-    {
         "name": "gravar_espacos_kanban",
         "anchor": "rotina-gravar_espacos_kanban-65a7a60d",
         "result": "void",
@@ -308,15 +299,6 @@
     {
         "name": "ler_colunas_kanban",
         "anchor": "rotina-ler_colunas_kanban-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_envios_anexos",
-        "anchor": "rotina-ler_envios_anexos-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

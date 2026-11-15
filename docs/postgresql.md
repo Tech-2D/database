@@ -133,3 +133,5 @@ A versão **047** padroniza 54 nomes de colunas, incluindo as PKs simples com o 
 A versão **048** cria FKs de disciplinas em três tabelas e de turmas em nove tabelas, além dos vínculos de recorrência e upload. Os nomes repetidos são retirados; a leitura reconstrói os rótulos. O catálogo escolar guarda uma única referência externa da Agenda. Texto livre e propostas não aprovadas continuam explicitamente textuais.
 
 A versão **049** transfere o controle de entregas do resumo semanal para o Redis e remove `entregas_resumo`. As preferências de recebimento continuam em `preferencias_resumo`.
+
+A versão **050** remove `envios_anexos`. Uploads pendentes ficam no Redis e os anexos confirmados continuam em `anexos_atividade`.

@@ -153,7 +153,6 @@ A versão 048 substitui os nomes repetidos por vínculos com as entidades existe
 | atividades, regras_recorrencia, sugestoes_atividade | id_disciplina | disciplinas.id_disciplina |
 | atividades, regras_recorrencia, regras_retencao, sugestoes_atividade, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, preferencias_resumo, turmas_agenda | id_turma | turmas.id_turma |
 | atividades | id_regra_recorrencia | regras_recorrencia.id_regra_recorrencia |
-| envios_anexos | id_atividade | atividades.id_atividade |
 
 Por exemplo, o horário de **2º Tec D** e uma atividade de **2° TECH D** compartilham o mesmo `id_turma`. A forma usada pela Agenda fica uma única vez em `turmas.referencia_agenda`. Para matérias, os rótulos de Notas já existentes são usados para localizar o cadastro correto; não se cria outra disciplina por uma diferença conhecida de exibição.
 
@@ -171,8 +170,12 @@ As duplicatas comprovadas de Língua Inglesa e Língua Portuguesa 2 são consoli
 - Nome e e-mail de um participante do Kanban são informações de identificação do acesso, não uma FK para um perfil público opcional.
 - Referências externas de cartões e quadros fazem parte do contrato do agregado do Kanban; não são nomes de disciplinas ou de turmas. A estrutura interna já tem FKs entre espaço, quadro, coluna, cartão e checklist.
 
-A FK dos uploads fica nula se a atividade é excluída, preservando os metadados temporários para limpeza. A exclusão física de uma regra de recorrência também desvincula suas ocorrências, sem apagar as atividades. Excluir uma disciplina ou turma ainda referenciada é impedido pelo banco.
+A exclusão física de uma regra de recorrência também desvincula suas ocorrências, sem apagar as atividades. Excluir uma disciplina ou turma ainda referenciada é impedido pelo banco.
 
 ## Resumo semanal por e-mail
 
 As preferências de turma e de recebimento ficam em `preferencias_resumo`. O controle temporário de entrega usa uma reserva por conta e semana no Redis. O serviço cria a reserva antes de tentar enviar o e-mail e atualiza seu estado depois. A reserva expira 28 dias após o início da semana resumida. [Chave e prazo de expiração]({{ '/redis.html#reservas-resumo-semanal' | relative_url }})
+
+## Preparação e limpeza de uploads
+
+A autorização de upload fica no Redis por meio de um registro pendente. É possível confirmar o arquivo durante uma hora. A confirmação grava `anexos_atividade` no PostgreSQL antes de remover a autorização. Envios abandonados mantêm a referência ao objeto até a limpeza do R2. A limpeza verifica se o objeto já está vinculado a uma atividade antes de apagar qualquer arquivo. [Chaves dos uploads pendentes]({{ '/redis.html#uploads-pendentes' | relative_url }})

@@ -215,3 +215,29 @@
       description: O sufixo deriva do caminho do registro, que identifica a conta e a segunda-feira do resumo. A chave guarda a reserva e o resultado da tentativa, sem o e-mail do destinatário nem o conteúdo da mensagem.
       expiry: Expira 28 dias após a segunda-feira do resumo, à meia-noite UTC. Uma atualização de status preserva o prazo. Uma tentativa incerta permanece bloqueada contra reenvios automáticos até a expiração.
       route: POST /api/internal/web-data · somente o serviço de e-mail
+
+- id: uploads-pendentes
+  title: Envios pendentes de anexos
+  nav: Envios pendentes de anexos
+  icon: cache
+  description: O Worker guarda a autorização temporária do upload no Redis. A API usa esses dados para validar o arquivo recebido. O anexo confirmado é registrado no PostgreSQL e o conteúdo fica no Cloudflare R2.
+  source: pending-uploads.js
+  entries:
+    - id: pending-upload-records
+      name: Registros de upload
+      key: 'tech2d:{agenda-uploads}:records'
+      type: Hash JSON
+      ttl: Até confirmação ou limpeza
+      ttl_seconds: dinamico
+      description: Um campo por upload guarda o arquivo esperado, o UID, a atividade e a chave privada do objeto no R2.
+      expiry: A confirmação é válida por uma hora. O registro permanece disponível depois desse prazo para que o serviço de limpeza possa apagar o objeto abandonado. Se o arquivo já consta como anexo, a limpeza só remove o registro no Redis.
+      route: POST /api/internal/web-data · serviço de arquivos
+    - id: pending-upload-index
+      name: Índice por data de criação
+      key: 'tech2d:{agenda-uploads}:created'
+      type: ZSET
+      ttl: Até confirmação ou limpeza
+      ttl_seconds: dinamico
+      description: Ordena os uploads pendentes pela data de criação em milissegundos. O cron consulta os vencidos em lotes de até 100.
+      expiry: A entrada sai do índice junto com o registro do upload.
+      route: POST /api/internal/web-data · limpeza periódica

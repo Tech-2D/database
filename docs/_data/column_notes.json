@@ -56,16 +56,6 @@
     "id_disciplina": "Referência à matéria em disciplinas. Permite reutilizar a mesma matéria em várias séries sem cadastrar novamente o nome.",
     "ano_serie": "Série de 1 a 3 em que a matéria pode receber notas. Compõe a chave e valida a compatibilidade entre a disciplina e o caderno."
   },
-  "envios_anexos": {
-    "id_envio_anexo": "Identificador de envios_anexos, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
-    "id_atividade": "FK para atividades.id_atividade. A preparação de upload precisa de uma atividade existente. Se ela for excluída, a FK fica nula e os metadados temporários permanecem disponíveis para a limpeza do arquivo; o envio não pode ser vinculado a uma atividade inexistente.",
-    "nome": "Nome informado na preparação do upload. Ajuda a conferir e apresentar o arquivo que será vinculado à atividade.",
-    "tipo_mime": "Tipo declarado do material. Permite ao backend conferir o formato aceito antes de finalizar o anexo.",
-    "tamanho_bytes": "Tamanho esperado do upload em bytes. Permite aplicar os limites do serviço e conferir o objeto recebido.",
-    "chave_arquivo": "Chave do objeto correspondente no Cloudflare R2.",
-    "id_usuario": "UID da conta no Firebase Authentication.",
-    "criado_em_ms": "Momento da autorização em milissegundos Unix. Permite ao backend avaliar a validade e a limpeza de uploads pendentes."
-  },
   "espacos_kanban": {
     "id_espaco_kanban": "Identificador de espacos_kanban, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "id_proprietario": "UID do dono do espaço. É a referência usada pelo controle de acesso e pelo gerenciamento do compartilhamento.",
