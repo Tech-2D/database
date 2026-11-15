@@ -202,7 +202,7 @@
 - id: reservas-resumo-semanal
   title: Envios do resumo semanal
   nav: Envios do resumo semanal
-  icon: clock
+  icon: cache
   description: O serviço de e-mail registra uma reserva por conta e semana antes de enviar o resumo. O Worker coordena as reservas no Redis para impedir que duas execuções do cron enviem o mesmo e-mail.
   source: digest-deliveries.js
   entries:
