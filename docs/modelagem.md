@@ -61,13 +61,13 @@ A visão [Catálogo de horários]({{ '/views.html#view-catalogo_horarios' | rela
 
 ## Identidade e links
 
-`registros_aplicacao.id` é um `bigint` gerado pelo banco. As tabelas de negócio usam `id_registro` para referenciá-lo. A API continua aceitando uma referência como `activities/ABC` para localizar uma atividade aberta por um link antigo. O banco separa o tipo `activities` e a referência `ABC` em colunas.
+`registros_aplicacao.id_registro` é um `bigint` gerado pelo banco. Cada tabela de negócio usa uma PK com o nome da entidade, como `atividades.id_atividade` ou `espacos_kanban.id_espaco_kanban`. Essas PKs também são FKs para o registro compartilhado. A API continua aceitando referências como `activities/ABC` para localizar uma atividade aberta por link; essa referência externa é diferente do ID numérico.
 
 ## Atividades e anexos
 
-`atividades` guarda título, descrição, disciplina, turma, data e hora. Uma turma nula indica atividade geral. `anexos_atividade` guarda os metadados dos arquivos. A FK `id_atividade` aponta para `atividades.id_registro`, deixando explícito a qual atividade o anexo pertence. Não há coluna `ordem`: a API devolve os anexos em sequência estável pelo ID numérico.
+`atividades` guarda título, descrição, disciplina, turma, data e hora. Uma turma nula indica atividade geral. `anexos_atividade` guarda os metadados dos arquivos. A FK `id_atividade` aponta para `atividades.id_atividade`, deixando explícito a qual atividade o anexo pertence. Não há coluna `ordem`: a API devolve os anexos em sequência estável pelo ID numérico.
 
-`atividades.turma` usa a chave de turma da Agenda. `horarios_aula.id_turma` aponta para o identificador numérico do catálogo de aulas.
+`atividades.nome_turma` usa a chave de turma da Agenda. `horarios_aula.id_turma` aponta para o identificador numérico do catálogo de aulas.
 
 O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do Cloudflare R2 e, após a confirmação, remove a atividade e seus metadados do PostgreSQL. Uma falha no R2 mantém a atividade para nova tentativa.
 
@@ -121,13 +121,25 @@ Os antigos campos `id_pai` foram substituídos por nomes que indicam o destino d
 
 | Tabela | Coluna | Referência |
 | --- | --- | --- |
-| anexos_atividade | id_atividade | atividades.id_registro |
-| quadros_kanban | id_espaco_kanban | espacos_kanban.id_registro |
-| colunas_kanban | id_quadro_kanban | quadros_kanban.id |
-| cartoes_kanban | id_quadro_kanban | quadros_kanban.id |
-| itens_checklist | id_cartao_kanban | cartoes_kanban.id |
-| registros_aplicacao | id_registro_pai | registros_aplicacao.id |
+| anexos_atividade | id_atividade | atividades.id_atividade |
+| quadros_kanban | id_espaco_kanban | espacos_kanban.id_espaco_kanban |
+| colunas_kanban | id_quadro_kanban | quadros_kanban.id_quadro_kanban |
+| cartoes_kanban | id_quadro_kanban | quadros_kanban.id_quadro_kanban |
+| itens_checklist | id_cartao_kanban | cartoes_kanban.id_cartao_kanban |
+| registros_aplicacao | id_registro_pai | registros_aplicacao.id_registro |
 
 Em `cartoes_kanban`, `(id_quadro_kanban, referencia_coluna)` também referencia `(id_quadro_kanban, referencia)` de `colunas_kanban`, garantindo que a coluna pertença ao mesmo quadro.
 
-Nas tabelas que usam `id_registro` como PK e FK, esse campo referencia `registros_aplicacao.id`: é a identidade compartilhada do registro, diferente dos vínculos com atividade, quadro ou cartão acima.
+Nas tabelas que usam uma PK específica da entidade e também FK, a chave referencia `registros_aplicacao.id_registro`: é a identidade compartilhada do registro, diferente dos vínculos com atividade, quadro ou cartão acima.
+
+## Convenção de nomes dos campos
+
+- Os nomes físicos ficam em português, em `snake_case`, sem acentos.
+- PKs simples identificam a entidade: `id_atividade`, `id_anexo_atividade`, `id_quadro_kanban`, `id_professor`. As PKs compostas de Notas e visitas mantêm os campos que representam sua identidade real.
+- FKs identificam o destino: por exemplo, `anexos_atividade.id_atividade` referencia `atividades.id_atividade`. Uma PK que também é FK mantém o nome da entidade de negócio.
+- Texto que contém um nome usa `nome_turma` ou `nome_disciplina`; esses campos não são IDs numéricos nem FKs para os catálogos.
+- Campos de atividades usam `tipo_atividade`, `data_atividade` e `hora_atividade`. A recorrência usa `data_inicio` e `data_fim`.
+- Instantes usam o sufixo `_em`; contadores temporais em milissegundos mantêm `_em_ms`. As descrições informam unidade e significado.
+- `referencia_...` identifica um valor externo do contrato, separado da PK física.
+
+As views continuam expondo os aliases necessários ao contrato da API. Por exemplo, `visao_recibos_gravacao.id` vem de `recibos_gravacao.id_recibo_gravacao`. Essa compatibilidade evita alterar os sites e as automações junto com cada renomeação física.

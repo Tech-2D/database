@@ -9,7 +9,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_horario_aula",
         "type": "character varying(320)",
         "note": "Identificador externo esperado pelo site."
       },
@@ -56,7 +56,7 @@
       },
       {
         "name": "turma_id",
-        "source": "turma",
+        "source": "nome_turma",
         "type": "character varying(150)",
         "note": "Turma associada ao registro."
       },
@@ -74,25 +74,25 @@
       },
       {
         "name": "type",
-        "source": "tipo",
+        "source": "tipo_atividade",
         "type": "character varying(32)",
         "note": "Categoria da atividade, como tarefa, trabalho, prova ou evento."
       },
       {
         "name": "subject",
-        "source": "disciplina",
+        "source": "nome_disciplina",
         "type": "character varying(150)",
         "note": "Nome da disciplina, quando informado."
       },
       {
         "name": "date",
-        "source": "data",
+        "source": "data_atividade",
         "type": "character varying(10)",
         "note": "Data da atividade."
       },
       {
         "name": "time",
-        "source": "hora",
+        "source": "hora_atividade",
         "type": "text",
         "note": "Horário local da atividade, quando informado."
       },
@@ -162,13 +162,13 @@
       },
       {
         "name": "turma",
-        "source": "turma",
+        "source": "nome_turma",
         "type": "character varying(150)",
         "note": "Turma usada na seleção de atividades pelo job."
       },
       {
         "name": "data",
-        "source": "data",
+        "source": "data_atividade",
         "type": "date",
         "note": "Dia da atividade, usado para selecionar ocorrências futuras ou antigas."
       },
@@ -195,7 +195,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_horario_aula",
         "type": "character varying(320)",
         "note": "Identificador externo esperado pelo site."
       },
@@ -234,7 +234,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_disciplina",
         "type": "bigint",
         "note": "ID numérico da disciplina."
       },
@@ -256,7 +256,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_disciplina",
         "type": "bigint",
         "note": "Identificador da disciplina no catálogo compartilhado."
       },
@@ -355,7 +355,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_faixa_horario",
         "type": "bigint",
         "note": "ID numérico da faixa."
       },
@@ -382,7 +382,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_horario_aula",
         "type": "character varying(320)",
         "note": "Identificador externo da aula, preservado para o site."
       },
@@ -548,7 +548,7 @@
       },
       {
         "name": "turma_id",
-        "source": "turma",
+        "source": "nome_turma",
         "type": "character varying(150)",
         "note": "Turma associada ao registro."
       },
@@ -569,7 +569,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_professor",
         "type": "bigint",
         "note": "ID numérico do professor."
       },
@@ -590,7 +590,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_recibo_gravacao",
         "type": "character varying(128)",
         "note": "Identificador estável do lote, recebido em commit.id. Uma nova operação recebe outro ID; uma tentativa de reenviar a mesma operação conserva este ID para localizar a confirmação anterior. Também corresponde ao operationId do convite preparado no Redis."
       },
@@ -623,7 +623,7 @@
     "columns": [
       {
         "name": "id",
-        "source": "id",
+        "source": "id_turma",
         "type": "bigint",
         "note": "ID numérico da turma no catálogo de horários."
       },

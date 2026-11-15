@@ -4,11 +4,11 @@
         "name": "anexos_atividade",
         "columns": [
             {
-                "name": "id",
+                "name": "id_anexo_atividade",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de anexos_atividade. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -17,7 +17,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Atividade que contém o anexo. Referencia atividades.id_registro; a exclusão da atividade remove os metadados de seus anexos.",
+                "comment": "Atividade que contém o anexo. Referencia atividades.id_atividade; a exclusão da atividade remove os metadados de seus anexos.",
                 "nullable": false,
                 "generated": false
             },
@@ -90,11 +90,11 @@
             {
                 "table": "atividades",
                 "column": "id_atividade",
-                "target": "id_registro"
+                "target": "id_atividade"
             }
         ],
         "primary_key": [
-            "id"
+            "id_anexo_atividade"
         ],
         "foreign_key_count": 1
     },
@@ -103,11 +103,11 @@
         "name": "atividades",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_atividade",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de atividades, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -130,7 +130,7 @@
                 "generated": false
             },
             {
-                "name": "tipo",
+                "name": "tipo_atividade",
                 "type": "character varying(32)",
                 "check": false,
                 "unique": false,
@@ -139,7 +139,7 @@
                 "generated": false
             },
             {
-                "name": "disciplina",
+                "name": "nome_disciplina",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -148,7 +148,7 @@
                 "generated": false
             },
             {
-                "name": "data",
+                "name": "data_atividade",
                 "type": "date",
                 "check": false,
                 "unique": false,
@@ -157,7 +157,7 @@
                 "generated": false
             },
             {
-                "name": "hora",
+                "name": "hora_atividade",
                 "type": "time without time zone",
                 "check": false,
                 "unique": false,
@@ -166,7 +166,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -224,12 +224,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_atividade",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_atividade"
         ],
         "foreign_key_count": 1
     },
@@ -238,11 +238,11 @@
         "name": "cartoes_kanban",
         "columns": [
             {
-                "name": "id",
+                "name": "id_cartao_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de cartoes_kanban. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -251,7 +251,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Quadro ao qual o cartão pertence. Referencia quadros_kanban.id; junto com referencia_coluna, exige uma coluna desse mesmo quadro.",
+                "comment": "Quadro ao qual o cartão pertence. Referencia quadros_kanban.id_quadro_kanban; junto com referencia_coluna, exige uma coluna desse mesmo quadro.",
                 "nullable": false,
                 "generated": false
             },
@@ -361,11 +361,11 @@
             {
                 "table": "quadros_kanban",
                 "column": "id_quadro_kanban",
-                "target": "id"
+                "target": "id_quadro_kanban"
             }
         ],
         "primary_key": [
-            "id"
+            "id_cartao_kanban"
         ],
         "foreign_key_count": 2
     },
@@ -374,11 +374,11 @@
         "name": "colunas_kanban",
         "columns": [
             {
-                "name": "id",
+                "name": "id_coluna_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de colunas_kanban. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -387,7 +387,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Quadro ao qual a coluna pertence. Referencia quadros_kanban.id.",
+                "comment": "Quadro ao qual a coluna pertence. Referencia quadros_kanban.id_quadro_kanban.",
                 "nullable": false,
                 "generated": false
             },
@@ -442,11 +442,11 @@
             {
                 "table": "quadros_kanban",
                 "column": "id_quadro_kanban",
-                "target": "id"
+                "target": "id_quadro_kanban"
             }
         ],
         "primary_key": [
-            "id"
+            "id_coluna_kanban"
         ],
         "foreign_key_count": 1
     },
@@ -455,11 +455,11 @@
         "name": "disciplinas",
         "columns": [
             {
-                "name": "id",
+                "name": "id_disciplina",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de disciplinas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -477,7 +477,7 @@
         "references": [
         ],
         "primary_key": [
-            "id"
+            "id_disciplina"
         ],
         "foreign_key_count": 0
     },
@@ -509,7 +509,7 @@
             {
                 "table": "disciplinas",
                 "column": "id_disciplina",
-                "target": "id"
+                "target": "id_disciplina"
             }
         ],
         "primary_key": [
@@ -523,11 +523,11 @@
         "name": "entregas_resumo",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_entrega_resumo",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de entregas_resumo, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -572,12 +572,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_entrega_resumo",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_entrega_resumo"
         ],
         "foreign_key_count": 1
     },
@@ -586,11 +586,11 @@
         "name": "envios_anexos",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_envio_anexo",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de envios_anexos, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -662,12 +662,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_envio_anexo",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_envio_anexo"
         ],
         "foreign_key_count": 1
     },
@@ -676,11 +676,11 @@
         "name": "espacos_kanban",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_espaco_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de espacos_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -725,12 +725,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_espaco_kanban",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_espaco_kanban"
         ],
         "foreign_key_count": 1
     },
@@ -739,11 +739,11 @@
         "name": "faixas_horario",
         "columns": [
             {
-                "name": "id",
+                "name": "id_faixa_horario",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de faixas_horario. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -770,7 +770,7 @@
         "references": [
         ],
         "primary_key": [
-            "id"
+            "id_faixa_horario"
         ],
         "foreign_key_count": 0
     },
@@ -779,11 +779,11 @@
         "name": "horarios_aula",
         "columns": [
             {
-                "name": "id",
+                "name": "id_horario_aula",
                 "type": "character varying(320)",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador textual do horário de aula, preservado nos links e no contrato da API. id_registro_aplicacao identifica separadamente o registro interno.",
                 "nullable": false,
                 "generated": false
             },
@@ -842,7 +842,7 @@
                 "generated": false
             },
             {
-                "name": "id_registro",
+                "name": "id_registro_aplicacao",
                 "type": "bigint",
                 "check": false,
                 "unique": true,
@@ -891,32 +891,32 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_registro_aplicacao",
+                "target": "id_registro"
             },
             {
                 "table": "turmas",
                 "column": "id_turma",
-                "target": "id"
+                "target": "id_turma"
             },
             {
                 "table": "disciplinas",
                 "column": "id_disciplina",
-                "target": "id"
+                "target": "id_disciplina"
             },
             {
                 "table": "professores",
                 "column": "id_professor",
-                "target": "id"
+                "target": "id_professor"
             },
             {
                 "table": "faixas_horario",
                 "column": "id_faixa_horario",
-                "target": "id"
+                "target": "id_faixa_horario"
             }
         ],
         "primary_key": [
-            "id"
+            "id_horario_aula"
         ],
         "foreign_key_count": 5
     },
@@ -925,11 +925,11 @@
         "name": "itens_checklist",
         "columns": [
             {
-                "name": "id",
+                "name": "id_item_checklist",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de itens_checklist. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -938,7 +938,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Cartão que contém o item de checklist. Referencia cartoes_kanban.id.",
+                "comment": "Cartão que contém o item de checklist. Referencia cartoes_kanban.id_cartao_kanban.",
                 "nullable": false,
                 "generated": false
             },
@@ -984,11 +984,11 @@
             {
                 "table": "cartoes_kanban",
                 "column": "id_cartao_kanban",
-                "target": "id"
+                "target": "id_cartao_kanban"
             }
         ],
         "primary_key": [
-            "id"
+            "id_item_checklist"
         ],
         "foreign_key_count": 1
     },
@@ -997,11 +997,11 @@
         "name": "limites_servico",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_limite_servico",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de limites_servico, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1028,12 +1028,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_limite_servico",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_limite_servico"
         ],
         "foreign_key_count": 1
     },
@@ -1042,11 +1042,11 @@
         "name": "limpeza_anexos_kanban",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_limpeza_anexo_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de limpeza_anexos_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1082,12 +1082,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_limpeza_anexo_kanban",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_limpeza_anexo_kanban"
         ],
         "foreign_key_count": 1
     },
@@ -1096,11 +1096,11 @@
         "name": "mensagens_sugestao",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_mensagem_sugestao",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de mensagens_sugestao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1136,12 +1136,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_mensagem_sugestao",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_mensagem_sugestao"
         ],
         "foreign_key_count": 1
     },
@@ -1452,11 +1452,11 @@
         "name": "participantes_kanban",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_participante_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de participantes_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1510,12 +1510,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_participante_kanban",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_participante_kanban"
         ],
         "foreign_key_count": 1
     },
@@ -1524,11 +1524,11 @@
         "name": "pedidos_agenda",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_pedido_agenda",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de pedidos_agenda, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1582,12 +1582,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_pedido_agenda",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_pedido_agenda"
         ],
         "foreign_key_count": 1
     },
@@ -1596,11 +1596,11 @@
         "name": "pedidos_kanban",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_pedido_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de pedidos_kanban, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1672,12 +1672,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_pedido_kanban",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_pedido_kanban"
         ],
         "foreign_key_count": 1
     },
@@ -1686,16 +1686,16 @@
         "name": "pedidos_representacao",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_pedido_representacao",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de pedidos_representacao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -1744,12 +1744,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_pedido_representacao",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_pedido_representacao"
         ],
         "foreign_key_count": 1
     },
@@ -1758,11 +1758,11 @@
         "name": "perfis_administrativos",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_perfil_administrativo",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de perfis_administrativos, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1776,7 +1776,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -1798,12 +1798,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_perfil_administrativo",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_perfil_administrativo"
         ],
         "foreign_key_count": 1
     },
@@ -1812,11 +1812,11 @@
         "name": "perfis_comunidade",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_perfil_comunidade",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de perfis_comunidade, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1839,7 +1839,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(80)",
                 "check": false,
                 "unique": false,
@@ -1888,12 +1888,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_perfil_comunidade",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_perfil_comunidade"
         ],
         "foreign_key_count": 1
     },
@@ -1902,11 +1902,11 @@
         "name": "preferencias_resumo",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_preferencia_resumo",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de preferencias_resumo, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -1920,7 +1920,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -1942,12 +1942,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_preferencia_resumo",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_preferencia_resumo"
         ],
         "foreign_key_count": 1
     },
@@ -1956,11 +1956,11 @@
         "name": "professores",
         "columns": [
             {
-                "name": "id",
+                "name": "id_professor",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de professores. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -1978,7 +1978,7 @@
         "references": [
         ],
         "primary_key": [
-            "id"
+            "id_professor"
         ],
         "foreign_key_count": 0
     },
@@ -1987,11 +1987,11 @@
         "name": "quadros_kanban",
         "columns": [
             {
-                "name": "id",
+                "name": "id_quadro_kanban",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de quadros_kanban. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -2000,7 +2000,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Espaço pessoal ou compartilhado que contém o quadro. Referencia espacos_kanban.id_registro.",
+                "comment": "Espaço pessoal ou compartilhado que contém o quadro. Referencia espacos_kanban.id_espaco_kanban.",
                 "nullable": false,
                 "generated": false
             },
@@ -2055,11 +2055,11 @@
             {
                 "table": "espacos_kanban",
                 "column": "id_espaco_kanban",
-                "target": "id_registro"
+                "target": "id_espaco_kanban"
             }
         ],
         "primary_key": [
-            "id"
+            "id_quadro_kanban"
         ],
         "foreign_key_count": 1
     },
@@ -2068,11 +2068,11 @@
         "name": "recibos_gravacao",
         "columns": [
             {
-                "name": "id",
+                "name": "id_recibo_gravacao",
                 "type": "character varying(128)",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador externo do lote confirmado, recebido em commit.id. O valor continua estável nos reenvios e é exposto como id pela view de recibos.",
                 "nullable": false,
                 "generated": false
             },
@@ -2108,7 +2108,7 @@
         "references": [
         ],
         "primary_key": [
-            "id"
+            "id_recibo_gravacao"
         ],
         "foreign_key_count": 0
     },
@@ -2117,11 +2117,11 @@
         "name": "registros_aplicacao",
         "columns": [
             {
-                "name": "id",
+                "name": "id_registro",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico do registro da aplicação. As tabelas de negócio referenciam esta chave usando nomes específicos de cada entidade.",
                 "nullable": false,
                 "generated": true
             },
@@ -2157,7 +2157,7 @@
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": "Registro da aplicação ao qual este registro está vinculado. Referencia registros_aplicacao.id; nas mensagens de sugestão, identifica o registro da sugestão.",
+                "comment": "Registro da aplicação ao qual este registro está vinculado. Referencia registros_aplicacao.id_registro; nas mensagens de sugestão, identifica o registro da sugestão.",
                 "nullable": true,
                 "generated": false
             },
@@ -2185,11 +2185,11 @@
             {
                 "table": "registros_aplicacao",
                 "column": "id_registro_pai",
-                "target": "id"
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id"
+            "id_registro"
         ],
         "foreign_key_count": 1
     },
@@ -2198,11 +2198,11 @@
         "name": "regras_recorrencia",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_regra_recorrencia",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de regras_recorrencia, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -2225,7 +2225,7 @@
                 "generated": false
             },
             {
-                "name": "tipo",
+                "name": "tipo_atividade",
                 "type": "character varying(32)",
                 "check": false,
                 "unique": false,
@@ -2234,7 +2234,7 @@
                 "generated": false
             },
             {
-                "name": "disciplina",
+                "name": "nome_disciplina",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -2243,7 +2243,7 @@
                 "generated": false
             },
             {
-                "name": "hora",
+                "name": "hora_atividade",
                 "type": "time without time zone",
                 "check": false,
                 "unique": false,
@@ -2252,7 +2252,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -2288,7 +2288,7 @@
                 "generated": false
             },
             {
-                "name": "inicio",
+                "name": "data_inicio",
                 "type": "date",
                 "check": false,
                 "unique": false,
@@ -2297,7 +2297,7 @@
                 "generated": false
             },
             {
-                "name": "fim",
+                "name": "data_fim",
                 "type": "date",
                 "check": false,
                 "unique": false,
@@ -2346,12 +2346,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_regra_recorrencia",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_regra_recorrencia"
         ],
         "foreign_key_count": 1
     },
@@ -2360,16 +2360,16 @@
         "name": "regras_retencao",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_regra_retencao",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de regras_retencao, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -2418,12 +2418,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_regra_retencao",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_regra_retencao"
         ],
         "foreign_key_count": 1
     },
@@ -2432,11 +2432,11 @@
         "name": "sugestoes_atividade",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_sugestao_atividade",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de sugestoes_atividade, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -2459,7 +2459,7 @@
                 "generated": false
             },
             {
-                "name": "tipo",
+                "name": "tipo_atividade",
                 "type": "character varying(32)",
                 "check": false,
                 "unique": false,
@@ -2468,7 +2468,7 @@
                 "generated": false
             },
             {
-                "name": "disciplina",
+                "name": "nome_disciplina",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -2477,7 +2477,7 @@
                 "generated": false
             },
             {
-                "name": "data",
+                "name": "data_atividade",
                 "type": "date",
                 "check": false,
                 "unique": false,
@@ -2486,7 +2486,7 @@
                 "generated": false
             },
             {
-                "name": "hora",
+                "name": "hora_atividade",
                 "type": "time without time zone",
                 "check": false,
                 "unique": false,
@@ -2495,7 +2495,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -2562,12 +2562,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_sugestao_atividade",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_sugestao_atividade"
         ],
         "foreign_key_count": 1
     },
@@ -2576,11 +2576,11 @@
         "name": "sugestoes_melhoria",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_sugestao_melhoria",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de sugestoes_melhoria, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -2594,7 +2594,7 @@
                 "generated": false
             },
             {
-                "name": "turma",
+                "name": "nome_turma",
                 "type": "character varying(150)",
                 "check": false,
                 "unique": false,
@@ -2679,12 +2679,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_sugestao_melhoria",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_sugestao_melhoria"
         ],
         "foreign_key_count": 1
     },
@@ -2693,11 +2693,11 @@
         "name": "turmas",
         "columns": [
             {
-                "name": "id",
+                "name": "id_turma",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador numérico de turmas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.",
                 "nullable": false,
                 "generated": true
             },
@@ -2715,7 +2715,7 @@
         "references": [
         ],
         "primary_key": [
-            "id"
+            "id_turma"
         ],
         "foreign_key_count": 0
     },
@@ -2724,11 +2724,11 @@
         "name": "turmas_agenda",
         "columns": [
             {
-                "name": "id_registro",
+                "name": "id_turma_agenda",
                 "type": "bigint",
                 "check": false,
                 "unique": false,
-                "comment": null,
+                "comment": "Identificador de turmas_agenda, simultaneamente PK e FK para registros_aplicacao.id_registro. Compartilha o valor do registro da aplicação; a referência pública usada pelos links permanece separada.",
                 "nullable": false,
                 "generated": false
             },
@@ -2773,12 +2773,12 @@
         "references": [
             {
                 "table": "registros_aplicacao",
-                "column": "id_registro",
-                "target": "id"
+                "column": "id_turma_agenda",
+                "target": "id_registro"
             }
         ],
         "primary_key": [
-            "id_registro"
+            "id_turma_agenda"
         ],
         "foreign_key_count": 1
     },

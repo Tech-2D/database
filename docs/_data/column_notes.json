@@ -1,7 +1,7 @@
 {
   "anexos_atividade": {
-    "id": "Identificador numérico gerado pelo banco.",
-    "id_atividade": "Identifica a atividade dona do anexo. Referencia atividades.id_registro: um anexo pertence a uma atividade; ao excluir a atividade, seus metadados de anexos são removidos por ON DELETE CASCADE. O arquivo no R2 é tratado pelo fluxo de limpeza da API.",
+    "id_anexo_atividade": "Identificador de anexos_atividade. É a chave primária da entidade. Identificador numérico gerado pelo banco.",
+    "id_atividade": "Identifica a atividade dona do anexo. Referencia atividades.id_atividade: um anexo pertence a uma atividade; ao excluir a atividade, seus metadados de anexos são removidos por ON DELETE CASCADE. O arquivo no R2 é tratado pelo fluxo de limpeza da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "nome": "Nome do material mostrado na lista de anexos e no download. Ajuda o aluno a reconhecer o arquivo antes de abri-lo.",
     "tipo_mime": "Tipo de conteúdo do arquivo, como PDF ou ZIP. Apoia a validação e a resposta de download.",
@@ -11,14 +11,14 @@
     "enviado_por": "Identifica quem enviou o material, para atribuir a origem do anexo dentro do fluxo autorizado de arquivos."
   },
   "atividades": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_atividade": "Identificador de atividades, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "titulo": "Nome da entrega ou compromisso mostrado no calendário, nos detalhes e nos resumos. Permite identificar rapidamente a atividade.",
     "descricao": "Instruções e detalhes da atividade.",
-    "tipo": "Categoria da atividade, como tarefa, trabalho, prova ou evento.",
-    "disciplina": "Nome da disciplina, quando informado.",
-    "data": "Dia usado para posicionar a atividade no calendário e selecionar entregas nos resumos e no expurgo.",
-    "hora": "Horário opcional exibido nos detalhes e na ordenação das atividades do dia. Sem valor, a atividade continua tendo uma data.",
-    "turma": "Sala que recebe a atividade. Nulo representa atividade geral; a API usa esse valor para filtrar o calendário e restringir edições do representante.",
+    "tipo_atividade": "Categoria da atividade, como tarefa, trabalho, prova ou evento.",
+    "nome_disciplina": "Nome da disciplina, quando informado.",
+    "data_atividade": "Dia usado para posicionar a atividade no calendário e selecionar entregas nos resumos e no expurgo.",
+    "hora_atividade": "Horário opcional exibido nos detalhes e na ordenação das atividades do dia. Sem valor, a atividade continua tendo uma data.",
+    "nome_turma": "Sala que recebe a atividade. Nulo representa atividade geral; a API usa esse valor para filtrar o calendário e restringir edições do representante.",
     "criado_por": "UID de quem criou a atividade, quando disponível.",
     "email_criador": "E-mail de quem criou a atividade, usado internamente.",
     "referencia_recorrencia": "Identifica a regra que gerou a ocorrência. Permite à automação reconhecer atividades já geradas e evitar novas cópias da mesma ocorrência.",
@@ -26,8 +26,8 @@
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
   "cartoes_kanban": {
-    "id": "Identificador numérico gerado pelo banco.",
-    "id_quadro_kanban": "Identifica o quadro que contém a tarefa. Referencia quadros_kanban.id. Junto com referencia_coluna, também referencia colunas_kanban(id_quadro_kanban, referencia), exigindo uma coluna do mesmo quadro.",
+    "id_cartao_kanban": "Identificador de cartoes_kanban. É a chave primária da entidade. Identificador numérico gerado pelo banco.",
+    "id_quadro_kanban": "Identifica o quadro que contém a tarefa. Referencia quadros_kanban.id_quadro_kanban. Junto com referencia_coluna, também referencia colunas_kanban(id_quadro_kanban, referencia), exigindo uma coluna do mesmo quadro.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "referencia_coluna": "Identificador externo da coluna do mesmo quadro. Mantém o cartão na etapa correta e impede vinculá-lo à coluna de outro quadro.",
@@ -40,8 +40,8 @@
     "referencias_atividades": "IDs externos de atividades da Agenda vinculadas ao cartão. Permitem abrir as entregas relacionadas sem copiar seu conteúdo para o Kanban."
   },
   "colunas_kanban": {
-    "id": "Identificador numérico gerado pelo banco.",
-    "id_quadro_kanban": "Identifica o quadro ao qual esta coluna pertence. Referencia quadros_kanban.id. A mesma referência é usada na FK composta dos cartões para impedir que um cartão use uma coluna de outro quadro.",
+    "id_coluna_kanban": "Identificador de colunas_kanban. É a chave primária da entidade. Identificador numérico gerado pelo banco.",
+    "id_quadro_kanban": "Identifica o quadro ao qual esta coluna pertence. Referencia quadros_kanban.id_quadro_kanban. A mesma referência é usada na FK composta dos cartões para impedir que um cartão use uma coluna de outro quadro.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "nome": "Nome da etapa, como Em andamento ou Concluído. Permite adaptar o fluxo de trabalho de cada quadro.",
@@ -49,7 +49,7 @@
     "concluida": "Marca a coluna como etapa final. Os cartões nela colocados contam como concluídos no progresso do quadro."
   },
   "disciplinas": {
-    "id": "Identidade numérica da matéria no catálogo compartilhado. Horários e disciplinas_series reutilizam esta chave, evitando nomes duplicados por aplicativo.",
+    "id_disciplina": "Identificador de disciplinas. É a chave primária da entidade. Identidade numérica da matéria no catálogo compartilhado. Horários e disciplinas_series reutilizam esta chave, evitando nomes duplicados por aplicativo.",
     "nome": "Nome canônico da matéria. É apresentado nos horários e projetado pela view da área de Notas, que mantém os rótulos compatíveis com as notas existentes."
   },
   "disciplinas_series": {
@@ -57,14 +57,14 @@
     "ano_serie": "Série de 1 a 3 em que a matéria pode receber notas. Compõe a chave e valida a compatibilidade entre a disciplina e o caderno."
   },
   "entregas_resumo": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_entrega_resumo": "Identificador de entregas_resumo, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "situacao": "Estado de processamento do envio, distinguindo reserva e conclusão. Ajuda a coordenar tentativas sem duplicar um resumo já enviado.",
     "inicio_semana": "Data que identifica a semana resumida. Evita confundir o envio desta semana com o de outro período.",
     "criada_em_ms": "Momento da reserva em milissegundos desde o Unix epoch.",
     "concluida_em_ms": "Momento da conclusão em milissegundos desde o Unix epoch."
   },
   "envios_anexos": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_envio_anexo": "Identificador de envios_anexos, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "referencia_atividade": "ID externo da atividade que receberá o material. Permite conferir se o upload pertence ao destino autorizado.",
     "nome": "Nome informado na preparação do upload. Ajuda a conferir e apresentar o arquivo que será vinculado à atividade.",
     "tipo_mime": "Tipo declarado do material. Permite ao backend conferir o formato aceito antes de finalizar o anexo.",
@@ -74,58 +74,58 @@
     "criado_em_ms": "Momento da autorização em milissegundos Unix. Permite ao backend avaliar a validade e a limpeza de uploads pendentes."
   },
   "espacos_kanban": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_espaco_kanban": "Identificador de espacos_kanban, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "id_proprietario": "UID do dono do espaço. É a referência usada pelo controle de acesso e pelo gerenciamento do compartilhamento.",
     "versao_formato": "Versão da estrutura do conteúdo de Kanban. Permite interpretar o formato salvo; é diferente da versão de edição de registros_aplicacao.",
     "criado_em": "Momento de criação, no formato ISO da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
   "faixas_horario": {
-    "id": "Chave numérica do intervalo. Permite que várias aulas compartilhem as mesmas horas de início e fim.",
+    "id_faixa_horario": "Identificador de faixas_horario. É a chave primária da entidade. Chave numérica do intervalo. Permite que várias aulas compartilhem as mesmas horas de início e fim.",
     "hora_inicio": "Início local da aula. Define o começo do bloco na grade e das consultas de aula em andamento.",
     "hora_fim": "Término local da aula. Define até quando o professor permanece naquele bloco do horário."
   },
   "horarios_aula": {
-    "id": "Identificador externo da aula, preservado para o site.",
+    "id_horario_aula": "Identificador de horarios_aula. É a chave primária da entidade. Identificador externo da aula, preservado para o site.",
     "id_professor": "Chave do docente em professores. Associa a aula ao cadastro reutilizado na busca por nome.",
     "id_disciplina": "Chave da matéria no catálogo geral disciplinas. Reutiliza o cadastro em vez de copiar o nome a cada aula.",
     "id_turma": "Chave da sala em turmas. Permite filtrar a grade da turma e identificar onde o professor está.",
     "id_faixa_horario": "Chave do intervalo em faixas_horario. Liga a aula às horas de início e fim sem repetir esses valores.",
     "dia_semana": "Dia da semana, de 0 (domingo) a 6 (sábado).",
     "ativo": "Indica se o horário está ativo no catálogo.",
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_registro_aplicacao": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
     "andar": "Andar associado ao local desta aula. Ajuda na localização do professor; pode ficar vazio quando não foi informado.",
     "sala": "Descrição da sala ou localização.",
     "criado_em": "Momento de criação, no formato ISO da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
   "itens_checklist": {
-    "id": "Identificador numérico gerado pelo banco.",
-    "id_cartao_kanban": "Identifica o cartão que contém esta etapa do checklist. Referencia cartoes_kanban.id. Excluir o cartão remove seus itens por ON DELETE CASCADE.",
+    "id_item_checklist": "Identificador de itens_checklist. É a chave primária da entidade. Identificador numérico gerado pelo banco.",
+    "id_cartao_kanban": "Identifica o cartão que contém esta etapa do checklist. Referencia cartoes_kanban.id_cartao_kanban. Excluir o cartão remove seus itens por ON DELETE CASCADE.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "descricao": "Texto da etapa dentro do cartão. Define o que precisa ser feito antes de marcar este item como concluído.",
     "concluido": "Estado de conclusão desta etapa do cartão. Permite acompanhar o checklist sem marcar todo o cartão como concluído."
   },
   "limites_servico": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_limite_servico": "Identificador de limites_servico, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "quantidade": "Número de ocorrências acumuladas na janela de limitação. O backend compara esse contador com o limite configurado para o serviço.",
     "expira_em_ms": "Instante de expiração da janela, em milissegundos Unix. Define quando o contador deixa de restringir as novas tentativas."
   },
   "limpeza_anexos_kanban": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_limpeza_anexo_kanban": "Identificador de limpeza_anexos_kanban, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "referencia_espaco": "Referência do espaço do Kanban usada para localizar arquivos no R2.",
     "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
     "referencia_cartao": "Identificador do cartão removido."
   },
   "mensagens_sugestao": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_mensagem_sugestao": "Identificador de mensagens_sugestao, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "mensagem": "Texto trocado na conversa privada da sugestão. Permite esclarecer detalhes do pedido entre o autor e a administração.",
     "remetente": "UID do autor desta mensagem. Permite distinguir a resposta da administração da mensagem enviada pelo dono da sugestão.",
     "criado_em": "Momento de criação, no formato ISO da API."
   },
   "participantes_kanban": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_participante_kanban": "Identificador de participantes_kanban, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
     "id_usuario": "UID da conta autorizada a participar. O controle de acesso verifica este vínculo, não apenas o nome ou e-mail exibido.",
     "email": "E-mail do participante para identificação no gerenciamento do quadro; não substitui o UID na autorização.",
@@ -133,7 +133,7 @@
     "criado_em": "Momento de criação, no formato ISO da API."
   },
   "pedidos_agenda": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_pedido_agenda": "Identificador de pedidos_agenda, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "nome_turma": "Sala que o solicitante quer incluir no sistema. É o nome avaliado pela administração antes da habilitação da agenda.",
     "email": "Contato associado à solicitação de uma agenda. Ajuda a administração a identificar quem pediu a nova sala.",
     "situacao": "Andamento da avaliação administrativa. Separa uma solicitação pendente de uma decisão já tomada.",
@@ -141,7 +141,7 @@
     "revisado_em": "Momento da avaliação administrativa da nova agenda. Registra quando houve uma decisão sobre a solicitação."
   },
   "pedidos_kanban": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_pedido_kanban": "Identificador de pedidos_kanban, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
     "id_usuario": "UID da conta no Firebase Authentication.",
     "email": "E-mail apresentado ao proprietário para reconhecer quem está solicitando entrada no quadro.",
@@ -151,8 +151,8 @@
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
   "pedidos_representacao": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
-    "turma": "Sala que o solicitante pretende representar; é o escopo da aprovação que será revisada.",
+    "id_pedido_representacao": "Identificador de pedidos_representacao, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
+    "nome_turma": "Sala que o solicitante pretende representar; é o escopo da aprovação que será revisada.",
     "email": "E-mail informado para o futuro acesso. Permite relacionar o pedido ao convite aprovado para a mesma conta.",
     "situacao": "Andamento da análise do representante. Evita tratar um pedido pendente como permissão administrativa.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -188,34 +188,34 @@
     "nota": "Nota da recuperação final, entre 0 e 10. A visão a combina com a média anual para calcular o resultado final quando a recuperação é necessária."
   },
   "perfis_administrativos": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_perfil_administrativo": "Identificador de perfis_administrativos, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "papel": "Papel usado nas verificações de autorização da API. Distingue o acesso administrativo global do acesso restrito do representante.",
-    "turma": "Sala que delimita a atuação do representante. Não deve ser interpretada como autorização para editar todas as turmas.",
+    "nome_turma": "Sala que delimita a atuação do representante. Não deve ser interpretada como autorização para editar todas as turmas.",
     "criado_em": "Momento de criação, no formato ISO da API."
   },
   "perfis_comunidade": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_perfil_comunidade": "Identificador de perfis_comunidade, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",
     "empresa": "Empresa informada pela pessoa no perfil público. Dá contexto profissional no diretório da comunidade.",
-    "turma": "Sala que a pessoa escolheu mostrar no perfil. É informação pública de apresentação, sem conceder permissões de representante.",
+    "nome_turma": "Sala que a pessoa escolheu mostrar no perfil. É informação pública de apresentação, sem conceder permissões de representante.",
     "sala": "Descrição da sala ou localização.",
     "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
     "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
   "preferencias_resumo": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_preferencia_resumo": "Identificador de preferencias_resumo, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "ativo": "Escolha de receber o resumo. O serviço usa esse estado para decidir se deve incluir a conta nos envios.",
-    "turma": "Sala cujas atividades devem compor o resumo da conta. Evita enviar entregas de uma sala diferente.",
+    "nome_turma": "Sala cujas atividades devem compor o resumo da conta. Evita enviar entregas de uma sala diferente.",
     "alterada_em_ms": "Momento da atualização em milissegundos desde o Unix epoch."
   },
   "professores": {
-    "id": "Identidade numérica do docente. Mantém o vínculo das aulas com o mesmo professor quando seu nome cadastrado é alterado.",
+    "id_professor": "Identificador de professores. É a chave primária da entidade. Identidade numérica do docente. Mantém o vínculo das aulas com o mesmo professor quando seu nome cadastrado é alterado.",
     "nome": "Nome do professor no catálogo de horários."
   },
   "quadros_kanban": {
-    "id": "Identificador numérico gerado pelo banco.",
-    "id_espaco_kanban": "Identifica o espaço pessoal ou compartilhado que contém o quadro. Referencia espacos_kanban.id_registro. Um espaço pode conter vários quadros.",
+    "id_quadro_kanban": "Identificador de quadros_kanban. É a chave primária da entidade. Identificador numérico gerado pelo banco.",
+    "id_espaco_kanban": "Identifica o espaço pessoal ou compartilhado que contém o quadro. Referencia espacos_kanban.id_espaco_kanban. Um espaço pode conter vários quadros.",
     "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
     "referencia": "Identificador externo preservado para os comandos da interface. Permite localizar o mesmo item após reordenar ou recarregar a lista.",
     "nome": "Nome do quadro mostrado na navegação do Kanban. Permite distinguir projetos ou modelos de organização dentro do espaço.",
@@ -223,55 +223,55 @@
     "compacto": "Preferência de visualização compacta do quadro. Muda a densidade dos cartões, sem alterar o conteúdo ou as permissões."
   },
   "recibos_gravacao": {
-    "id": "Identificador estável do lote, recebido em commit.id. Uma nova operação recebe outro ID; uma tentativa de reenviar a mesma operação conserva este ID para localizar a confirmação anterior. Também corresponde ao operationId do convite preparado no Redis.",
+    "id_recibo_gravacao": "Identificador de recibos_gravacao. É a chave primária da entidade. Identificador estável do lote, recebido em commit.id. Uma nova operação recebe outro ID; uma tentativa de reenviar a mesma operação conserva este ID para localizar a confirmação anterior. Também corresponde ao operationId do convite preparado no Redis.",
     "autor": "UID da conta autenticada ou identificação service:<nome> do serviço que enviou o lote. É calculado pela API a partir da identidade validada, não escolhido pelo corpo da requisição. Impede que outra identidade reutilize o mesmo recibo.",
     "hash_requisicao": "Resumo criptográfico do lote recebido. A API compara esse valor e o autor antes de tratar o pedido como repetição; o mesmo ID com conteúdo diferente recebe HTTP 409. Também confere se o convite no Redis corresponde exatamente à aprovação confirmada no SQL.",
     "confirmado_em": "Momento registrado ao inserir o recibo. O registro só fica visível após o COMMIT da mesma transação das alterações. É a referência temporal da confirmação, não um prazo de expiração; atualmente a tabela não possui TTL nem limpeza automática por idade."
   },
   "registros_aplicacao": {
-    "id": "Identificador numérico gerado pelo PostgreSQL.",
+    "id_registro": "Identificador numérico do registro da aplicação. As tabelas de negócio o referenciam por chaves com nomes específicos da entidade, como atividades.id_atividade. O tipo e a referência externa preservam os links públicos.",
     "tipo": "Tipo de registro usado pela API, como activities ou feedback/messages. Direciona a leitura e a gravação para a tabela de negócio correspondente.",
     "referencia": "Identificador externo preservado para os sites e links existentes.",
     "referencia_pai": "Referência externa da sugestão a que uma mensagem pertence. Vazia nos registros principais; preserva o vínculo aceito pelo contrato da API.",
-    "id_registro_pai": "Identifica o registro da aplicação ao qual este registro está vinculado. É uma FK para registros_aplicacao.id; nas mensagens de sugestão, aponta para o registro da sugestão. Não representa o autor da mensagem.",
+    "id_registro_pai": "Identifica o registro da aplicação ao qual este registro está vinculado. É uma FK para registros_aplicacao.id_registro; nas mensagens de sugestão, aponta para o registro da sugestão. Não representa o autor da mensagem.",
     "versao": "Versão usada para detectar conflitos de edição.",
     "atualizado_em": "Data e hora da última alteração da linha."
   },
   "regras_recorrencia": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_regra_recorrencia": "Identificador de regras_recorrencia, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "titulo": "Título do modelo copiado para cada ocorrência gerada. Evita precisar cadastrar o nome novamente em cada semana.",
     "descricao": "Instruções copiadas para as atividades geradas. Mantém um texto comum para a repetição planejada.",
-    "tipo": "Categoria aplicada a cada ocorrência, como tarefa ou evento. Mantém as atividades geradas classificadas no calendário.",
-    "disciplina": "Matéria que será copiada para cada atividade gerada pela regra.",
-    "hora": "Horário local da atividade, quando informado.",
-    "turma": "Sala de destino das ocorrências e escopo de gerenciamento do representante.",
+    "tipo_atividade": "Categoria aplicada a cada ocorrência, como tarefa ou evento. Mantém as atividades geradas classificadas no calendário.",
+    "nome_disciplina": "Matéria que será copiada para cada atividade gerada pela regra.",
+    "hora_atividade": "Horário local da atividade, quando informado.",
+    "nome_turma": "Sala de destino das ocorrências e escopo de gerenciamento do representante.",
     "criado_por": "UID da conta que criou o registro.",
     "email_criador": "E-mail da conta que criou o registro.",
     "criado_em": "Momento de criação, no formato ISO da API.",
-    "inicio": "Primeira data válida da recorrência.",
-    "fim": "Última data permitida para gerar ocorrências. Limita o período de uma repetição personalizada.",
+    "data_inicio": "Primeira data válida da recorrência.",
+    "data_fim": "Última data permitida para gerar ocorrências. Limita o período de uma repetição personalizada.",
     "ativa": "Indica se a regra ou configuração está ativa.",
     "excluida": "Marca a regra como removida no contrato da aplicação. A automação deve desconsiderá-la ao gerar novas atividades.",
     "intervalo_semanas": "Intervalo entre semanas de ocorrência. Distingue uma repetição semanal de uma repetição a cada duas ou mais semanas.",
     "dias_semana": "Dias selecionados para a repetição. Permite distribuir apresentações ou entregas em vários dias da mesma semana."
   },
   "regras_retencao": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
-    "turma": "Sala cuja retenção esta política controla. Evita aplicar a configuração de um representante a outra sala.",
+    "id_regra_retencao": "Identificador de regras_retencao, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
+    "nome_turma": "Sala cuja retenção esta política controla. Evita aplicar a configuração de um representante a outra sala.",
     "dias": "Quantidade de dias que a turma mantém as atividades no calendário. Define a data de corte para a exclusão da atividade e dos anexos.",
     "ativa": "Indica se a regra ou configuração está ativa.",
     "alterado_por": "UID de quem modificou a política. Permite atribuir a responsabilidade pela configuração do expurgo.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
   "sugestoes_atividade": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_sugestao_atividade": "Identificador de sugestoes_atividade, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "titulo": "Nome proposto para a nova atividade. Permite ao representante identificar o pedido na fila de avaliação.",
     "descricao": "Instruções propostas pelo solicitante. Dá ao revisor o contexto necessário para decidir o cadastro no calendário.",
-    "tipo": "Categoria sugerida, como tarefa ou prova. Ajuda o revisor a classificar a eventual atividade.",
-    "disciplina": "Matéria proposta para a atividade; orienta a avaliação e o eventual cadastro no calendário.",
-    "data": "Dia proposto para a atividade. Permite revisar a entrega antes de confirmar sua inclusão no calendário.",
-    "hora": "Horário local da atividade, quando informado.",
-    "turma": "Sala à qual a proposta se destina. Delimita a revisão pelo representante competente.",
+    "tipo_atividade": "Categoria sugerida, como tarefa ou prova. Ajuda o revisor a classificar a eventual atividade.",
+    "nome_disciplina": "Matéria proposta para a atividade; orienta a avaliação e o eventual cadastro no calendário.",
+    "data_atividade": "Dia proposto para a atividade. Permite revisar a entrega antes de confirmar sua inclusão no calendário.",
+    "hora_atividade": "Horário local da atividade, quando informado.",
+    "nome_turma": "Sala à qual a proposta se destina. Delimita a revisão pelo representante competente.",
     "criado_em": "Momento de criação, no formato ISO da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API.",
     "situacao": "Estado da análise da proposta. Mantém sugestões pendentes separadas das já tratadas.",
@@ -280,9 +280,9 @@
     "encerrada_em": "Momento em que a sugestão foi encerrada."
   },
   "sugestoes_melhoria": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_sugestao_melhoria": "Identificador de sugestoes_melhoria, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "mensagem": "Descrição da melhoria ou do problema enviada pela conta autenticada. É a base da análise e da conversa com a administração.",
-    "turma": "Sala informada com o feedback. Ajuda a contextualizar o pedido, sem substituir a autoria autenticada.",
+    "nome_turma": "Sala informada com o feedback. Ajuda a contextualizar o pedido, sem substituir a autoria autenticada.",
     "criado_por": "UID da conta que criou o registro.",
     "email_criador": "E-mail da conta que criou o registro.",
     "criado_em": "Momento de criação, no formato ISO da API.",
@@ -293,11 +293,11 @@
     "concluida_por": "UID do administrador que marcou o pedido como concluído. Conserva a responsabilidade pelo encerramento."
   },
   "turmas": {
-    "id": "Identidade numérica da turma nos horários. As aulas referenciam esta chave para reutilizar o cadastro da sala.",
+    "id_turma": "Identificador de turmas. É a chave primária da entidade. Identidade numérica da turma nos horários. As aulas referenciam esta chave para reutilizar o cadastro da sala.",
     "nome": "Nome da sala no catálogo de horários. Não concede automaticamente acesso administrativo nem habilita uma agenda."
   },
   "turmas_agenda": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
+    "id_turma_agenda": "Identificador de turmas_agenda, usado como PK e também como FK para registros_aplicacao.id_registro. Compartilha a identidade do registro da aplicação; a referência externa dos links fica no registro relacionado.",
     "nome": "Nome da sala apresentado no catálogo da Agenda. Identifica a agenda habilitada pelo fluxo administrativo.",
     "ativa": "Habilitação da agenda no catálogo. Permite suspender sua disponibilidade sem apagar seu cadastro.",
     "referencia_pedido": "Solicitação que originou a agenda aprovada. Mantém a rastreabilidade da decisão administrativa.",

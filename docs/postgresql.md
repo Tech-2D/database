@@ -66,7 +66,7 @@ Busque por tabela, coluna ou tipo, ou filtre por área. Cada card explica onde a
 
 Abra a [modelagem]({{ '/modelagem.html' | relative_url }}) para seguir os vínculos de horários, atividades e contas.
 
-`atividades.data` usa `date` e `atividades.hora` usa `time`. O horário é opcional. Cada anexo fica em uma linha de `anexos_atividade`, com `id_atividade`, nome, tamanho e referência ao arquivo no R2. A sequência é dada pelo ID, sem uma coluna de ordem.
+`atividades.data_atividade` usa `date` e `atividades.hora_atividade` usa `time`. O horário é opcional. Cada anexo fica em uma linha de `anexos_atividade`, com `id_atividade`, nome, tamanho e referência ao arquivo no R2. A sequência é dada pelo ID, sem uma coluna de ordem.
 
 ## Acesso ao banco
 
@@ -127,3 +127,5 @@ Em um banco local vazio, siga os passos em [Consultas SQL]({{ '/consultas.html' 
 A versão **045** padroniza os nomes da área de Notas: `notas_cadernos`, `notas_lancamentos`, `notas_recuperacoes`, `visao_disciplinas_notas` e `visao_notas_resultados`. O rename preserva dados, permissões, vínculos e RLS.
 
 A versão **046** substitui as seis FKs chamadas `id_pai` por nomes explícitos de relacionamento e remove `ordem` de `anexos_atividade`. Funções SQL e a view de atividades usam os novos campos; os anexos são retornados por ID.
+
+A versão **047** padroniza 54 nomes de colunas, incluindo as PKs simples com o nome da entidade, nomes textuais de turma e disciplina e datas das atividades. As funções SQL usam as novas colunas; as views preservam o contrato da API.
