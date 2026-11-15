@@ -244,64 +244,6 @@
     },
     {
         "kind": "table",
-        "name": "bloqueios_agenda",
-        "columns": [
-            {
-                "name": "id",
-                "type": "uuid",
-                "check": false,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "tipo",
-                "type": "character varying(32)",
-                "check": true,
-                "unique": false,
-                "comment": "Tipo de bloqueio aceito pela API: email.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "alvo",
-                "type": "character varying(320)",
-                "check": false,
-                "unique": false,
-                "comment": "E-mail normalizado da conta bloqueada.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "criado_em",
-                "type": "timestamp with time zone",
-                "check": false,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "criado_por",
-                "type": "character varying(128)",
-                "check": false,
-                "unique": false,
-                "comment": null,
-                "nullable": false,
-                "generated": false
-            }
-        ],
-        "comment": "Bloqueios de acesso à Agenda por e-mail, gerenciados por superadministradores.",
-        "references": [
-        ],
-        "primary_key": [
-            "id"
-        ],
-        "foreign_key_count": 0
-    },
-    {
-        "kind": "table",
         "name": "cartoes_kanban",
         "columns": [
             {

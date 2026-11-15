@@ -84,7 +84,7 @@ O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do 
 - [Visitas aos sites]({{ '/postgresql.html#obj-visitas_aos_sites' | relative_url }}) separa as visitas por site e deduplica acessos dentro de intervalos de 30 minutos.
   O painel de usuários também usa essas visitas para mostrar a data mais recente de cada conta na Agenda.
 - [Perfis de acesso administrativo]({{ '/postgresql.html#obj-perfis_administrativos' | relative_url }}) guarda uma projeção do papel e da turma. A identidade da conta vem do Firebase Authentication.
-- [Bloqueios de acesso à Agenda]({{ '/postgresql.html#obj-bloqueios_agenda' | relative_url }}) guarda os bloqueios por e-mail aplicados à Agenda.
+- Os [bloqueios temporários da Agenda]({{ '/redis.html#bloqueios-da-agenda' | relative_url }}) ficam no Redis, identificados pelo UID da conta e com o prazo escolhido pelo administrador.
 
 Os vínculos de horários usam chaves estrangeiras no PostgreSQL. Os vínculos entre documentos, contas e atividades usam identificadores que a API valida.
 

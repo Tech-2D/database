@@ -128,3 +128,38 @@
       description: Guarda a assinatura da criação, edição ou exclusão. A API usa o recibo para reconhecer o reenvio da mesma operação.
       expiry: Cada operação bem-sucedida tem o seu próprio prazo.
       route: POST /api/data
+
+- id: bloqueios-da-agenda
+  title: Bloqueios temporários da Agenda
+  nav: Bloqueios da Agenda
+  icon: key
+  description: O painel Usuários e bloqueios identifica a conta pelo e-mail ou UID. O Worker confirma o cadastro e guarda o bloqueio pelo UID. Superadministradores podem configurar a duração ou liberar a conta antes do prazo.
+  source: agenda-blocks.js
+  entries:
+    - id: block-user
+      name: Bloqueio por conta
+      key: 'tech2d:{agenda-blocks}:user:{uid_codificado}'
+      type: String JSON
+      ttl: Configurável
+      ttl_seconds: configuravel
+      description: Guarda UID, e-mail no momento do bloqueio, administrador, data de criação e data de liberação. O UID passa por encodeURIComponent para formar a chave.
+      expiry: O administrador escolhe entre 1 minuto e 365 dias. O Redis remove a chave na data de liberação. A mesma conta continua bloqueada se trocar o e-mail.
+      route: GET /api/admin/agenda-users · POST /api/admin/agenda-users · rotas protegidas da Agenda
+    - id: block-index
+      name: Índice de bloqueios vigentes
+      key: 'tech2d:{agenda-blocks}:index'
+      type: ZSET
+      ttl: Até a última liberação
+      ttl_seconds: dinamico
+      description: Relaciona os UIDs bloqueados às datas de expiração em milissegundos. O painel consulta apenas entradas vigentes e usa o índice para paginar os resultados.
+      expiry: A chave expira na data de liberação mais distante. Um bloqueio curto mantém o prazo necessário para listar bloqueios mais longos.
+      route: GET /api/admin/agenda-users
+    - id: block-commit
+      name: Recibo de bloqueio ou liberação
+      key: 'tech2d:{agenda-blocks}:commit:{id_operacao}'
+      type: String
+      ttl: 24 h
+      ttl_seconds: 86400
+      description: Reconhece uma repetição da mesma operação e evita que um reenvio renove o prazo do bloqueio.
+      expiry: O prazo começa na primeira gravação bem-sucedida.
+      route: POST /api/admin/agenda-users

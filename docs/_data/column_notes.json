@@ -26,13 +26,6 @@
     "criado_em": "Momento de criação da atividade. Conserva a origem temporal do cadastro para o histórico e as respostas da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
-  "bloqueios_agenda": {
-    "id": "Identificador único da regra de bloqueio.",
-    "tipo": "Tipo aceito pelo banco e pela API. O valor é email.",
-    "alvo": "E-mail normalizado da conta bloqueada.",
-    "criado_em": "Data e hora da criação da regra.",
-    "criado_por": "UID da conta administrativa que criou a regra."
-  },
   "cartoes_kanban": {
     "id": "Identificador numérico gerado pelo banco.",
     "id_pai": "Identifica o quadro em quadros_kanban que contém a tarefa. A chave composta com referencia_coluna exige que a coluna escolhida pertença a esse mesmo quadro.",

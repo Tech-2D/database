@@ -115,6 +115,7 @@ Os catálogos públicos passam por projeções que selecionam os campos da respo
 | 039 | Disponibiliza as disciplinas do Notaki por turma |
 | 040 | Retira os acessos recentes e limita os bloqueios da Agenda ao e-mail |
 | 041 | Retira o histórico de auditoria e os valores anteriores das alterações |
+| 042 | Move os bloqueios temporários da Agenda para o Redis, por UID da conta |
 
 Em um banco local vazio, siga os passos em [Consultas SQL]({{ '/consultas.html' | relative_url }}). O script de instalação aplica as migrações na ordem acima.
 

@@ -187,45 +187,6 @@
     ]
   },
   {
-    "name": "visao_bloqueios_agenda",
-    "comment": "Interface SQL de compatibilidade para bloqueios_agenda",
-    "dependencies": [
-      "bloqueios_agenda"
-    ],
-    "columns": [
-      {
-        "name": "id",
-        "source": "id",
-        "type": "uuid",
-        "note": "Identificador único da regra de bloqueio."
-      },
-      {
-        "name": "kind",
-        "source": "tipo",
-        "type": "character varying(32)",
-        "note": "Tipo aceito pelo banco e pela API. O valor é email."
-      },
-      {
-        "name": "target",
-        "source": "alvo",
-        "type": "character varying(320)",
-        "note": "E-mail normalizado da conta bloqueada."
-      },
-      {
-        "name": "created_at",
-        "source": "criado_em",
-        "type": "timestamp with time zone",
-        "note": "Data e hora da criação da regra."
-      },
-      {
-        "name": "created_by",
-        "source": "criado_por",
-        "type": "character varying(128)",
-        "note": "UID da conta administrativa que criou a regra."
-      }
-    ]
-  },
-  {
     "name": "visao_catalogo_horarios",
     "comment": "Apelidos de colunas usados pela API do Cadê o professor.",
     "dependencies": [

@@ -14,6 +14,7 @@ database: redis
     <div><dt>Cache de consultas</dt><dd>60 segundos a 5 minutos</dd></div>
     <div><dt>Comunicados e avisos</dt><dd>7 dias</dd></div>
     <div><dt>Atualizações da Agenda</dt><dd>14 dias</dd></div>
+    <div><dt>Bloqueios de conta</dt><dd>Prazo configurável</dd></div>
   </dl>
 </section>
 
@@ -35,7 +36,7 @@ database: redis
       <article class="redis-key" id="{{ item.id }}" data-catalog-object data-ttl-seconds="{{ item.ttl_seconds }}" aria-labelledby="{{ item.id }}-titulo">
         <div class="redis-key-heading">
           <h4 id="{{ item.id }}-titulo">{{ item.name | escape }}</h4>
-          <span class="redis-ttl" title="{{ item.ttl_seconds }} segundos"><span>TTL</span> {{ item.ttl }}</span>
+          <span class="redis-ttl" title="{{ item.expiry | escape }}"><span>TTL</span> {{ item.ttl }}</span>
         </div>
         <p class="redis-key-path"><code>{{ item.key | escape }}</code></p>
         <p>{{ item.description | escape }}</p>
@@ -61,7 +62,7 @@ database: redis
   </div>
   <div>
     <dt>Quando o Redis fica indisponível</dt>
-    <dd>A API busca atividades, turmas e horários no PostgreSQL. O calendário abre sem o comunicado geral e sem as publicações de atualização enquanto o Redis estiver indisponível. O quadro de avisos indica falha na consulta. Gravações de comunicados, atualizações e avisos retornam erro.</dd>
+    <dd>A API busca atividades, turmas e horários no PostgreSQL. O calendário abre sem o comunicado geral e sem as publicações de atualização enquanto o Redis estiver indisponível. O quadro de avisos indica falha na consulta. Gravações de comunicados, atualizações e avisos retornam erro. A Agenda também retorna indisponibilidade nas rotas protegidas quando a validação de bloqueio falha.</dd>
   </div>
   <div>
     <dt>Como diagnosticar o cache</dt>
