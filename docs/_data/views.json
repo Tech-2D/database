@@ -187,52 +187,6 @@
     ]
   },
   {
-    "name": "visao_auditoria_aplicacao",
-    "comment": null,
-    "dependencies": [
-      "auditoria_aplicacao",
-      "valores_historico"
-    ],
-    "columns": [
-      {
-        "name": "sequence",
-        "source": "sequencia",
-        "type": "bigint",
-        "note": "Identificador sequencial da entrada."
-      },
-      {
-        "name": "actor",
-        "source": "autor",
-        "type": "character varying(256)",
-        "note": "Conta ou serviço que realizou a operação."
-      },
-      {
-        "name": "path",
-        "source": "caminho",
-        "type": "character varying(512)",
-        "note": "Caminho do documento afetado."
-      },
-      {
-        "name": "operation",
-        "source": "operacao",
-        "type": "character varying(32)",
-        "note": "Operação realizada, como criação, alteração ou exclusão."
-      },
-      {
-        "name": "previous_data",
-        "source": "previous_data",
-        "type": "jsonb",
-        "note": "Conteúdo anterior reconstruído a partir das linhas da auditoria."
-      },
-      {
-        "name": "changed_at",
-        "source": "alterado_em",
-        "type": "timestamp with time zone",
-        "note": "Data e hora da alteração."
-      }
-    ]
-  },
-  {
     "name": "visao_bloqueios_agenda",
     "comment": "Interface SQL de compatibilidade para bloqueios_agenda",
     "dependencies": [

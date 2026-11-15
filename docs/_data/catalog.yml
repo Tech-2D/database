@@ -86,10 +86,6 @@
       title: Preferências de e-mail por conta
     - name: entregas_resumo
       title: Reservas de envio do resumo semanal
-    - name: auditoria_aplicacao
-      title: Auditoria da aplicação
-    - name: valores_historico
-      title: Campos tipados do histórico
 
 - id: pegaki
   name: Notas e médias do Pegaki

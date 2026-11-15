@@ -33,14 +33,14 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `040_retirar_acessos_recentes` está instalada no banco.
+A versão `041_retirar_auditoria_aplicacao` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |
 | Visitas aos sites | `visitas_aos_sites` reúne as contagens e a última data registrada na Agenda. A moderação da Agenda aplica bloqueios por e-mail. |
 | Catálogo de matérias | O Pegaki reutiliza disciplinas; disciplinas_series associa matérias e séries sem repetir nomes. visao_disciplinas_pegaki preserva os rótulos usados pela interface. |
 | Expurgo de atividades | O Worker exclui os anexos do R2 antes de remover a atividade e seus metadados do PostgreSQL. A rotina não cria cópias. |
-| Auditoria da antiga rota de atividades | A tabela antiga foi retirada; as operações atuais usam `auditoria_aplicacao` e `valores_historico`. |
+| Gravações da aplicação | Os recibos ajudam a reconhecer requisições repetidas. O histórico de auditoria foi retirado. |
 | Listas e agrupamentos | Foram removidos os marcadores `grupo` e `listas_presentes`. A ordem continua explícita nas tabelas filhas, e a API devolve listas vazias como `[]`. |
 
 O histórico dos scripts fica no Git. A versão instalada fica no comentário de `tech2d`, sem uma tabela de controle de migrações. Os schemas internos do PostgreSQL e do Aiven pertencem ao serviço e não fazem parte das áreas da aplicação.

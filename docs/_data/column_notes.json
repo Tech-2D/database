@@ -26,13 +26,6 @@
     "criado_em": "Momento de criação da atividade. Conserva a origem temporal do cadastro para o histórico e as respostas da API.",
     "alterado_em": "Momento da última alteração, no formato ISO da API."
   },
-  "auditoria_aplicacao": {
-    "sequencia": "Identificador sequencial da entrada.",
-    "autor": "Conta ou serviço que realizou a operação.",
-    "caminho": "Referência externa do registro alterado, reconstruída no formato do contrato da API. Permite relacionar a auditoria à entidade e ao link que foram afetados.",
-    "operacao": "Operação realizada, como criação, alteração ou exclusão.",
-    "alterado_em": "Momento em que a operação foi auditada. Permite ordenar o histórico das mudanças."
-  },
   "bloqueios_agenda": {
     "id": "Identificador único da regra de bloqueio.",
     "tipo": "Tipo aceito pelo banco e pela API. O valor é email.",
@@ -333,17 +326,6 @@
     "ativa": "Habilitação da agenda no catálogo. Permite suspender sua disponibilidade sem apagar seu cadastro.",
     "referencia_pedido": "Solicitação que originou a agenda aprovada. Mantém a rastreabilidade da decisão administrativa.",
     "aprovada_em": "Momento em que a agenda foi aprovada. Conserva a data da liberação da sala no sistema."
-  },
-  "valores_historico": {
-    "id": "Identificador numérico gerado pelo banco.",
-    "id_auditoria": "Entrada da auditoria atual à qual o campo pertence.",
-    "id_pai": "Campo ou lista que contém este valor. Nulo na raiz.",
-    "chave": "Nome do campo quando faz parte de um objeto.",
-    "ordem": "Posição do item dentro da lista, a partir de zero. Preserva a sequência escolhida na interface ao reconstruir a resposta da API.",
-    "tipo": "Tipo do valor preservado, incluindo objeto, lista e nulo.",
-    "valor_textual": "Valor anterior de um campo textual. Só é usado quando tipo indica uma string, preservando a reconstrução do histórico.",
-    "valor_numerico": "Valor anterior de um campo numérico. Mantém números como números durante a reconstrução da auditoria.",
-    "valor_logico": "Valor anterior verdadeiro ou falso. Preserva o significado booleano em vez de convertê-lo para texto."
   },
   "visitas_aos_sites": {
     "dia": "Data local da visita no horário de Brasília. Sustenta os agrupamentos diários do painel e o corte de retenção.",

@@ -79,10 +79,6 @@ O expurgo diário usa a regra de retenção da turma. A API exclui os anexos do 
 
 `espacos_kanban` identifica o proprietário e agrupa quadros pessoais ou compartilhados. Quadros, colunas, cartões e itens de checklist ficam em tabelas relacionadas. O vínculo entre cartão e coluna exige que os dois pertençam ao mesmo quadro. Participantes e pedidos de acesso ficam em tabelas próprias.
 
-## Auditoria
-
-Os eventos de auditoria guardam a ação, a autoria e o momento da alteração. `valores_historico` guarda os campos anteriores em linhas tipadas, com posição e vínculo com a auditoria. Isso preserva objetos e listas mesmo após a exclusão do registro original.
-
 ## Visitas e permissões
 
 - [Visitas aos sites]({{ '/postgresql.html#obj-visitas_aos_sites' | relative_url }}) separa as visitas por site e deduplica acessos dentro de intervalos de 30 minutos.

@@ -243,30 +243,12 @@
         "procedure": false
     },
     {
-        "name": "gravar_valor_historico",
-        "anchor": "rotina-gravar_valor_historico-6dfc5090",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "auditoria bigint, pai bigint, campo character varying, posicao integer, objeto jsonb",
-        "procedure": false
-    },
-    {
         "name": "inserir_anexos_atividade",
         "anchor": "rotina-inserir_anexos_atividade-32f84b30",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
         "arguments": "pai bigint, posicao integer, objeto jsonb",
-        "procedure": false
-    },
-    {
-        "name": "inserir_auditoria",
-        "anchor": "rotina-inserir_auditoria-d41d8cd9",
-        "result": "trigger",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "",
         "procedure": false
     },
     {
@@ -554,15 +536,6 @@
         "result": "jsonb",
         "comment": null,
         "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_valor_historico",
-        "anchor": "rotina-ler_valor_historico-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "plpgsql",
         "arguments": "alvo bigint",
         "procedure": false
     },

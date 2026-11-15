@@ -7,10 +7,6 @@
     "feature": "Calendário · Dia, semana, mês e detalhes",
     "description": "Alimenta o calendário, os links diretos de atividades e as consultas das automações. Representantes editam atividades da própria turma; administradores têm o acesso permitido pela política da API."
   },
-  "auditoria_aplicacao": {
-    "feature": "API · Histórico de alterações",
-    "description": "Recebe os registros de gravações feitos pela aplicação. Identifica quem alterou o quê; valores_historico conserva o estado anterior em campos tipados. É um recurso de operação, sem edição pelo usuário comum."
-  },
   "bloqueios_agenda": {
     "feature": "Administração · Bloquear e desbloquear acessos",
     "description": "Consultada pela moderação antes das operações protegidas da Agenda. Superadministradores gerenciam os bloqueios por e-mail no painel Usuários e bloqueios."
@@ -154,10 +150,6 @@
   "turmas_agenda": {
     "feature": "Agenda · Turmas habilitadas pela administração",
     "description": "Guarda o nome e a habilitação de agendas aprovadas pelo fluxo de pedidos. Trata da disponibilidade da agenda, enquanto turmas identifica salas dos horários; esses papéis são distintos na implementação atual."
-  },
-  "valores_historico": {
-    "feature": "API · Conteúdo anterior das alterações",
-    "description": "Decompõe os valores do estado anterior de um registro auditado em linhas e tipos. A API reconstrói o conteúdo do histórico com funções SQL; não é uma segunda cópia ativa da atividade ou do quadro."
   },
   "visitas_aos_sites": {
     "feature": "Administração · Estatísticas de acesso",
