@@ -1,9 +1,9 @@
 ---
 title: Redis
-description: Cache de catálogos, comunicado geral e histórico de atualizações da Agenda.
+description: Cache de catálogos, comunicados de turma, comunicado geral e atualizações da Agenda.
 ---
 
-O Redis acelera as consultas públicas da API SQL. O PostgreSQL fornece a revisão dos catálogos de atividades, turmas e horários, usada para escolher a chave do cache. O comunicado geral e as publicações de atualização ficam no Redis com prazos próprios.
+O Redis acelera as consultas públicas da API SQL. O PostgreSQL fornece a revisão dos catálogos de atividades, turmas e horários, usada para escolher a chave do cache. O comunicado geral, as atualizações e os avisos das turmas ficam no Redis com prazos próprios.
 
 **Configuração atual:** o Worker SQL usa `REDIS_CACHE_ENABLED=true`. O resultado de cada consulta aparece no header `X-Catalog-Cache`; em caso de falha ou indisponibilidade do Redis, a API consulta o PostgreSQL. As rotas continuam exigindo a autenticação e as permissões verificadas pelo Worker.
 
@@ -52,3 +52,15 @@ Os avisos publicados em **Atualizações** aparecem no histórico e no aviso de 
 | tech2d:{agenda-updates}:commit:ID | Recibo de publicação para repetir a requisição sem duplicar o aviso |
 
 A API lê os avisos ativos diretamente do Redis nas rotas de catálogo da Agenda e de atualizações. O PostgreSQL continua a validar a permissão de publicação e a autorização de crédito de uma sugestão. Se o Redis ficar indisponível, o calendário continua carregando as atividades e turmas, e a interface indica falha ao tentar publicar.
+
+## Quadro de avisos das turmas
+
+Os avisos do quadro ficam disponíveis por sete dias (604.800 segundos) a partir da publicação. A API define o prazo na criação. Editar o aviso preserva a data original de expiração. Representantes podem editar e apagar avisos da própria turma, e superadministradores podem gerenciar qualquer turma.
+
+| Chave | Conteúdo |
+| --- | --- |
+| `tech2d:{board-notices}:item:ID` | Aviso, autoria, data de expiração e versão |
+| `tech2d:{board-notices}:class:TURMA` | Índice de avisos da turma por data de expiração |
+| `tech2d:{board-notices}:commit:ID` | Recibo temporário para reconhecer a repetição da mesma gravação |
+
+A leitura autenticada em `GET /api/catalog/notices?class=…` omite o e-mail e o identificador do autor. O painel administrativo consulta a mesma turma com as permissões de edição aplicadas. A API consulta o PostgreSQL para verificar papéis e turmas e grava os avisos somente no Redis.

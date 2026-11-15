@@ -40,19 +40,6 @@
     "operacao": "Operação realizada, como criação, alteração ou exclusão.",
     "alterado_em": "Momento em que a operação foi auditada. Permite ordenar o histórico das mudanças."
   },
-  "avisos_turma": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
-    "turma": "Sala cujo quadro exibe o comunicado. Também delimita a permissão de edição dos representantes.",
-    "titulo": "Assunto mostrado no quadro de avisos. Resume o comunicado antes da leitura de seu conteúdo.",
-    "conteudo": "Texto publicado pelo usuário ou pela administração.",
-    "tipo": "Classificação do aviso, usada para contextualizar sua apresentação no mural.",
-    "expira_em": "Fim da validade do aviso. Permite distinguir o comunicado vigente de um aviso vencido.",
-    "expurgo_em": "Data prevista para retirada do aviso pelo fluxo de expurgo; é separada do fim de sua validade.",
-    "criado_por": "UID da conta que criou o registro.",
-    "email_autor": "E-mail associado à autoria do comunicado, para identificação no fluxo de gerenciamento.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "alterado_em": "Momento da última alteração, no formato ISO da API."
-  },
   "bloqueios_agenda": {
     "id": "Identificador único da regra de bloqueio.",
     "tipo": "Tipo de bloqueio, por e-mail ou rede.",

@@ -36,15 +36,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_avisos_turma",
-        "anchor": "rotina-gravar_avisos_turma-65a7a60d",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
-        "procedure": false
-    },
-    {
         "name": "gravar_chat_representantes",
         "anchor": "rotina-gravar_chat_representantes-65a7a60d",
         "result": "void",
@@ -326,15 +317,6 @@
     {
         "name": "ler_atividades",
         "anchor": "rotina-ler_atividades-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_avisos_turma",
-        "anchor": "rotina-ler_avisos_turma-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

@@ -15,10 +15,6 @@
     "feature": "API · Histórico de alterações",
     "description": "Recebe os registros de gravações feitos pela aplicação. Identifica quem alterou o quê; valores_historico conserva o estado anterior em campos tipados. É um recurso de operação, sem edição pelo usuário comum."
   },
-  "avisos_turma": {
-    "feature": "Turma · Quadro de avisos",
-    "description": "Usada no mural da sala para comunicados publicados por representantes e administradores. A turma restringe o público, e as datas de validade permitem distinguir um aviso vigente de um comunicado vencido."
-  },
   "bloqueios_agenda": {
     "feature": "Administração · Bloquear e desbloquear acessos",
     "description": "Consultada pela moderação antes das operações protegidas da Agenda. Administradores cadastram e removem bloqueios por e-mail ou identificador de rede; a API não expõe esses dados no catálogo do calendário."

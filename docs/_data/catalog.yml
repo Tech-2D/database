@@ -11,8 +11,6 @@
       title: Políticas de expurgo por turma
     - name: turmas_agenda
       title: Turmas habilitadas na Agenda
-    - name: avisos_turma
-      title: Avisos publicados no quadro da turma
 - id: horarios
   name: Horários dos professores
   objects:
