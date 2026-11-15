@@ -192,19 +192,6 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
-  "perfis_comunidade": {
-    "id_perfil_comunidade": "Identificador numérico próprio de perfis_comunidade. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",
-    "empresa": "Empresa informada pela pessoa no perfil público. Dá contexto profissional no diretório da comunidade.",
-    "turma_informada": "Texto livre informado pelo dono do perfil, como 2ºD. É informação de apresentação e não define a turma autorizada de um representante. Por não exigir uma turma escolar cadastrada, permanece textual.",
-    "sala": "Descrição da sala ou localização.",
-    "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
-    "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
-    "alterado_em": "Momento da última alteração, no formato ISO da API.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
   "preferencias_resumo": {
     "id_preferencia_resumo": "Identificador numérico próprio de preferencias_resumo. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "ativo": "Escolha de receber o resumo. O serviço usa esse estado para decidir se deve incluir a conta nos envios.",
@@ -321,5 +308,18 @@
     "tipo_visitante": "Categoria da chave de visitante. O registro atual exige autenticação; a categoria anônima preserva a leitura do histórico existente.",
     "chave_visitante": "UID para acessos autenticados ou código derivado para o histórico anônimo. Permite deduplicar visitas sem guardar um IP literal.",
     "site": "Origem da visita: agenda, professores ou pegaki (identificador técnico da área de Notas). Permite comparar o uso de cada site no mesmo painel."
+  },
+  "perfis": {
+    "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",
+    "empresa": "Empresa informada pela pessoa no perfil público. Dá contexto profissional no diretório da comunidade.",
+    "turma_informada": "Texto livre informado pelo dono do perfil, como 2ºD. É informação de apresentação e não define a turma autorizada de um representante. Por não exigir uma turma escolar cadastrada, permanece textual.",
+    "sala": "Descrição da sala ou localização.",
+    "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
+    "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
+    "alterado_em": "Momento da última alteração, no formato ISO da API.",
+    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
+    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
+    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações.",
+    "id_perfil": "Identificador numérico do perfil do usuário. É a chave primária da tabela perfis e permanece estável ao editar as informações da conta."
   }
 }

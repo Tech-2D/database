@@ -75,10 +75,6 @@
     "feature": "Login · Permissões de administradores e representantes",
     "description": "Consultada na autenticação das áreas administrativas e nas verificações de gravação. Define o papel da conta e a turma sobre a qual um representante pode atuar; não armazena a senha do Firebase Authentication. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
-  "perfis_comunidade": {
-    "feature": "Menu · Perfis da comunidade",
-    "description": "Guarda os dados que a pessoa escolheu publicar, como nome, empresa, foto, sala e turma_informada. Essa turma é texto livre de apresentação; não concede acesso nem substitui o id_turma do perfil administrativo. Contas autenticadas não precisam ter perfil público."
-  },
   "preferencias_resumo": {
     "feature": "Configurações · Resumo semanal por e-mail",
     "description": "Registra a participação da conta no resumo e a turma selecionada para o envio. O serviço usa essa preferência para montar um resumo pertinente à sala do destinatário. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
@@ -122,5 +118,9 @@
   "visitas_aos_sites": {
     "feature": "Administração · Estatísticas de acesso",
     "description": "Alimenta os totais, a comparação entre sites e a data da última visita de cada conta à Agenda. A combinação de data, intervalo, visitante e site evita contar várias vezes a mesma visita dentro de uma janela de meia hora. A retenção é de 90 dias."
+  },
+  "perfis": {
+    "feature": "Conta · Perfil do usuário",
+    "description": "Usada na edição do perfil do usuário e na exibição dos dados que a pessoa escolheu publicar na Agenda e no Cadê o professor. Guarda nome, empresa, turma informada, sala, andar, foto e os metadados de edição do perfil. A referência da API identifica a conta pelo UID do Firebase Authentication; a autenticação e a senha continuam no serviço de login. Preferências com tabelas próprias, como a adesão ao resumo semanal, continuam separadas."
   }
 }

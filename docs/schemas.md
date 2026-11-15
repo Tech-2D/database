@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `053_retirar_conversas_sugestoes` está instalada no banco.
+A versão `054_perfis_usuarios` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

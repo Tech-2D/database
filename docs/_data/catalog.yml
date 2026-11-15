@@ -55,8 +55,8 @@
   objects:
     - name: perfis_administrativos
       title: Papéis administrativos
-    - name: perfis_comunidade
-      title: Perfis públicos da comunidade
+    - name: perfis
+      title: Perfis dos usuários
     - name: pedidos_agenda
       title: Pedidos de criação de agenda
     - name: pedidos_representacao

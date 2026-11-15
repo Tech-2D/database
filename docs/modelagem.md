@@ -164,8 +164,8 @@ As duplicatas comprovadas de Língua Inglesa e Língua Portuguesa 2 são consoli
 ### Onde texto continua correto
 
 - `pedidos_agenda.nome_turma_solicitada` é uma proposta que pode ainda não ter correspondente aprovado.
-- `perfis_comunidade.turma_informada`, empresa, sala e andar são informações livres da pessoa, sem catálogo obrigatório.
-- UIDs do Firebase Authentication não apontam para `perfis_comunidade`: nem toda conta publica um perfil.
+- `perfis.turma_informada`, empresa, sala e andar são informações livres da pessoa, sem catálogo obrigatório.
+- UIDs do Firebase Authentication não apontam para `perfis`: nem toda conta publica um perfil.
 - Nome e e-mail de um participante do Kanban são informações de identificação do acesso, não uma FK para um perfil público opcional.
 - Referências externas de cartões e quadros fazem parte do contrato do agregado do Kanban; não são nomes de disciplinas ou de turmas. A estrutura interna já tem FKs entre espaço, quadro, coluna, cartão e checklist.
 
@@ -182,3 +182,7 @@ A autorização de upload fica no Redis por meio de um registro pendente. É pos
 ## Limites de serviço
 
 Recuperação de senha, anexos e fotos usam contadores no Redis com janela de uma hora. Uma gravação verifica a versão de todos os contadores antes de atualizar qualquer um. O prazo de expiração começa no primeiro uso da janela e permanece fixo. [Chaves dos limites de serviço]({{ '/redis.html#limites-de-servico' | relative_url }})
+
+## Perfil do usuário
+
+`perfis` é a tabela de dados do perfil, usada na edição e apresentação de nome, empresa, turma informada, sala, andar e foto. A PK `id_perfil` identifica a linha e `referencia_api` preserva o UID da conta esperado pela API. Os dados existentes e suas versões foram preservados na renomeação da versão 054. A senha permanece no Firebase Authentication. Preferências específicas, como receber o resumo semanal, continuam em suas tabelas próprias.

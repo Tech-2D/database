@@ -126,8 +126,8 @@
         "procedure": false
     },
     {
-        "name": "gravar_perfis_administrativos",
-        "anchor": "rotina-gravar_perfis_administrativos-a45b467e",
+        "name": "gravar_perfis",
+        "anchor": "rotina-gravar_perfis-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
@@ -135,8 +135,8 @@
         "procedure": false
     },
     {
-        "name": "gravar_perfis_comunidade",
-        "anchor": "rotina-gravar_perfis_comunidade-a45b467e",
+        "name": "gravar_perfis_administrativos",
+        "anchor": "rotina-gravar_perfis_administrativos-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
@@ -360,8 +360,8 @@
         "procedure": false
     },
     {
-        "name": "ler_perfis_administrativos",
-        "anchor": "rotina-ler_perfis_administrativos-c9ce0023",
+        "name": "ler_perfis",
+        "anchor": "rotina-ler_perfis-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",
@@ -369,8 +369,8 @@
         "procedure": false
     },
     {
-        "name": "ler_perfis_comunidade",
-        "anchor": "rotina-ler_perfis_comunidade-c9ce0023",
+        "name": "ler_perfis_administrativos",
+        "anchor": "rotina-ler_perfis_administrativos-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",
