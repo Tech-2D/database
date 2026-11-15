@@ -11,10 +11,6 @@
     "feature": "Meu Kanban · Tarefas pessoais e compartilhadas",
     "description": "Guarda o conteúdo de cada tarefa exibida nos quadros. Coluna, posição, prazo, prioridade, responsável e vínculos com atividades permitem organizar o trabalho sem transformar o cartão em uma atividade da turma."
   },
-  "chat_representantes": {
-    "feature": "Representantes · Chat em grupo",
-    "description": "Usada no grupo de comunicação dos representantes e administradores dentro da Agenda. Os dados do remetente contextualizam a mensagem; a API restringe o acesso às contas com o papel necessário."
-  },
   "colunas_kanban": {
     "feature": "Meu Kanban · Etapas do quadro",
     "description": "Define as etapas que recebem os cartões e a ordem em que aparecem. A indicação de conclusão alimenta o cálculo de progresso; mover uma coluna altera sua posição, não o conteúdo das tarefas."

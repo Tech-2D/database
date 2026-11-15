@@ -40,15 +40,6 @@
     "etiquetas": "Rótulos usados para organizar e buscar tarefas no quadro. A lista conserva a ordem definida pelo usuário.",
     "referencias_atividades": "IDs externos de atividades da Agenda vinculadas ao cartão. Permitem abrir as entregas relacionadas sem copiar seu conteúdo para o Kanban."
   },
-  "chat_representantes": {
-    "id_registro": "Chave da linha de negócio em registros_aplicacao. Liga o conteúdo à referência externa e à versão usada pela API para detectar conflitos de edição.",
-    "mensagem": "Conteúdo enviado ao chat em grupo. É o texto que representantes e administradores leem para trocar avisos e dúvidas.",
-    "remetente": "UID de quem publicou a mensagem. Mantém a autoria mesmo se o e-mail da conta mudar.",
-    "email_remetente": "E-mail observado no envio, para identificar o participante no chat restrito.",
-    "papel_remetente": "Papel apresentado com a mensagem, dando contexto sobre quem atua como representante ou administrador. A autorização continua sendo verificada pela API.",
-    "turma_remetente": "Sala associada ao representante no envio. Ajuda a contextualizar pedidos e dúvidas no chat em grupo.",
-    "criado_em": "Momento de criação, no formato ISO da API."
-  },
   "colunas_kanban": {
     "id": "Identificador numérico gerado pelo banco.",
     "id_pai": "Identifica a linha de quadros_kanban que contém este item. A chave estrangeira mantém o vínculo e evita itens sem um pai válido.",

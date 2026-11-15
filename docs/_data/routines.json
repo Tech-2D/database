@@ -36,15 +36,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_chat_representantes",
-        "anchor": "rotina-gravar_chat_representantes-65a7a60d",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb",
-        "procedure": false
-    },
-    {
         "name": "gravar_conteudo",
         "anchor": "rotina-gravar_conteudo-40971084",
         "result": "void",
@@ -308,15 +299,6 @@
     {
         "name": "ler_cartoes_kanban",
         "anchor": "rotina-ler_cartoes_kanban-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
-        "name": "ler_chat_representantes",
-        "anchor": "rotina-ler_chat_representantes-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

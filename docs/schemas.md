@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `042_bloqueios_agenda_no_redis` está instalada no banco.
+A versão `043_retirar_chat_representantes` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

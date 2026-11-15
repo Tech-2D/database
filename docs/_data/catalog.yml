@@ -33,8 +33,6 @@
       title: Sugestões de melhoria da Agenda
     - name: mensagens_sugestao
       title: Mensagens privadas sobre sugestões
-    - name: chat_representantes
-      title: Mensagens do chat dos representantes
 - id: kanban
   name: Kanban
   objects:
