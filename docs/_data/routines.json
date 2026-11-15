@@ -135,15 +135,6 @@
         "procedure": false
     },
     {
-        "name": "gravar_preferencias_resumo",
-        "anchor": "rotina-gravar_preferencias_resumo-a45b467e",
-        "result": "void",
-        "comment": null,
-        "language": "plpgsql",
-        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
-        "procedure": false
-    },
-    {
         "name": "gravar_registros",
         "anchor": "rotina-gravar_registros-d006a42d",
         "result": "void",
@@ -164,6 +155,15 @@
     {
         "name": "gravar_regras_retencao",
         "anchor": "rotina-gravar_regras_retencao-a45b467e",
+        "result": "void",
+        "comment": null,
+        "language": "plpgsql",
+        "arguments": "alvo bigint, objeto jsonb, chave_api character varying, compartilhado_api boolean, pai_api character varying, id_pai_api bigint",
+        "procedure": false
+    },
+    {
+        "name": "gravar_resumo_perfil",
+        "anchor": "rotina-gravar_resumo_perfil-a45b467e",
         "result": "void",
         "comment": null,
         "language": "plpgsql",
@@ -351,15 +351,6 @@
         "procedure": false
     },
     {
-        "name": "ler_preferencias_resumo",
-        "anchor": "rotina-ler_preferencias_resumo-c9ce0023",
-        "result": "jsonb",
-        "comment": null,
-        "language": "sql",
-        "arguments": "alvo bigint",
-        "procedure": false
-    },
-    {
         "name": "ler_quadros_kanban",
         "anchor": "rotina-ler_quadros_kanban-c9ce0023",
         "result": "jsonb",
@@ -389,6 +380,15 @@
     {
         "name": "ler_regras_retencao",
         "anchor": "rotina-ler_regras_retencao-c9ce0023",
+        "result": "jsonb",
+        "comment": null,
+        "language": "sql",
+        "arguments": "alvo bigint",
+        "procedure": false
+    },
+    {
+        "name": "ler_resumo_perfil",
+        "anchor": "rotina-ler_resumo_perfil-c9ce0023",
         "result": "jsonb",
         "comment": null,
         "language": "sql",

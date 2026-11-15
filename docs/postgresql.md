@@ -132,7 +132,7 @@ A versão **047** padroniza 54 nomes de colunas, incluindo as PKs simples com o 
 
 A versão **048** cria FKs de disciplinas em três tabelas e de turmas em nove tabelas, além dos vínculos de recorrência e upload. Os nomes repetidos são retirados; a leitura reconstrói os rótulos. O catálogo escolar guarda uma única referência externa da Agenda. Texto livre e propostas não aprovadas continuam explicitamente textuais.
 
-A versão **049** transfere o controle de entregas do resumo semanal para o Redis e remove `entregas_resumo`. As preferências de recebimento continuam em `preferencias_resumo`.
+A versão **049** transfere o controle de entregas do resumo semanal para o Redis e remove `entregas_resumo`. As preferências de recebimento permaneceram no SQL e, na versão 056, foram incorporadas a `perfis`.
 
 A versão **050** remove `envios_anexos`. Uploads pendentes ficam no Redis e os anexos confirmados continuam em `anexos_atividade`.
 
@@ -148,4 +148,8 @@ Na versão `053_retirar_conversas_sugestoes`, a tabela de mensagens privadas e s
 
 ## Solicitações temporárias no Redis
 
-A versão `055_pedidos_temporarios_redis` removeu as tabelas de sugestões de atividades e pedidos de Agenda. Esses dois fluxos usam Redis com TTL fixo de 7 dias. A estrutura SQL atual possui 29 tabelas; a aprovação de uma turma continua sendo persistida em `turmas_agenda`.
+A versão `055_pedidos_temporarios_redis` removeu as tabelas de sugestões de atividades e pedidos de Agenda. Esses dois fluxos usam Redis com TTL fixo de 7 dias. Na versão 055, a estrutura SQL passou a ter 29 tabelas; a aprovação de uma turma continua sendo persistida em `turmas_agenda`.
+
+## Preferências do resumo no perfil
+
+A versão `056_resumo_no_perfil` incorporou as inscrições do resumo semanal à tabela `perfis` e removeu `preferencias_resumo`. A estrutura atual possui 28 tabelas. As projeções da API continuam separando a apresentação pública da inscrição privada; os perfis e as preferências existentes foram preservados.

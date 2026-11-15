@@ -1684,17 +1684,17 @@
                 "type": "bigint",
                 "check": true,
                 "unique": false,
-                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
-                "nullable": false,
+                "comment": "Versão de edição dos dados de apresentação. Nula quando a conta apenas configurou o resumo e não publicou um perfil.",
+                "nullable": true,
                 "generated": false
             },
             {
                 "name": "atualizado_em",
                 "type": "timestamp with time zone",
-                "check": false,
+                "check": true,
                 "unique": false,
-                "comment": "Instante da última gravação da entidade no contrato da API.",
-                "nullable": false,
+                "comment": "Instante da última gravação dos dados de apresentação; nulo quando não há perfil publicado.",
+                "nullable": true,
                 "generated": false
             },
             {
@@ -1705,15 +1705,65 @@
                 "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
                 "nullable": false,
                 "generated": false
+            },
+            {
+                "name": "resumo_semanal_ativo",
+                "type": "boolean",
+                "check": false,
+                "unique": false,
+                "comment": "Escolha privada de receber o resumo semanal por e-mail. Nula quando não há preferência cadastrada.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "id_turma_resumo",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "FK para turmas.id_turma. Turma selecionada para o resumo semanal, independente da turma livre informada no perfil público.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "resumo_alterado_em_ms",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": "Momento da atualização da preferência em milissegundos desde o Unix epoch, preservado no contrato do serviço de e-mail.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "resumo_versao",
+                "type": "bigint",
+                "check": true,
+                "unique": false,
+                "comment": "Versão da preferência privada. Permite editar o perfil público e a inscrição no resumo sem sobrescrever uma seção ao salvar a outra.",
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "resumo_atualizado_em",
+                "type": "timestamp with time zone",
+                "check": true,
+                "unique": false,
+                "comment": "Instante da última gravação da preferência privada do resumo; nulo quando não existe inscrição configurada.",
+                "nullable": true,
+                "generated": false
             }
         ],
-        "comment": "Dados e configurações do perfil do usuário. Usada na edição do perfil e na apresentação dos dados que a pessoa escolheu publicar na Agenda e no Cadê o professor.",
+        "comment": "Dados do perfil e preferências privadas do resumo semanal por usuário. A leitura pública seleciona somente os dados de apresentação e somente linhas com perfil publicado.",
         "references": [
+            {
+                "table": "turmas",
+                "column": "id_turma_resumo",
+                "target": "id_turma"
+            }
         ],
         "primary_key": [
             "id_perfil"
         ],
-        "foreign_key_count": 0
+        "foreign_key_count": 1
     },
     {
         "kind": "table",
@@ -1793,87 +1843,6 @@
         ],
         "primary_key": [
             "id_perfil_administrativo"
-        ],
-        "foreign_key_count": 1
-    },
-    {
-        "kind": "table",
-        "name": "preferencias_resumo",
-        "columns": [
-            {
-                "name": "id_preferencia_resumo",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "ativo",
-                "type": "boolean",
-                "check": false,
-                "unique": false,
-                "comment": "Campo enabled no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "alterada_em_ms",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "Campo updatedAt no contrato da API.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "id_turma",
-                "type": "bigint",
-                "check": false,
-                "unique": false,
-                "comment": "FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.",
-                "nullable": true,
-                "generated": false
-            },
-            {
-                "name": "versao",
-                "type": "bigint",
-                "check": true,
-                "unique": false,
-                "comment": "Revisão da entidade usada para detectar edições concorrentes.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "atualizado_em",
-                "type": "timestamp with time zone",
-                "check": false,
-                "unique": false,
-                "comment": "Instante da última gravação da entidade no contrato da API.",
-                "nullable": false,
-                "generated": false
-            },
-            {
-                "name": "referencia_api",
-                "type": "character varying(320)",
-                "check": true,
-                "unique": true,
-                "comment": "Identificador externo estável usado pelo contrato da API e pelos links da entidade.",
-                "nullable": false,
-                "generated": false
-            }
-        ],
-        "comment": "Preferências de e-mail por conta",
-        "references": [
-            {
-                "table": "turmas",
-                "column": "id_turma",
-                "target": "id_turma"
-            }
-        ],
-        "primary_key": [
-            "id_preferencia_resumo"
         ],
         "foreign_key_count": 1
     },

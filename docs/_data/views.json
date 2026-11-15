@@ -280,7 +280,7 @@
   },
   {
     "name": "visao_documentos_aplicacao",
-    "comment": "Reúne as entidades tipadas com UNION ALL. Reconstrói referências, conteúdo e versões sem uma tabela central de identidades.",
+    "comment": "Reúne as entidades tipadas com UNION ALL. O perfil público e a preferência privada de resumo são projeções distintas da mesma linha de perfis, com dados e versões separados.",
     "dependencies": [
       "atividades",
       "espacos_kanban",
@@ -291,7 +291,6 @@
       "pedidos_representacao",
       "perfis_administrativos",
       "perfis",
-      "preferencias_resumo",
       "regras_recorrencia",
       "regras_retencao",
       "sugestoes_melhoria",
@@ -324,13 +323,13 @@
       },
       {
         "name": "version",
-        "source": "versao",
+        "source": "versao / resumo_versao",
         "type": "bigint",
-        "note": "Versão do registro usada para detectar conflitos."
+        "note": "Versão da projeção consultada. Em perfis, os dados de apresentação e a preferência privada têm versões independentes."
       },
       {
         "name": "updated_at",
-        "source": "atualizado_em",
+        "source": "atualizado_em / resumo_atualizado_em",
         "type": "timestamp with time zone",
         "note": "Data e hora da última alteração."
       }

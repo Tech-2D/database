@@ -33,7 +33,7 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `055_pedidos_temporarios_redis` está instalada no banco.
+A versão `056_resumo_no_perfil` está instalada no banco.
 
 | Mudança | Estrutura atual |
 | --- | --- |

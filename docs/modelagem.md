@@ -150,7 +150,8 @@ A versão 048 substitui os nomes repetidos por vínculos com as entidades existe
 | Tabelas | FK | Catálogo ou entidade de destino |
 | --- | --- | --- |
 | atividades, regras_recorrencia | id_disciplina | disciplinas.id_disciplina |
-| atividades, regras_recorrencia, regras_retencao, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, preferencias_resumo, turmas_agenda | id_turma | turmas.id_turma |
+| atividades, regras_recorrencia, regras_retencao, sugestoes_melhoria, pedidos_representacao, perfis_administrativos, turmas_agenda | id_turma | turmas.id_turma |
+| perfis | id_turma_resumo | turmas.id_turma |
 | atividades | id_regra_recorrencia | regras_recorrencia.id_regra_recorrencia |
 
 Por exemplo, o horário de **2º Tec D** e uma atividade de **2° TECH D** compartilham o mesmo `id_turma`. A forma usada pela Agenda fica uma única vez em `turmas.referencia_agenda`. Para matérias, os rótulos de Notas já existentes são usados para localizar o cadastro correto; não se cria outra disciplina por uma diferença conhecida de exibição.
@@ -173,7 +174,7 @@ A exclusão física de uma regra de recorrência também desvincula suas ocorrê
 
 ## Resumo semanal por e-mail
 
-As preferências de turma e de recebimento ficam em `preferencias_resumo`. O controle temporário de entrega usa uma reserva por conta e semana no Redis. O serviço cria a reserva antes de tentar enviar o e-mail e atualiza seu estado depois. A reserva expira 28 dias após o início da semana resumida. [Chave e prazo de expiração]({{ '/redis.html#reservas-resumo-semanal' | relative_url }})
+As preferências de turma e de recebimento ficam na própria tabela `perfis`, nos campos `id_turma_resumo` e `resumo_semanal_ativo`. O controle temporário de entrega usa uma reserva por conta e semana no Redis. O serviço cria a reserva antes de tentar enviar o e-mail e atualiza seu estado depois. A reserva expira 28 dias após o início da semana resumida. [Chave e prazo de expiração]({{ '/redis.html#reservas-resumo-semanal' | relative_url }})
 
 ## Preparação e limpeza de uploads
 
@@ -185,10 +186,16 @@ Recuperação de senha, anexos e fotos usam contadores no Redis com janela de um
 
 ## Perfil do usuário
 
-`perfis` é a tabela de dados do perfil, usada na edição e apresentação de nome, empresa, turma informada, sala, andar e foto. A PK `id_perfil` identifica a linha e `referencia_api` preserva o UID da conta esperado pela API. Os dados existentes e suas versões foram preservados na renomeação da versão 054. A senha permanece no Firebase Authentication. Preferências específicas, como receber o resumo semanal, continuam em suas tabelas próprias.
+`perfis` é a tabela de dados do perfil, usada na edição e apresentação de nome, empresa, turma informada, sala, andar e foto. A PK `id_perfil` identifica a linha e `referencia_api` preserva o UID da conta esperado pela API. Os dados existentes e suas versões foram preservados na renomeação da versão 054. A senha permanece no Firebase Authentication. A preferência de resumo semanal também fica nessa linha, em campos privados separados dos dados de apresentação.
 
 ## Sugestões de atividades e pedidos de Agenda no Redis
 
 As coleções da API `suggestions` e `agendaClassRequests` usam Redis com TTL de 7 dias. A versão 055 removeu `sugestoes_atividade` e `pedidos_agenda` do PostgreSQL após copiar e conferir 8 sugestões e 1 pedido. Esses registros copiados receberam 7 dias a partir da migração. Novos registros expiram 7 dias após o envio; edição, aprovação ou conclusão preservam o prazo original.
 
 As permissões continuam na API: representantes revisam sugestões da própria turma e administradores revisam pedidos de novas Agendas. A aprovação pode gravar a habilitação permanente em `turmas_agenda`; essa habilitação permanece após o pedido expirar. A API prepara a versão no Redis e só a considera válida depois da confirmação do recibo no SQL. Uma falha mantém a versão anterior visível e reverte a liberação da turma. Os recibos não guardam o conteúdo do pedido.
+
+## Resumo semanal na mesma linha do perfil
+
+A versão 056 incorporou `preferencias_resumo` em `perfis`. `resumo_semanal_ativo` guarda a inscrição, `id_turma_resumo` referencia a turma escolar, e `resumo_alterado_em_ms` preserva a data usada pelo serviço de e-mail. `resumo_versao` e `resumo_atualizado_em` controlam a edição dessa seção sem alterar a versão do perfil público.
+
+Uma conta pode possuir apenas a preferência de resumo: nesse caso `versao` e `atualizado_em` ficam nulos, e o diretório público não mostra a linha. O contrato da API mantém `userProfiles/{uid}` e `_agendaDigestPreferences/{uid}` como projeções diferentes da mesma tabela; essas referências não representam tabelas separadas. Editar ou excluir os dados de apresentação preserva a inscrição, e alterar ou excluir a preferência preserva o perfil. As inscrições existentes, suas turmas e as versões foram conferidas durante a migração.

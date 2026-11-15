@@ -64,8 +64,6 @@
   objects:
     - name: recibos_gravacao
       title: Recibos de gravação
-    - name: preferencias_resumo
-      title: Preferências de e-mail por conta
 
 - id: notas
   name: Notas e médias

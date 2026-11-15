@@ -181,15 +181,6 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
-  "preferencias_resumo": {
-    "id_preferencia_resumo": "Identificador numérico próprio de preferencias_resumo. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "ativo": "Escolha de receber o resumo. O serviço usa esse estado para decidir se deve incluir a conta nos envios.",
-    "id_turma": "FK para turmas.id_turma. Seleciona as atividades da sala usadas no resumo semanal da conta. O nome exibido é consultado no catálogo, sem duplicação.",
-    "alterada_em_ms": "Momento da atualização em milissegundos desde o Unix epoch.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
-  },
   "professores": {
     "id_professor": "Identificador de professores. É a chave primária da entidade. Identidade numérica do docente. Mantém o vínculo das aulas com o mesmo professor quando seu nome cadastrado é alterado.",
     "nome": "Nome do professor no catálogo de horários."
@@ -287,9 +278,14 @@
     "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
     "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
     "alterado_em": "Momento da última alteração, no formato ISO da API.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações.",
-    "id_perfil": "Identificador numérico do perfil do usuário. É a chave primária da tabela perfis e permanece estável ao editar as informações da conta."
+    "versao": "Versão de edição dos dados de apresentação do perfil. Nula quando a conta apenas configurou o resumo e ainda não publicou perfil; essas linhas não aparecem no diretório público.",
+    "atualizado_em": "Data e hora da última gravação dos dados de apresentação do perfil. Nula quando ainda não há perfil publicado; a preferência de resumo usa resumo_atualizado_em.",
+    "referencia_api": "UID da conta esperado pela API. Identifica a mesma linha de perfil tanto na apresentação pública quanto nas preferências privadas de resumo, com projeções e permissões separadas.",
+    "id_perfil": "Identificador numérico do perfil do usuário. É a chave primária da tabela perfis e permanece estável ao editar as informações da conta.",
+    "resumo_semanal_ativo": "Preferência privada de receber o resumo semanal por e-mail. Verdadeiro inscreve, falso desliga o envio e nulo indica que a pessoa ainda não configurou essa preferência.",
+    "id_turma_resumo": "FK para turmas.id_turma. Escolhe as atividades da sala incluídas no resumo da conta. É independente de turma_informada, que é apenas o texto de apresentação do perfil público.",
+    "resumo_alterado_em_ms": "Momento em que a preferência foi atualizada, em milissegundos desde o Unix epoch. Preserva o formato consumido pelo formulário e pelo serviço de e-mail.",
+    "resumo_versao": "Versão de edição das preferências privadas de resumo. Evita que editar a inscrição sobrescreva o perfil e permite detectar conflitos entre duas alterações da inscrição. Nula quando não há preferência cadastrada.",
+    "resumo_atualizado_em": "Data e hora da última gravação das preferências do resumo. Nula quando a conta ainda não configurou a inscrição."
   }
 }
