@@ -2,12 +2,12 @@
   title: Cache dos catálogos
   nav: Cache dos catálogos
   icon: cache
-  description: Guarda respostas de atividades, turmas e horários que podem ser reconstruídas pelo PostgreSQL.
+  description: Acelera a abertura do calendário e a busca de professores. É uma cópia descartável das consultas públicas; as atividades e os horários continuam salvos no PostgreSQL.
   source: redis-catalog.js
   entries:
     - id: cache-agenda
       name: Calendário da Agenda
-      key: 'tech2d:sql:public:v2:agenda:{revisao}:{hash_filtros}'
+      key: 'tech2d:{cache}:agenda:<revisao>:<hash_filtros>'
       type: String
       ttl: 60 s
       ttl_seconds: 60
@@ -16,16 +16,16 @@
       route: GET /api/catalog/agenda
     - id: cache-updates
       name: Turmas no catálogo de atualizações
-      key: 'tech2d:sql:public:v2:updates:{revisao}:{hash_filtros}'
+      key: 'tech2d:{cache}:atualizacoes:<revisao>:<hash_filtros>'
       type: String
       ttl: 60 s
       ttl_seconds: 60
-      description: Guarda a lista de turmas ativas usada pela rota de atualizações. A rota busca as publicações diretamente nas chaves de agenda-updates.
+      description: Guarda a lista de turmas ativas usada pela rota de atualizações. A rota busca as publicações diretamente nas chaves do grupo atualizacoes.
       expiry: O prazo começa quando a API grava a resposta gerada pelo PostgreSQL.
       route: GET /api/catalog/updates
     - id: cache-schedules
       name: Horários do Cadê o professor
-      key: 'tech2d:sql:public:v2:schedules:{revisao}:{hash_filtros}'
+      key: 'tech2d:{cache}:horarios:<revisao>:<hash_filtros>'
       type: String
       ttl: 5 min
       ttl_seconds: 300
@@ -37,13 +37,13 @@
   title: Comunicado geral da Agenda
   nav: Comunicado geral
   icon: home
-  description: Sustenta a opção Aviso para todos da administração. Há um comunicado geral vigente por vez.
+  description: Usado em Administração → Aviso para todos. Mostra uma única mensagem geral para quem abre a Agenda, independentemente da turma. Uma nova publicação substitui a anterior.
   source: announcement.js
   entries:
     - id: announcement-latest
       name: Comunicado atual
-      key: 'tech2d:{announcement}:latest'
-      type: String JSON
+      key: 'tech2d:{comunicado}:atual'
+      type: String (JSON)
       ttl: 7 dias
       ttl_seconds: 604800
       description: Guarda a mensagem, a data e a versão do comunicado que aparece na Agenda.
@@ -51,7 +51,7 @@
       route: GET /api/catalog/agenda · GET /api/catalog/updates
     - id: announcement-commit
       name: Recibo do comunicado
-      key: 'tech2d:{announcement}:commit:{id_operacao}'
+      key: 'tech2d:{comunicado}:recibo:<id_operacao>'
       type: String
       ttl: 7 dias
       ttl_seconds: 604800
@@ -63,13 +63,13 @@
   title: Atualizações da Agenda
   nav: Atualizações
   icon: layers
-  description: Alimenta o histórico em Atualizações e o pop-up que aparece quando há uma publicação nova.
+  description: Usado no menu Atualizações e no pop-up de novidades ao abrir a Agenda. Cada publicação fica disponível por 14 dias; depois sai tanto da lista quanto do pop-up.
   source: agenda-updates.js
   entries:
     - id: update-item
       name: Publicação individual
-      key: 'tech2d:{agenda-updates}:item:{id_atualizacao}'
-      type: String JSON
+      key: 'tech2d:{atualizacoes}:item:<id_atualizacao>'
+      type: String (JSON)
       ttl: 14 dias
       ttl_seconds: 1209600
       description: Guarda título, descrição, data e os dados do crédito da sugestão quando autorizado. A API seleciona os campos públicos antes de devolvê-los.
@@ -77,7 +77,7 @@
       route: GET /api/catalog/updates · GET /api/catalog/agenda
     - id: update-index
       name: Índice de atualizações
-      key: 'tech2d:{agenda-updates}:index'
+      key: 'tech2d:{atualizacoes}:indice'
       type: ZSET
       ttl: 14 dias
       ttl_seconds: 1209600
@@ -86,7 +86,7 @@
       route: GET /api/catalog/updates · GET /api/catalog/agenda
     - id: update-commit
       name: Recibo de publicação
-      key: 'tech2d:{agenda-updates}:commit:{id_operacao}'
+      key: 'tech2d:{atualizacoes}:recibo:<id_operacao>'
       type: String
       ttl: 14 dias
       ttl_seconds: 1209600
@@ -103,8 +103,8 @@
   entries:
     - id: notice-item
       name: Aviso individual
-      key: 'tech2d:{board-notices}:item:{id_aviso}'
-      type: String JSON
+      key: 'tech2d:{avisos}:item:<id_aviso>'
+      type: String (JSON)
       ttl: 7 dias
       ttl_seconds: 604800
       description: Guarda o texto, a turma, a autoria, a versão e a data de expiração. O e-mail e o UID do autor ficam fora da resposta para alunos.
@@ -112,7 +112,7 @@
       route: GET /api/catalog/notices?class=… · POST /api/data
     - id: notice-index
       name: Índice por turma
-      key: 'tech2d:{board-notices}:class:{turma}'
+      key: 'tech2d:{avisos}:turma:<turma>'
       type: ZSET
       ttl: 7 dias
       ttl_seconds: 604800
@@ -121,7 +121,7 @@
       route: GET /api/catalog/notices?class=… · POST /api/data
     - id: notice-commit
       name: Recibo de gravação
-      key: 'tech2d:{board-notices}:commit:{id_operacao}'
+      key: 'tech2d:{avisos}:recibo:<id_operacao>'
       type: String
       ttl: 7 dias
       ttl_seconds: 604800
@@ -138,8 +138,8 @@
   entries:
     - id: block-user
       name: Bloqueio por conta
-      key: 'tech2d:{agenda-blocks}:user:{uid_codificado}'
-      type: String JSON
+      key: 'tech2d:{bloqueios}:usuario:<uid_codificado>'
+      type: String (JSON)
       ttl: Configurável
       ttl_seconds: configuravel
       description: Guarda UID, e-mail no momento do bloqueio, administrador, data de criação e data de liberação. O UID passa por encodeURIComponent para formar a chave.
@@ -147,7 +147,7 @@
       route: GET /api/admin/agenda-users · POST /api/admin/agenda-users · rotas protegidas da Agenda
     - id: block-index
       name: Índice de bloqueios vigentes
-      key: 'tech2d:{agenda-blocks}:index'
+      key: 'tech2d:{bloqueios}:indice'
       type: ZSET
       ttl: Até a última liberação
       ttl_seconds: dinamico
@@ -156,7 +156,7 @@
       route: GET /api/admin/agenda-users
     - id: block-commit
       name: Recibo de bloqueio ou liberação
-      key: 'tech2d:{agenda-blocks}:commit:{id_operacao}'
+      key: 'tech2d:{bloqueios}:recibo:<id_operacao>'
       type: String
       ttl: 24 h
       ttl_seconds: 86400
@@ -173,8 +173,8 @@
   entries:
     - id: invite-item
       name: Convite por operação de aprovação
-      key: 'tech2d:{representative-invites}:item:{id_operacao}'
-      type: String JSON
+      key: 'tech2d:{convites}:item:<id_operacao>'
+      type: String (JSON)
       ttl: 7 dias
       ttl_seconds: 604800
       description: Guarda e-mail, turma, pedido de origem, data de aprovação e expiração. Também vincula a aprovação ao recibo da gravação.
@@ -182,7 +182,7 @@
       route: POST /api/data · ativação do representante
     - id: invite-index
       name: Índice de convites vigentes
-      key: 'tech2d:{representative-invites}:index'
+      key: 'tech2d:{convites}:indice'
       type: ZSET
       ttl: Até a última expiração
       ttl_seconds: dinamico
@@ -191,7 +191,7 @@
       route: POST /api/data · lista administrativa
     - id: invite-email
       name: Índice por e-mail aprovado
-      key: 'tech2d:{representative-invites}:email:{hash_email}'
+      key: 'tech2d:{convites}:email:<hash_email>'
       type: ZSET
       ttl: Até a última expiração do e-mail
       ttl_seconds: dinamico
@@ -203,13 +203,13 @@
   title: Envios do resumo semanal
   nav: Envios do resumo semanal
   icon: cache
-  description: O serviço de e-mail registra uma reserva por conta e semana antes de enviar o resumo. O Worker coordena as reservas no Redis para impedir que duas execuções do cron enviem o mesmo e-mail.
+  description: Usado pelo envio automático do resumo semanal por e-mail. Reserva o envio por conta e semana para impedir que duas execuções mandem o mesmo resumo. Não armazena o texto do e-mail nem as atividades da turma.
   source: digest-deliveries.js
   entries:
     - id: digest-delivery
       name: Reserva de envio por conta e semana
-      key: 'tech2d:{digest-deliveries}:item:{hash_semana_e_conta}'
-      type: String JSON
+      key: 'tech2d:{resumos}:item:<hash_semana_e_conta>'
+      type: String (JSON)
       ttl: Até 28 dias após o início da semana
       ttl_seconds: dinamico
       description: O sufixo deriva do caminho do registro, que identifica a conta e a segunda-feira do resumo. A chave guarda a reserva e o resultado da tentativa, sem o e-mail do destinatário nem o conteúdo da mensagem.
@@ -225,8 +225,8 @@
   entries:
     - id: pending-upload-records
       name: Registros de upload
-      key: 'tech2d:{agenda-uploads}:records'
-      type: Hash JSON
+      key: 'tech2d:{uploads}:registros'
+      type: Hash (valores JSON)
       ttl: Até confirmação ou limpeza
       ttl_seconds: dinamico
       description: Um campo por upload guarda o arquivo esperado, o UID, a atividade e a chave privada do objeto no R2.
@@ -234,7 +234,7 @@
       route: POST /api/internal/web-data · serviço de arquivos
     - id: pending-upload-index
       name: Índice por data de criação
-      key: 'tech2d:{agenda-uploads}:created'
+      key: 'tech2d:{uploads}:por_data'
       type: ZSET
       ttl: Até confirmação ou limpeza
       ttl_seconds: dinamico
@@ -246,13 +246,13 @@
   title: Limites de serviço
   nav: Limites de serviço
   icon: cache
-  description: Limita tentativas de recuperação de senha e de envio de anexos ou fotos. A API confere e atualiza em conjunto os contadores da mesma solicitação.
+  description: Protege a recuperação de senha, o envio de anexos e o envio de fotos contra excesso de tentativas. Conta os usos dentro de uma janela de uma hora; ao expirar, uma nova janela pode começar. Não é o histórico de acessos dos alunos.
   source: service-limits.js
   entries:
     - id: service-limit-counter
       name: Contador por serviço e escopo
-      key: 'tech2d:{service-limits}:counter:{hash_do_escopo}'
-      type: String JSON
+      key: 'tech2d:{limites}:contador:<hash_do_escopo>'
+      type: String (JSON)
       ttl: Até o fim da janela de uma hora
       ttl_seconds: 3600
       description: Guarda a quantidade de tentativas, a hora de expiração e a versão usada para detectar alterações simultâneas. O escopo depende do serviço, como conta ou limite global.
@@ -260,7 +260,7 @@
       route: POST /api/internal/web-data · somente o backend
     - id: service-limit-receipt
       name: Recibo da atualização dos contadores
-      key: 'tech2d:{service-limits}:receipt:{id_operacao}'
+      key: 'tech2d:{limites}:recibo:<id_operacao>'
       type: String
       ttl: 1 hora após a gravação
       ttl_seconds: 3600
@@ -272,12 +272,12 @@
   title: Sugestões e pedidos temporários
   nav: Sugestões e pedidos
   icon: clock
-  description: Substitui as tabelas sugestoes_atividade e pedidos_agenda. Guarda propostas de atividades, solicitações de abertura de Agenda e pedidos de acesso ao Kanban e de representação por sete dias.
+  description: Aparece em Sugerir atividade, Pedir agenda para minha turma, Sou representante e nos convites de Kanban compartilhado. Guarda cada pedido enquanto ele pode ser analisado, por até sete dias. A aprovação de um pedido não é uma permissão temporária — o acesso aprovado fica no PostgreSQL.
   source: temporary-requests.js
   entries:
     - id: pedidos-temporarios-valores
       name: Conteúdo e versões das solicitações
-      key: 'tech2d:{temporary-requests}:item:{id_operacao}:{hash_caminho}'
+      key: 'tech2d:{pedidos}:item:<id_operacao>:<hash_caminho>'
       type: String (JSON)
       ttl: Até 7 dias
       ttl_seconds: 604800
@@ -286,17 +286,17 @@
       route: POST /api/data — get, query e commit para suggestions, agendaClassRequests, kanbanRequests e representativeRequests
     - id: pedidos-temporarios-colecoes
       name: Índice de solicitações por coleção
-      key: 'tech2d:{temporary-requests}:collection:{colecao}'
-      type: Sorted Set
+      key: 'tech2d:{pedidos}:colecao:<tipo>'
+      type: ZSET
       ttl: Até 7 dias
       ttl_seconds: 604800
-      description: Lista as chaves de versões da coleção suggestions, agendaClassRequests ou representativeRequests. A API seleciona a versão confirmada mais recente de cada registro e aplica os filtros e as permissões antes de devolver os resultados.
+      description: Lista versões de sugestões de atividades, pedidos de novas turmas ou pedidos de representação. O trecho <tipo> é atividades, turmas ou representantes. A API seleciona a versão confirmada mais recente de cada registro e aplica os filtros e as permissões antes de devolver os resultados.
       expiry: Expira no prazo do item mais recente do índice. Entradas vencidas são removidas nas gravações e ignoradas nas leituras.
       route: POST /api/data — query
     - id: pedidos-temporarios-caminhos
       name: Índice por solicitação
-      key: 'tech2d:{temporary-requests}:path:{hash_caminho}'
-      type: Sorted Set
+      key: 'tech2d:{pedidos}:registro:<hash_caminho>'
+      type: ZSET
       ttl: Até 7 dias
       ttl_seconds: 604800
       description: Localiza as versões de uma solicitação pelo hash de seu caminho. Uma gravação que falha no SQL não oculta a última versão confirmada; os dados preparados sem recibo válido são ignorados até expirarem.
@@ -305,11 +305,11 @@
 
     - id: pedidos-kanban-escopo
       name: Índices de acesso ao Kanban
-      key: 'tech2d:{temporary-requests}:kanban:{campo}:{hash_valor}'
-      type: Sorted Set
+      key: 'tech2d:{pedidos}:kanban:<quadro_ou_usuario>:<hash_valor>'
+      type: ZSET
       ttl: Até 7 dias
       ttl_seconds: 604800
-      description: Localiza as versões dos pedidos por quadro ou solicitante. O proprietário pode listar os pedidos do quadro e cada solicitante pode consultar os próprios. Participações aprovadas ficam no PostgreSQL.
+      description: Localiza pedidos de acesso ao Kanban por quadro ou solicitante. O trecho <quadro_ou_usuario> é quadro ou usuario. O proprietário pode listar os pedidos do quadro e cada solicitante pode consultar os próprios. Participações aprovadas ficam no PostgreSQL.
       expiry: Expira no prazo da versão mais recente do índice. Pedidos vencidos são ignorados.
       route: POST /api/data — query de kanbanRequests
 
@@ -322,7 +322,7 @@
   entries:
     - id: limpeza-kanban-pendentes
       name: Limpezas pendentes
-      key: 'tech2d:{kanban-cleanup}:pending'
+      key: 'tech2d:{limpeza}:pendentes'
       type: List
       ttl: Sem TTL
       description: Recebe as limpezas de cartões removidos. Falhas no R2 e listagens incompletas devolvem o item ao fim da fila.
@@ -330,7 +330,7 @@
       route: POST /api/data e rotina diária de limpeza
     - id: limpeza-kanban-processamento
       name: Limpezas em processamento
-      key: 'tech2d:{kanban-cleanup}:processing'
+      key: 'tech2d:{limpeza}:em_processamento'
       type: List
       ttl: Sem TTL
       description: Guarda os itens reservados antes de acessar o R2. A próxima execução recupera os itens deixados por uma rotina interrompida.
@@ -338,7 +338,7 @@
       route: Rotina diária de limpeza
     - id: limpeza-kanban-trava
       name: Trava de processamento
-      key: 'tech2d:{kanban-cleanup}:lease'
+      key: 'tech2d:{limpeza}:trava'
       type: String
       ttl: 2 min
       ttl_seconds: 120

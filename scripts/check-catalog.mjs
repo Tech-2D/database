@@ -45,3 +45,14 @@ const ddl = await read('sql/atual/estrutura.sql')
 assert.ok(ddl.includes('tech2d-schema-version:' + sqlInventory.version))
 assert.doesNotMatch(ddl, /^(COPY |INSERT INTO )/m, 'O snapshot deve conter apenas estrutura')
 console.log(`Scripts SQL validados: ${exported('VIEW').length} views, ${exported('FUNCTION').length} funções e todos os links do catálogo.`)
+
+const redisNames = JSON.parse(await read('docs/_data/redis_names.json'))
+const redisCatalog = await read('docs/_data/redis_catalog.yml')
+const documentedKeys = [...redisCatalog.matchAll(/^      key: '([^']+)'$/gm)].map(m => m[1])
+assert.ok(documentedKeys.length > 25, 'Documentar os grupos Redis usados pela aplicação')
+for (const key of documentedKeys) {
+  const example = key.replace('<tipo>', 'atividades').replace('<quadro_ou_usuario>', 'quadro').replaceAll(/<[^>]+>/g, 'EXEMPLO')
+  assert.ok(redisNames.some(r => example === r.current || example.startsWith(r.current + ':')), 'Padrão Redis sem implementação documentada: ' + key)
+  assert.ok(!redisNames.some(r => example === r.legacy || example.startsWith(r.legacy + ':')), 'Nome antigo no catálogo Redis: ' + key)
+}
+console.log(`Redis validado: ${documentedKeys.length} padrões de chaves atuais no catálogo.`)

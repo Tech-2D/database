@@ -1,0 +1,134 @@
+[
+  {
+    "legacy": "tech2d:{announcement}:latest",
+    "current": "tech2d:{comunicado}:atual"
+  },
+  {
+    "legacy": "tech2d:{announcement}:commit",
+    "current": "tech2d:{comunicado}:recibo"
+  },
+  {
+    "legacy": "tech2d:{agenda-updates}:item",
+    "current": "tech2d:{atualizacoes}:item"
+  },
+  {
+    "legacy": "tech2d:{agenda-updates}:index",
+    "current": "tech2d:{atualizacoes}:indice"
+  },
+  {
+    "legacy": "tech2d:{agenda-updates}:commit",
+    "current": "tech2d:{atualizacoes}:recibo"
+  },
+  {
+    "legacy": "tech2d:{board-notices}:item",
+    "current": "tech2d:{avisos}:item"
+  },
+  {
+    "legacy": "tech2d:{board-notices}:class",
+    "current": "tech2d:{avisos}:turma"
+  },
+  {
+    "legacy": "tech2d:{board-notices}:commit",
+    "current": "tech2d:{avisos}:recibo"
+  },
+  {
+    "legacy": "tech2d:{agenda-blocks}:user",
+    "current": "tech2d:{bloqueios}:usuario"
+  },
+  {
+    "legacy": "tech2d:{agenda-blocks}:index",
+    "current": "tech2d:{bloqueios}:indice"
+  },
+  {
+    "legacy": "tech2d:{agenda-blocks}:commit",
+    "current": "tech2d:{bloqueios}:recibo"
+  },
+  {
+    "legacy": "tech2d:{representative-invites}:item",
+    "current": "tech2d:{convites}:item"
+  },
+  {
+    "legacy": "tech2d:{representative-invites}:index",
+    "current": "tech2d:{convites}:indice"
+  },
+  {
+    "legacy": "tech2d:{representative-invites}:email",
+    "current": "tech2d:{convites}:email"
+  },
+  {
+    "legacy": "tech2d:{digest-deliveries}:item",
+    "current": "tech2d:{resumos}:item"
+  },
+  {
+    "legacy": "tech2d:{agenda-uploads}:records",
+    "current": "tech2d:{uploads}:registros"
+  },
+  {
+    "legacy": "tech2d:{agenda-uploads}:created",
+    "current": "tech2d:{uploads}:por_data"
+  },
+  {
+    "legacy": "tech2d:{service-limits}:counter",
+    "current": "tech2d:{limites}:contador"
+  },
+  {
+    "legacy": "tech2d:{service-limits}:receipt",
+    "current": "tech2d:{limites}:recibo"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:item",
+    "current": "tech2d:{pedidos}:item"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:path",
+    "current": "tech2d:{pedidos}:registro"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:collection:suggestions",
+    "current": "tech2d:{pedidos}:colecao:atividades"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:collection:agendaClassRequests",
+    "current": "tech2d:{pedidos}:colecao:turmas"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:collection:representativeRequests",
+    "current": "tech2d:{pedidos}:colecao:representantes"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:collection:kanbanRequests",
+    "current": "tech2d:{pedidos}:colecao:kanban"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:kanban:boardId",
+    "current": "tech2d:{pedidos}:kanban:quadro"
+  },
+  {
+    "legacy": "tech2d:{temporary-requests}:kanban:userId",
+    "current": "tech2d:{pedidos}:kanban:usuario"
+  },
+  {
+    "legacy": "tech2d:{kanban-cleanup}:pending",
+    "current": "tech2d:{limpeza}:pendentes"
+  },
+  {
+    "legacy": "tech2d:{kanban-cleanup}:processing",
+    "current": "tech2d:{limpeza}:em_processamento"
+  },
+  {
+    "legacy": "tech2d:{kanban-cleanup}:lease",
+    "current": "tech2d:{limpeza}:trava"
+  },
+  {
+    "legacy": "tech2d:sql:public:v2:agenda",
+    "current": "tech2d:{cache}:agenda"
+  },
+  {
+    "legacy": "tech2d:sql:public:v2:updates",
+    "current": "tech2d:{cache}:atualizacoes"
+  },
+  {
+    "legacy": "tech2d:sql:public:v2:schedules",
+    "current": "tech2d:{cache}:horarios"
+  }
+]

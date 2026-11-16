@@ -8,7 +8,7 @@ database: redis
 <section class="redis-guide" aria-labelledby="como-redis-funciona">
   <div>
     <h2 id="como-redis-funciona">{% include doc-icon.html name="cache" %}Onde o Redis entra</h2>
-    <p>A API usa Redis para acelerar o calendário e os horários e para guardar publicações com prazo de validade. O TTL informa por quanto tempo uma chave existe. Ao fim do prazo, o Redis a remove.</p>
+    <p>O Redis guarda cópias rápidas de consultas, conteúdo com prazo de validade e filas de trabalho. O PostgreSQL mantém os dados permanentes, como atividades, horários, perfis e permissões aprovadas. O TTL é o tempo que falta para uma chave ser apagada automaticamente.</p>
   </div>
   <dl>
     <div><dt>Cache de consultas</dt><dd>60 segundos a 5 minutos</dd></div>
@@ -19,12 +19,29 @@ database: redis
   </dl>
 </section>
 
+## Como ler este catálogo
+
+| Conceito | O que significa na aplicação |
+| --- | --- |
+| **String (JSON)** | Um registro completo, como um aviso ou pedido. JSON aqui é o formato do valor no Redis. |
+| **Índice ZSET** | Uma lista ordenada de IDs ou referências. Ajuda a encontrar registros por turma, data ou solicitante; não substitui o conteúdo de cada item. |
+| **Hash** | Vários registros dentro de uma chave. Nos uploads, cada campo identifica um arquivo ainda pendente. |
+| **List** | Uma fila de trabalho. Na limpeza do Kanban, guarda os arquivos que ainda precisam ser removidos do R2. |
+| **Recibo** | Reconhece uma requisição já concluída. Se houver reenvio por falha de rede, evita publicar ou contar a mesma operação duas vezes. |
+
+**Expiração do conteúdo:** avisos e pedidos não possuem uma cópia permanente no PostgreSQL. Ao vencerem, deixam de estar disponíveis. O vencimento de um convite não remove a permissão de um representante que já ativou sua conta.
+
+**Expiração do cache:** apenas a cópia da consulta é removida. A próxima consulta recompõe a resposta a partir do PostgreSQL.
+
+**Índices e filas:** o índice pode durar até a expiração do último item, enquanto cada conteúdo mantém seu próprio prazo. Filas de limpeza ficam sem TTL para que uma falha temporária no R2 não deixe arquivos esquecidos.
+
 <section class="redis-inventory" id="catalogo-redis" aria-labelledby="chaves">
   <div class="redis-inventory-heading">
     <h2 id="chaves">{% include doc-icon.html name="key" %}Chaves do Redis</h2>
     <div data-catalog-controls hidden><p class="catalog-status" data-catalog-status role="status"></p></div>
   </div>
-  <p>Os nomes abaixo são padrões. Nas chaves <code>tech2d:sql:public:v2</code>, <code>{revisao}</code> é o valor calculado no PostgreSQL e <code>{hash_filtros}</code> é o SHA-256 dos filtros da consulta. Nos outros grupos, <code>{announcement}</code>, <code>{agenda-updates}</code> e <code>{board-notices}</code> são partes literais da chave.</p>
+  <p>O padrão é <code>tech2d:{grupo}:finalidade:&lt;identificador&gt;</code>. Os nomes fixos estão em português, sem acentos e separados por <code>:</code>. Por exemplo: <code>tech2d:{avisos}:item:AVISO_EXEMPLO</code>.</p>
+  <p>As chaves de agrupamento, como <code>{avisos}</code>, são literais: identificam o grupo e mantêm juntas as chaves usadas na mesma operação Redis. Já os trechos entre <code>&lt;...&gt;</code> devem ser substituídos pelo ID, turma ou hash indicado. O hash é uma assinatura determinística usada para localizar o registro; não é uma senha nem uma autorização de acesso. O UID vem do Firebase Authentication. IDs de operação identificam tentativas de gravação; a revisão identifica a versão dos dados que gerou o cache.</p>
 
   {% for group in site.data.redis_catalog %}
   <section class="redis-group" id="{{ group.id }}" data-catalog-group="{{ group.id }}" aria-labelledby="{{ group.id }}-titulo">
@@ -42,9 +59,9 @@ database: redis
         <p class="redis-key-path"><code>{{ item.key | escape }}</code></p>
         <p>{{ item.description | escape }}</p>
         <dl class="redis-key-details">
-          <div><dt>Tipo</dt><dd>{{ item.type }}</dd></div>
-          <div><dt>Expiração</dt><dd>{{ item.expiry | escape }}</dd></div>
-          <div><dt>Rotas</dt><dd><code>{{ item.route | escape }}</code></dd></div>
+          <div><dt>Estrutura</dt><dd>{{ item.type }}</dd></div>
+          <div><dt>Quando é removida</dt><dd>{{ item.expiry | escape }}</dd></div>
+          <div><dt>Onde a API usa</dt><dd><code>{{ item.route | escape }}</code></dd></div>
         </dl>
       </article>
       {% endfor %}
@@ -63,7 +80,7 @@ database: redis
   </div>
   <div>
     <dt>Quando o Redis fica indisponível</dt>
-    <dd>A API busca atividades, turmas e horários no PostgreSQL. O calendário abre sem o comunicado geral e sem as publicações de atualização enquanto o Redis estiver indisponível. O quadro de avisos indica falha na consulta. Gravações de comunicados, atualizações e avisos retornam erro. Consultas e gravações de sugestões de atividades e pedidos de Agenda também retornam indisponibilidade, sem recorrer a uma cópia SQL. A Agenda também retorna indisponibilidade nas rotas protegidas quando a validação de bloqueio falha.</dd>
+    <dd>Se a falha for no cache, a API consulta atividades e horários no PostgreSQL. Recursos que existem apenas no Redis, como avisos e pedidos, podem ficar indisponíveis — expiração e falha de conexão são situações diferentes. Operações protegidas que dependem da checagem de bloqueio não são liberadas sem essa verificação. A API não cria uma cópia SQL silenciosa desses dados temporários.</dd>
   </div>
   <div>
     <dt>Como diagnosticar o cache</dt>
