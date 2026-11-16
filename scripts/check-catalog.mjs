@@ -20,3 +20,28 @@ for (const table of schema) {
   for (const ref of table.references) assert.ok(names.includes(ref.table), 'Referência a uma tabela retirada: ' + ref.table)
 }
 console.log(`Catálogo validado: ${schema.length} tabelas, ${columns} campos, todos com explicação.`)
+
+// Every object linked from the site must have an exported SQL definition.
+const sqlInventory = JSON.parse(await read('sql/atual/catalogo.json'))
+const siteInventory = JSON.parse(await read('docs/_data/sql_inventory.json'))
+assert.equal(siteInventory.version, sqlInventory.version, 'A versão SQL do site está desatualizada')
+assert.deepEqual(siteInventory.counts, sqlInventory.counts)
+const routines = JSON.parse(await read('docs/_data/routines.json'))
+const views = JSON.parse(await read('docs/_data/views.json'))
+const exported = type => sqlInventory.objects.filter(o => o.type === type)
+assert.deepEqual(exported('TABLE').map(o => o.name).sort(), [...names].sort())
+assert.deepEqual(exported('VIEW').map(o => o.name).sort(), views.map(v => v.name).sort())
+assert.equal(exported('FUNCTION').length, routines.filter(r => !r.procedure).length)
+assert.equal(exported('PROCEDURE').length, routines.filter(r => r.procedure).length)
+for (const routine of routines) {
+  const category = routine.procedure ? 'procedures' : 'funcoes'
+  assert.match(await read(`sql/atual/${category}/${routine.name}.sql`), /CREATE (FUNCTION|PROCEDURE)/)
+}
+for (const file of new Set(sqlInventory.objects.map(o => o.file))) {
+  assert.ok(!file.includes('..') && !file.startsWith('/'), 'Arquivo SQL deve ficar no inventário')
+  assert.ok((await read('sql/atual/' + file)).trim(), 'SQL vazio: ' + file)
+}
+const ddl = await read('sql/atual/estrutura.sql')
+assert.ok(ddl.includes('tech2d-schema-version:' + sqlInventory.version))
+assert.doesNotMatch(ddl, /^(COPY |INSERT INTO )/m, 'O snapshot deve conter apenas estrutura')
+console.log(`Scripts SQL validados: ${exported('VIEW').length} views, ${exported('FUNCTION').length} funções e todos os links do catálogo.`)

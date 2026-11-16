@@ -5,14 +5,16 @@ description: Exemplos de leitura para explorar o esquema em um PostgreSQL local.
 
 ## Preparar o banco local
 
-Execute os comandos na raiz do clone de [Tech-2D/modelagem-dados](https://github.com/Tech-2D/database). Use um PostgreSQL local com `createdb` e `psql`.
+Execute os comandos na raiz do clone de [Tech-2D/database](https://github.com/Tech-2D/database). Use um PostgreSQL 18+ local com `createdb` e `psql`.
 
 ```sh
 createdb tech2d_local
-psql -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/migrate.psql
+psql -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/instalar.psql
 ```
 
 O banco começa vazio. Para consultar atividades e horários, insira dados de teste e troque `TURMA-EXEMPLO` pelo nome da turma que você cadastrou.
+
+[Entenda os scripts de instalação e os códigos por objeto]({{ "/scripts.html" | relative_url }}).
 
 ## Conferir a versão instalada
 

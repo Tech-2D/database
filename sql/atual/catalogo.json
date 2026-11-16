@@ -1,0 +1,2796 @@
+{
+  "schema": "tech2d",
+  "version": "061_simplificar_recorrencias",
+  "serverVersion": "18.6",
+  "dumpVersion": "18.6",
+  "counts": {
+    "SCHEMA": 1,
+    "COMMENT": 210,
+    "FUNCTION": 51,
+    "TABLE": 25,
+    "SEQUENCE": 10,
+    "VIEW": 15,
+    "CONSTRAINT": 47,
+    "INDEX": 25,
+    "TRIGGER": 1,
+    "FK CONSTRAINT": 25,
+    "ROW SECURITY": 3,
+    "POLICY": 3,
+    "ACL": 46,
+    "PROCEDURE": 0
+  },
+  "objects": [
+    {
+      "name": "tech2d",
+      "type": "SCHEMA",
+      "schema": null,
+      "file": "schema/tech2d.sql"
+    },
+    {
+      "name": "SCHEMA tech2d",
+      "type": "COMMENT",
+      "schema": null,
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "buscar_id_turma(text)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/buscar_id_turma.sql"
+    },
+    {
+      "name": "FUNCTION buscar_id_turma(valor text)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "chave_turma(text)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/chave_turma.sql"
+    },
+    {
+      "name": "FUNCTION chave_turma(valor text)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "consultar_catalogo_agenda(text, boolean)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/consultar_catalogo_agenda.sql"
+    },
+    {
+      "name": "FUNCTION consultar_catalogo_agenda(p_turma text, p_incluir_atividades boolean)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "gravar_atividades(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_atividades.sql"
+    },
+    {
+      "name": "gravar_conteudo(bigint, character varying, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_conteudo.sql"
+    },
+    {
+      "name": "gravar_espacos_kanban(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_espacos_kanban.sql"
+    },
+    {
+      "name": "gravar_horarios_aula(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_horarios_aula.sql"
+    },
+    {
+      "name": "gravar_participantes_kanban(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_participantes_kanban.sql"
+    },
+    {
+      "name": "gravar_perfis(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_perfis.sql"
+    },
+    {
+      "name": "gravar_perfis_administrativos(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_perfis_administrativos.sql"
+    },
+    {
+      "name": "gravar_registros(jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_registros.sql"
+    },
+    {
+      "name": "gravar_regras_recorrencia(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_regras_recorrencia.sql"
+    },
+    {
+      "name": "gravar_regras_retencao(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_regras_retencao.sql"
+    },
+    {
+      "name": "gravar_resumo_perfil(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_resumo_perfil.sql"
+    },
+    {
+      "name": "gravar_sugestoes_melhoria(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_sugestoes_melhoria.sql"
+    },
+    {
+      "name": "gravar_turmas_agenda(bigint, jsonb, character varying, boolean, character varying, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/gravar_turmas_agenda.sql"
+    },
+    {
+      "name": "inserir_anexos_atividade(bigint, integer, jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/inserir_anexos_atividade.sql"
+    },
+    {
+      "name": "inserir_cartoes_kanban(bigint, integer, jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/inserir_cartoes_kanban.sql"
+    },
+    {
+      "name": "inserir_colunas_kanban(bigint, integer, jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/inserir_colunas_kanban.sql"
+    },
+    {
+      "name": "inserir_itens_checklist(bigint, integer, jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/inserir_itens_checklist.sql"
+    },
+    {
+      "name": "inserir_quadros_kanban(bigint, integer, jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/inserir_quadros_kanban.sql"
+    },
+    {
+      "name": "ler_anexos_atividade(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_anexos_atividade.sql"
+    },
+    {
+      "name": "ler_atividades(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_atividades.sql"
+    },
+    {
+      "name": "ler_cartoes_kanban(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_cartoes_kanban.sql"
+    },
+    {
+      "name": "ler_colunas_kanban(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_colunas_kanban.sql"
+    },
+    {
+      "name": "ler_espacos_kanban(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_espacos_kanban.sql"
+    },
+    {
+      "name": "ler_horarios_aula(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_horarios_aula.sql"
+    },
+    {
+      "name": "ler_itens_checklist(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_itens_checklist.sql"
+    },
+    {
+      "name": "ler_participantes_kanban(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_participantes_kanban.sql"
+    },
+    {
+      "name": "ler_perfis(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_perfis.sql"
+    },
+    {
+      "name": "ler_perfis_administrativos(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_perfis_administrativos.sql"
+    },
+    {
+      "name": "ler_quadros_kanban(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_quadros_kanban.sql"
+    },
+    {
+      "name": "ler_registro(bigint, character varying)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_registro.sql"
+    },
+    {
+      "name": "ler_regras_recorrencia(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_regras_recorrencia.sql"
+    },
+    {
+      "name": "ler_regras_retencao(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_regras_retencao.sql"
+    },
+    {
+      "name": "ler_resumo_perfil(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_resumo_perfil.sql"
+    },
+    {
+      "name": "ler_sugestoes_melhoria(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_sugestoes_melhoria.sql"
+    },
+    {
+      "name": "ler_turmas_agenda(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/ler_turmas_agenda.sql"
+    },
+    {
+      "name": "nome_disciplina_agenda(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/nome_disciplina_agenda.sql"
+    },
+    {
+      "name": "FUNCTION nome_disciplina_agenda(alvo bigint)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "nome_turma_agenda(bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/nome_turma_agenda.sql"
+    },
+    {
+      "name": "FUNCTION nome_turma_agenda(alvo bigint)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "normalizar_rotulo(text)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/normalizar_rotulo.sql"
+    },
+    {
+      "name": "FUNCTION normalizar_rotulo(valor text)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "padronizar_listas_registro(character varying, jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/padronizar_listas_registro.sql"
+    },
+    {
+      "name": "referencia_api(character varying, character varying, character varying)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/referencia_api.sql"
+    },
+    {
+      "name": "remover_nulos_raiz(jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/remover_nulos_raiz.sql"
+    },
+    {
+      "name": "remover_nulos_recursivo(jsonb)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/remover_nulos_recursivo.sql"
+    },
+    {
+      "name": "resolver_disciplina(text)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/resolver_disciplina.sql"
+    },
+    {
+      "name": "FUNCTION resolver_disciplina(valor text)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "resolver_regra_recorrencia(text)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/resolver_regra_recorrencia.sql"
+    },
+    {
+      "name": "resolver_turma(text, boolean)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/resolver_turma.sql"
+    },
+    {
+      "name": "FUNCTION resolver_turma(valor text, agenda boolean)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "revisao_catalogo_publico(character varying)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/revisao_catalogo_publico.sql"
+    },
+    {
+      "name": "FUNCTION revisao_catalogo_publico(catalogo character varying)",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "vincular_disciplina_notaki(bigint, bigint)",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/vincular_disciplina_notaki.sql"
+    },
+    {
+      "name": "vincular_nova_disciplina_notaki()",
+      "type": "FUNCTION",
+      "schema": "tech2d",
+      "file": "funcoes/vincular_nova_disciplina_notaki.sql"
+    },
+    {
+      "name": "anexos_atividade",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/anexos_atividade.sql"
+    },
+    {
+      "name": "TABLE anexos_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.id_anexo_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.id_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.referencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.nome",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.tipo_mime",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.tamanho_bytes",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.chave_arquivo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.enviado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN anexos_atividade.enviado_por",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "anexos_atividade_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/anexos_atividade_id_seq.sql"
+    },
+    {
+      "name": "ids_entidades",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/ids_entidades.sql"
+    },
+    {
+      "name": "SEQUENCE ids_entidades",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "atividades",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/atividades.sql"
+    },
+    {
+      "name": "TABLE atividades",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.id_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.titulo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.descricao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.tipo_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.data_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.hora_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.criado_por",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.email_criador",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.criado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.alterado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.id_disciplina",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.id_regra_recorrencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN atividades.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "cartoes_kanban",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/cartoes_kanban.sql"
+    },
+    {
+      "name": "TABLE cartoes_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.id_cartao_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.id_quadro_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.referencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.referencia_coluna",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.titulo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.descricao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.prioridade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.prazo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.id_responsavel",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.etiquetas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN cartoes_kanban.referencias_atividades",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "cartoes_kanban_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/cartoes_kanban_id_seq.sql"
+    },
+    {
+      "name": "horarios_aula",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/horarios_aula.sql"
+    },
+    {
+      "name": "TABLE horarios_aula",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN horarios_aula.id_horario_aula",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN horarios_aula.id_horario_interno",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN horarios_aula.andar",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN horarios_aula.sala",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN horarios_aula.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN horarios_aula.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "turmas",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/turmas.sql"
+    },
+    {
+      "name": "TABLE turmas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas.referencia_agenda",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "catalogo_horarios",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/catalogo_horarios.sql"
+    },
+    {
+      "name": "VIEW catalogo_horarios",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "colunas_kanban",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/colunas_kanban.sql"
+    },
+    {
+      "name": "TABLE colunas_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN colunas_kanban.id_coluna_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN colunas_kanban.id_quadro_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN colunas_kanban.referencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN colunas_kanban.nome",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN colunas_kanban.cor",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN colunas_kanban.concluida",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "colunas_kanban_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/colunas_kanban_id_seq.sql"
+    },
+    {
+      "name": "disciplinas",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/disciplinas.sql"
+    },
+    {
+      "name": "TABLE disciplinas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN disciplinas.id_disciplina",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "disciplinas_series",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/disciplinas_series.sql"
+    },
+    {
+      "name": "TABLE disciplinas_series",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN disciplinas_series.id_disciplina",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN disciplinas_series.ano_serie",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "espacos_kanban",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/espacos_kanban.sql"
+    },
+    {
+      "name": "TABLE espacos_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.id_espaco_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.id_proprietario",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.versao_formato",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.criado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.alterado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN espacos_kanban.compartilhado",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "faixas_horario",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/faixas_horario.sql"
+    },
+    {
+      "name": "TABLE faixas_horario",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN faixas_horario.id_faixa_horario",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "itens_checklist",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/itens_checklist.sql"
+    },
+    {
+      "name": "TABLE itens_checklist",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN itens_checklist.id_item_checklist",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN itens_checklist.id_cartao_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN itens_checklist.referencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN itens_checklist.descricao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN itens_checklist.concluido",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "itens_checklist_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/itens_checklist_id_seq.sql"
+    },
+    {
+      "name": "notas_cadernos",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/notas_cadernos.sql"
+    },
+    {
+      "name": "TABLE notas_cadernos",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN notas_cadernos.id_usuario",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN notas_cadernos.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN notas_cadernos.regra_calculo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "notas_lancamentos",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/notas_lancamentos.sql"
+    },
+    {
+      "name": "TABLE notas_lancamentos",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "notas_recuperacoes",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/notas_recuperacoes.sql"
+    },
+    {
+      "name": "TABLE notas_recuperacoes",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "participantes_kanban",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/participantes_kanban.sql"
+    },
+    {
+      "name": "TABLE participantes_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.id_participante_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.referencia_quadro",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.id_usuario",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.email",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.nome",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.criado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN participantes_kanban.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "perfis",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/perfis.sql"
+    },
+    {
+      "name": "TABLE perfis",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.id_perfil",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.nome",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.empresa",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.turma_informada",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.sala",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.andar",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.url_foto",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.alterado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.resumo_semanal_ativo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.id_turma_resumo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.resumo_alterado_em_ms",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.resumo_versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis.resumo_atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "perfis_administrativos",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/perfis_administrativos.sql"
+    },
+    {
+      "name": "TABLE perfis_administrativos",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.id_perfil_administrativo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.papel",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.criado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN perfis_administrativos.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "professores",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/professores.sql"
+    },
+    {
+      "name": "TABLE professores",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN professores.id_professor",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "quadros_kanban",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/quadros_kanban.sql"
+    },
+    {
+      "name": "TABLE quadros_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN quadros_kanban.id_quadro_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN quadros_kanban.id_espaco_kanban",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN quadros_kanban.referencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN quadros_kanban.nome",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN quadros_kanban.cor",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN quadros_kanban.compacto",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "quadros_kanban_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/quadros_kanban_id_seq.sql"
+    },
+    {
+      "name": "recibos_gravacao",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/recibos_gravacao.sql"
+    },
+    {
+      "name": "TABLE recibos_gravacao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN recibos_gravacao.id_recibo_gravacao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "regras_recorrencia",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/regras_recorrencia.sql"
+    },
+    {
+      "name": "TABLE regras_recorrencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.id_regra_recorrencia",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.titulo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.descricao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.tipo_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.hora_atividade",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.criado_por",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.criado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.data_inicio",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.data_fim",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.ativa",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.intervalo_semanas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.dias_semana",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.id_disciplina",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_recorrencia.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "regras_retencao",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/regras_retencao.sql"
+    },
+    {
+      "name": "TABLE regras_retencao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.id_regra_retencao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.dias",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.ativa",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.alterado_por",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.alterado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN regras_retencao.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "school_classes_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/school_classes_id_seq.sql"
+    },
+    {
+      "name": "school_subjects_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/school_subjects_id_seq.sql"
+    },
+    {
+      "name": "school_teachers_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/school_teachers_id_seq.sql"
+    },
+    {
+      "name": "school_time_slots_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/school_time_slots_id_seq.sql"
+    },
+    {
+      "name": "sugestoes_melhoria",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/sugestoes_melhoria.sql"
+    },
+    {
+      "name": "TABLE sugestoes_melhoria",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.id_sugestao_melhoria",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.mensagem",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.criado_por",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.email_criador",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.criado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.credito_autorizado",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.nome_credito",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.situacao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.concluida_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.concluida_por",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN sugestoes_melhoria.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "turmas_agenda",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/turmas_agenda.sql"
+    },
+    {
+      "name": "TABLE turmas_agenda",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.id_turma_agenda",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.ativa",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.referencia_pedido",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.aprovada_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.id_turma",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.versao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.atualizado_em",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "COLUMN turmas_agenda.referencia_api",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_disciplinas_notas",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_disciplinas_notas.sql"
+    },
+    {
+      "name": "VIEW visao_disciplinas_notas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_atividades",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_atividades.sql"
+    },
+    {
+      "name": "VIEW visao_atividades",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_atividades_automacao",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_atividades_automacao.sql"
+    },
+    {
+      "name": "VIEW visao_atividades_automacao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_catalogo_horarios",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_catalogo_horarios.sql"
+    },
+    {
+      "name": "VIEW visao_catalogo_horarios",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_disciplinas",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_disciplinas.sql"
+    },
+    {
+      "name": "VIEW visao_disciplinas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_documentos_aplicacao",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_documentos_aplicacao.sql"
+    },
+    {
+      "name": "VIEW visao_documentos_aplicacao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_documentos_catalogo",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_documentos_catalogo.sql"
+    },
+    {
+      "name": "VIEW visao_documentos_catalogo",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_faixas_horario",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_faixas_horario.sql"
+    },
+    {
+      "name": "VIEW visao_faixas_horario",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_horarios_aula",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_horarios_aula.sql"
+    },
+    {
+      "name": "VIEW visao_horarios_aula",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_notas_resultados",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_notas_resultados.sql"
+    },
+    {
+      "name": "VIEW visao_notas_resultados",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_perfis_administrativos",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_perfis_administrativos.sql"
+    },
+    {
+      "name": "VIEW visao_perfis_administrativos",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_professores",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_professores.sql"
+    },
+    {
+      "name": "VIEW visao_professores",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_recibos_gravacao",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_recibos_gravacao.sql"
+    },
+    {
+      "name": "VIEW visao_recibos_gravacao",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visao_turmas",
+      "type": "VIEW",
+      "schema": "tech2d",
+      "file": "views/visao_turmas.sql"
+    },
+    {
+      "name": "VIEW visao_turmas",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "visitas_aos_sites",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/visitas_aos_sites.sql"
+    },
+    {
+      "name": "TABLE visitas_aos_sites",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
+      "name": "anexos_atividade anexos_atividade_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/anexos_atividade.sql"
+    },
+    {
+      "name": "recibos_gravacao app_commits_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/recibos_gravacao.sql"
+    },
+    {
+      "name": "atividades atividades_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/atividades.sql"
+    },
+    {
+      "name": "atividades atividades_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/atividades.sql"
+    },
+    {
+      "name": "cartoes_kanban cartoes_kanban_id_quadro_kanban_ordem_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/cartoes_kanban.sql"
+    },
+    {
+      "name": "cartoes_kanban cartoes_kanban_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/cartoes_kanban.sql"
+    },
+    {
+      "name": "colunas_kanban colunas_kanban_id_quadro_kanban_ordem_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/colunas_kanban.sql"
+    },
+    {
+      "name": "colunas_kanban colunas_kanban_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/colunas_kanban.sql"
+    },
+    {
+      "name": "colunas_kanban colunas_kanban_referencia_quadro",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/colunas_kanban.sql"
+    },
+    {
+      "name": "disciplinas_series disciplinas_series_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/disciplinas_series.sql"
+    },
+    {
+      "name": "espacos_kanban espacos_kanban_compartilhado_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/espacos_kanban.sql"
+    },
+    {
+      "name": "espacos_kanban espacos_kanban_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/espacos_kanban.sql"
+    },
+    {
+      "name": "horarios_aula horarios_aula_id_registro_aplicacao_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/horarios_aula.sql"
+    },
+    {
+      "name": "itens_checklist itens_checklist_id_cartao_kanban_ordem_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/itens_checklist.sql"
+    },
+    {
+      "name": "itens_checklist itens_checklist_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/itens_checklist.sql"
+    },
+    {
+      "name": "notas_cadernos notas_cadernos_id_usuario_ano_letivo_ano_serie_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_cadernos.sql"
+    },
+    {
+      "name": "notas_cadernos notas_cadernos_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_cadernos.sql"
+    },
+    {
+      "name": "notas_lancamentos notas_lancamentos_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_lancamentos.sql"
+    },
+    {
+      "name": "notas_recuperacoes notas_recuperacoes_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_recuperacoes.sql"
+    },
+    {
+      "name": "participantes_kanban participantes_kanban_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/participantes_kanban.sql"
+    },
+    {
+      "name": "participantes_kanban participantes_kanban_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/participantes_kanban.sql"
+    },
+    {
+      "name": "perfis_administrativos perfis_administrativos_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/perfis_administrativos.sql"
+    },
+    {
+      "name": "perfis_administrativos perfis_administrativos_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/perfis_administrativos.sql"
+    },
+    {
+      "name": "perfis perfis_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/perfis.sql"
+    },
+    {
+      "name": "perfis perfis_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/perfis.sql"
+    },
+    {
+      "name": "quadros_kanban quadros_kanban_id_espaco_kanban_ordem_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/quadros_kanban.sql"
+    },
+    {
+      "name": "quadros_kanban quadros_kanban_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/quadros_kanban.sql"
+    },
+    {
+      "name": "regras_recorrencia regras_recorrencia_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_recorrencia.sql"
+    },
+    {
+      "name": "regras_recorrencia regras_recorrencia_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_recorrencia.sql"
+    },
+    {
+      "name": "regras_retencao regras_retencao_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_retencao.sql"
+    },
+    {
+      "name": "regras_retencao regras_retencao_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_retencao.sql"
+    },
+    {
+      "name": "turmas school_classes_name_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas.sql"
+    },
+    {
+      "name": "turmas school_classes_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas.sql"
+    },
+    {
+      "name": "horarios_aula school_schedules_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/horarios_aula.sql"
+    },
+    {
+      "name": "disciplinas school_subjects_name_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/disciplinas.sql"
+    },
+    {
+      "name": "disciplinas school_subjects_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/disciplinas.sql"
+    },
+    {
+      "name": "professores school_teachers_name_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/professores.sql"
+    },
+    {
+      "name": "professores school_teachers_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/professores.sql"
+    },
+    {
+      "name": "faixas_horario school_time_slots_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/faixas_horario.sql"
+    },
+    {
+      "name": "faixas_horario school_time_slots_start_time_end_time_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/faixas_horario.sql"
+    },
+    {
+      "name": "sugestoes_melhoria sugestoes_melhoria_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/sugestoes_melhoria.sql"
+    },
+    {
+      "name": "sugestoes_melhoria sugestoes_melhoria_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/sugestoes_melhoria.sql"
+    },
+    {
+      "name": "turmas_agenda turmas_agenda_id_turma_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas_agenda.sql"
+    },
+    {
+      "name": "turmas_agenda turmas_agenda_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas_agenda.sql"
+    },
+    {
+      "name": "turmas_agenda turmas_agenda_referencia_api_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas_agenda.sql"
+    },
+    {
+      "name": "turmas turmas_referencia_agenda_key",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas.sql"
+    },
+    {
+      "name": "visitas_aos_sites visitas_aos_sites_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/visitas_aos_sites.sql"
+    },
+    {
+      "name": "atividades_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/atividades_caminho_api_idx.sql"
+    },
+    {
+      "name": "atividades_data",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/atividades_data.sql"
+    },
+    {
+      "name": "atividades_disciplina_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/atividades_disciplina_idx.sql"
+    },
+    {
+      "name": "atividades_regra_recorrencia_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/atividades_regra_recorrencia_idx.sql"
+    },
+    {
+      "name": "atividades_turma_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/atividades_turma_idx.sql"
+    },
+    {
+      "name": "espacos_kanban_personalkanban_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/espacos_kanban_personalkanban_caminho_api_idx.sql"
+    },
+    {
+      "name": "espacos_kanban_sharedkanban_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/espacos_kanban_sharedkanban_caminho_api_idx.sql"
+    },
+    {
+      "name": "horarios_aula_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/horarios_aula_caminho_api_idx.sql"
+    },
+    {
+      "name": "participantes_kanban_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/participantes_kanban_caminho_api_idx.sql"
+    },
+    {
+      "name": "participantes_kanban_quadro",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/participantes_kanban_quadro.sql"
+    },
+    {
+      "name": "perfis_administrativos_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/perfis_administrativos_caminho_api_idx.sql"
+    },
+    {
+      "name": "perfis_administrativos_turma_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/perfis_administrativos_turma_idx.sql"
+    },
+    {
+      "name": "perfis_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/perfis_caminho_api_idx.sql"
+    },
+    {
+      "name": "perfis_turma_resumo_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/perfis_turma_resumo_idx.sql"
+    },
+    {
+      "name": "regras_recorrencia_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/regras_recorrencia_caminho_api_idx.sql"
+    },
+    {
+      "name": "regras_recorrencia_disciplina_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/regras_recorrencia_disciplina_idx.sql"
+    },
+    {
+      "name": "regras_recorrencia_turma_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/regras_recorrencia_turma_idx.sql"
+    },
+    {
+      "name": "regras_retencao_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/regras_retencao_caminho_api_idx.sql"
+    },
+    {
+      "name": "regras_retencao_turma_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/regras_retencao_turma_idx.sql"
+    },
+    {
+      "name": "school_schedules_active_class_day",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/school_schedules_active_class_day.sql"
+    },
+    {
+      "name": "sugestoes_melhoria_autor",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/sugestoes_melhoria_autor.sql"
+    },
+    {
+      "name": "sugestoes_melhoria_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/sugestoes_melhoria_caminho_api_idx.sql"
+    },
+    {
+      "name": "sugestoes_melhoria_turma_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/sugestoes_melhoria_turma_idx.sql"
+    },
+    {
+      "name": "turmas_agenda_caminho_api_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/turmas_agenda_caminho_api_idx.sql"
+    },
+    {
+      "name": "turmas_agenda_turma_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/turmas_agenda_turma_idx.sql"
+    },
+    {
+      "name": "horarios_aula vincular_disciplina_notaki",
+      "type": "TRIGGER",
+      "schema": "tech2d",
+      "file": "gatilhos/horarios_aula_vincular_disciplina_notaki.sql"
+    },
+    {
+      "name": "anexos_atividade anexos_atividade_id_atividade_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/anexos_atividade.sql"
+    },
+    {
+      "name": "atividades atividades_id_disciplina_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/atividades.sql"
+    },
+    {
+      "name": "atividades atividades_id_regra_recorrencia_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/atividades.sql"
+    },
+    {
+      "name": "atividades atividades_id_turma_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/atividades.sql"
+    },
+    {
+      "name": "cartoes_kanban cartoes_kanban_coluna",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/cartoes_kanban.sql"
+    },
+    {
+      "name": "cartoes_kanban cartoes_kanban_id_quadro_kanban_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/cartoes_kanban.sql"
+    },
+    {
+      "name": "colunas_kanban colunas_kanban_id_quadro_kanban_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/colunas_kanban.sql"
+    },
+    {
+      "name": "disciplinas_series disciplinas_series_id_disciplina_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/disciplinas_series.sql"
+    },
+    {
+      "name": "itens_checklist itens_checklist_id_cartao_kanban_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/itens_checklist.sql"
+    },
+    {
+      "name": "notas_lancamentos notas_lancamentos_disciplina_serie_fk",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_lancamentos.sql"
+    },
+    {
+      "name": "notas_lancamentos notas_lancamentos_id_usuario_ano_letivo_ano_serie_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_lancamentos.sql"
+    },
+    {
+      "name": "notas_recuperacoes notas_recuperacoes_disciplina_serie_fk",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_recuperacoes.sql"
+    },
+    {
+      "name": "notas_recuperacoes notas_recuperacoes_id_usuario_ano_letivo_ano_serie_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/notas_recuperacoes.sql"
+    },
+    {
+      "name": "perfis_administrativos perfis_administrativos_id_turma_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/perfis_administrativos.sql"
+    },
+    {
+      "name": "perfis perfis_id_turma_resumo_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/perfis.sql"
+    },
+    {
+      "name": "quadros_kanban quadros_kanban_id_espaco_kanban_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/quadros_kanban.sql"
+    },
+    {
+      "name": "regras_recorrencia regras_recorrencia_id_disciplina_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_recorrencia.sql"
+    },
+    {
+      "name": "regras_recorrencia regras_recorrencia_id_turma_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_recorrencia.sql"
+    },
+    {
+      "name": "regras_retencao regras_retencao_id_turma_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/regras_retencao.sql"
+    },
+    {
+      "name": "horarios_aula school_schedules_class_id_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/horarios_aula.sql"
+    },
+    {
+      "name": "horarios_aula school_schedules_subject_id_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/horarios_aula.sql"
+    },
+    {
+      "name": "horarios_aula school_schedules_teacher_id_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/horarios_aula.sql"
+    },
+    {
+      "name": "horarios_aula school_schedules_time_slot_id_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/horarios_aula.sql"
+    },
+    {
+      "name": "sugestoes_melhoria sugestoes_melhoria_id_turma_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/sugestoes_melhoria.sql"
+    },
+    {
+      "name": "turmas_agenda turmas_agenda_id_turma_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/turmas_agenda.sql"
+    },
+    {
+      "name": "notas_cadernos",
+      "type": "ROW SECURITY",
+      "schema": "tech2d",
+      "file": "seguranca/notas_cadernos.sql"
+    },
+    {
+      "name": "notas_cadernos notas_cadernos_conta",
+      "type": "POLICY",
+      "schema": "tech2d",
+      "file": "politicas/notas_cadernos_notas_cadernos_conta.sql"
+    },
+    {
+      "name": "notas_lancamentos",
+      "type": "ROW SECURITY",
+      "schema": "tech2d",
+      "file": "seguranca/notas_lancamentos.sql"
+    },
+    {
+      "name": "notas_lancamentos notas_lancamentos_conta",
+      "type": "POLICY",
+      "schema": "tech2d",
+      "file": "politicas/notas_lancamentos_notas_lancamentos_conta.sql"
+    },
+    {
+      "name": "notas_recuperacoes",
+      "type": "ROW SECURITY",
+      "schema": "tech2d",
+      "file": "seguranca/notas_recuperacoes.sql"
+    },
+    {
+      "name": "notas_recuperacoes notas_recuperacoes_conta",
+      "type": "POLICY",
+      "schema": "tech2d",
+      "file": "politicas/notas_recuperacoes_notas_recuperacoes_conta.sql"
+    },
+    {
+      "name": "SCHEMA tech2d",
+      "type": "ACL",
+      "schema": null,
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION consultar_catalogo_agenda(p_turma text, p_incluir_atividades boolean)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION gravar_registros(lote jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION inserir_anexos_atividade(pai bigint, posicao integer, objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION inserir_cartoes_kanban(pai bigint, posicao integer, objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION inserir_colunas_kanban(pai bigint, posicao integer, objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION inserir_itens_checklist(pai bigint, posicao integer, objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION inserir_quadros_kanban(pai bigint, posicao integer, objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_anexos_atividade(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_atividades(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_cartoes_kanban(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_colunas_kanban(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_espacos_kanban(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_horarios_aula(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_itens_checklist(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_participantes_kanban(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_perfis(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_perfis_administrativos(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_quadros_kanban(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_registro(alvo bigint, tipo character varying)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_regras_recorrencia(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_regras_retencao(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_sugestoes_melhoria(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION ler_turmas_agenda(alvo bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION padronizar_listas_registro(tipo character varying, objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION referencia_api(tipo character varying, pai character varying, referencia character varying)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION remover_nulos_raiz(objeto jsonb)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION revisao_catalogo_publico(catalogo character varying)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION vincular_disciplina_notaki(turma_id bigint, disciplina_id bigint)",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "FUNCTION vincular_nova_disciplina_notaki()",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE catalogo_horarios",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE disciplinas_series",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE notas_cadernos",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE notas_lancamentos",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE notas_recuperacoes",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE recibos_gravacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_disciplinas_notas",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_atividades",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_atividades_automacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_catalogo_horarios",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_documentos_aplicacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_documentos_catalogo",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_notas_resultados",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_perfis_administrativos",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_recibos_gravacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visitas_aos_sites",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+\set ON_ERROR_STOP on
+-- Instalação de referência em um banco vazio, PostgreSQL 18 ou superior.
+-- Execute com --single-transaction e uma conta local com CREATEROLE.
+DO $$
+BEGIN
+  IF current_setting('server_version_num')::integer < 180000 THEN
+    RAISE EXCEPTION 'O snapshot atual exige PostgreSQL 18 ou superior';
+  END IF;
+  IF to_regnamespace('tech2d') IS NOT NULL THEN
+    RAISE EXCEPTION 'O schema tech2d já existe. Use um banco vazio para instalar a referência';
+  END IF;
+END;
+$$;
+\ir papeis-locais.sql
+\ir atual/estrutura.sql

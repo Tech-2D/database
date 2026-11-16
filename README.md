@@ -1,81 +1,87 @@
 # Modelagem de dados da Tech-2D
 
-Documentação do PostgreSQL usado pela Agenda e pelo Cadê o professor, com as migrações do esquema `tech2d` e a integração do cache de catálogos públicos em Redis. [Abrir site da documentação](https://tech-2d.github.io/database/)
+Documentação e scripts do PostgreSQL e do Redis usados pela Agenda e pelo Cadê o professor. [Abrir documentação](https://tech-2d.github.io/database/).
+
+A estrutura consolidada foi extraída do PostgreSQL na versão **061_simplificar_recorrencias**: **25 tabelas, 15 views e 51 funções** no schema `tech2d`. Não há procedures atualmente. O inventário inclui sequências, índices, constraints, trigger, políticas RLS, comentários e permissões. A exportação contém apenas definições, sem registros de usuários ou credenciais.
 
 | Conteúdo | Onde encontrar |
 | --- | --- |
-| Arquitetura e serviços de dados | [Visão geral](docs/index.md) |
-| Tabelas, colunas, tipos e chaves | [PostgreSQL](docs/postgresql.md) |
-| Áreas do sistema e simplificações aplicadas | [Organização por áreas](docs/schemas.md) |
-| Views, colunas e origem dos dados | [Views da API](docs/views.md) |
-| Relações e fluxos dos dados | [Modelagem](docs/modelagem.md) |
-| Exemplos de leitura SQL | [Consultas](docs/consultas.md) |
-| Catálogos, chaves, TTL e invalidação | [Redis](docs/redis.md) |
-| DDL utilizado pela API | [Migrações SQL](sql/migrations/) |
-| Consultas para explorar o esquema | [Exemplos SQL](sql/examples/consultas.sql) |
+| Instalação completa em banco vazio | [sql/instalar.psql](sql/instalar.psql) |
+| Estrutura atual, em ordem de criação | [sql/atual/estrutura.sql](sql/atual/estrutura.sql) |
+| CREATE TABLE por tabela | [sql/atual/tabelas](sql/atual/tabelas/) |
+| Código das views | [sql/atual/views](sql/atual/views/) |
+| Código das funções | [sql/atual/funcoes](sql/atual/funcoes/) |
+| Índices, relações, políticas e demais objetos | [Inventário completo](sql/atual/catalogo.json) |
+| Permissões e comentários | [Permissões](sql/atual/permissoes.sql) · [Comentários](sql/atual/comentarios.sql) |
+| Histórico de alterações da API | [sql/migrations](sql/migrations/) · [executor](sql/migrate.psql) |
+| Instruções dos scripts e validação | [Guia SQL](sql/README.md) |
+| Tabelas, campos e finalidade no sistema | [Catálogo PostgreSQL](docs/postgresql.md) |
+| Chaves Redis, TTL e funcionamento | [Redis](docs/redis.md) |
+| Consultas de exemplo | [sql/examples/consultas.sql](sql/examples/consultas.sql) |
 
-## Rodar o SQL localmente
+## Instalar a estrutura atual localmente
 
-Com o PostgreSQL rodando na sua máquina e `psql` e `createdb` disponíveis, execute na raiz do clone:
+Use PostgreSQL **18 ou superior**, com `createdb` e `psql` no PATH. Execute na raiz do clone, com uma conta local que possa criar bancos e papéis:
 
 ```sh
 createdb tech2d_local
-psql -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/migrate.psql
-psql -d tech2d_local -v ON_ERROR_STOP=1 -f sql/examples/consultas.sql
+psql -X -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/instalar.psql
+psql -X -d tech2d_local -v ON_ERROR_STOP=1 -f sql/examples/consultas.sql
 ```
 
-As migrações criam o esquema vazio. A versão atual fica no comentário do schema. As consultas de negócio podem retornar zero linhas até você inserir dados de teste. Use o banco local criado acima para experimentar.
+A instalação exige um schema `tech2d` inexistente e não apaga estruturas anteriores. Os papéis locais referenciados nos GRANT são criados sem login nem senha. O banco começa sem dados de negócio; consultas podem retornar zero linhas. Não execute esse instalador sobre o banco de produção.
 
-## Atualizar o espelho
+Os arquivos individuais servem para consultar o código. Eles possuem dependências entre si; não execute as pastas em ordem alfabética. O arquivo `estrutura.sql` preserva a ordem correta do `pg_dump`. Para atualizar um banco existente, use as migrações da [API](https://github.com/Tech-2D/api), conforme as instruções de cada alteração.
 
-O repositório [Tech-2D/api](https://github.com/Tech-2D/api) é a fonte das migrações. Atualize primeiro o repositório da API, depois copie os scripts para `sql/migrations/`, inclua as novas versões em `sql/migrate.psql` na ordem numérica e atualize a documentação. Para regenerar os detalhes do catálogo, aplique as migrações em um banco local e rode:
-
-```sh
-psql -d tech2d_local -v ON_ERROR_STOP=1 -At -f sql/catalog.psql > docs/_data/schema.json
-```
-
-Inclua o título em português em `docs/_data/catalog.yml` e descreva a função do objeto com `COMMENT ON` na migração. O catálogo extrai a descrição das tabelas dos comentários do PostgreSQL. Mantenha a finalidade dos campos em `docs/_data/column_notes.json` e o inventário de views em `docs/_data/views.json`. O catálogo corresponde ao esquema PostgreSQL após a migration 044; as migrations anteriores ficam preservadas como histórico.
-
-O site é gerado pelo GitHub Pages a partir de `docs/`. A organização das páginas foi inspirada no [Astro Database Workspace](https://github.com/Astro-Inter/astro-database).
-
-
-## Atualizar o estilo do site
-
-A documentação usa Tailwind CSS 4.3.5 para o layout responsivo. A folha pronta fica em `docs/assets/docs.css`, servida estaticamente pelo GitHub Pages. Depois de alterar `src/styles.css` ou as classes dos templates, gere o arquivo compilado e inclua-o no commit:
+## Conferir os scripts
 
 ```sh
 npm ci
-npm run build:css
-```
-
-
-## Objetos no menu lateral
-
-O explorador usa os inventários de `docs/_data/schema.json`, `views.json` e `routines.json` para gerar grupos, contagens e links. Ao adicionar uma tabela ou view, atualize o inventário correspondente. Para regenerar as funções e procedures após uma migration:
-
-```sh
-psql -d tech2d_local -v ON_ERROR_STOP=1 -At -f sql/routines.psql > docs/_data/routines.json
-```
-
-As âncoras das rotinas usam nome e assinatura, mantendo os links estáveis quando novos objetos são incluídos.
-
-## Notas
-
-A [modelagem de notas](docs/notas-pegaki.md) descreve os cadernos, notas e recuperações privados, o catálogo compartilhado e a visão de resultados, com RLS e fórmulas versionadas para futuras análises. A migration 024 foi aplicada ao PostgreSQL centralizado em 13/11/2026. O cálculo e o isolamento por conta foram conferidos no banco real assumindo o papel limitado da API em uma transação revertida.
-
-## Finalidade das tabelas e dos campos
-
-Cada card do catálogo e do explorador apresenta onde a tabela é usada no sistema. O arquivo `docs/_data/table_usage.json` mantém a área e a descrição desse uso. `docs/_data/column_notes.json` explica a finalidade de cada campo. Ao alterar o inventário, atualize as duas fontes para que uma tabela ou coluna nova não apareça sem explicação.
-
-Todas as tabelas permanecem em `tech2d`. As áreas do site organizam a navegação; não são schemas separados. A versão 032 consolida os acessos dos três sites e reutiliza o catálogo geral de disciplinas na área de Notas. As migrations 029 e 030 preparam a compatibilidade; publique a API atualizada antes de aplicar 031 e 032.
-
-Antes de publicar a documentação, confira a cobertura e gere o CSS:
-
-```sh
 npm run check
+```
+
+Com um servidor PostgreSQL 18 **local** disponível, configure `PGHOST`, `PGPORT` e `PGUSER`, e execute:
+
+```sh
+npm run check:sql
+```
+
+O teste exige `PGHOST=127.0.0.1`, `localhost` ou `::1`. Cria três bancos temporários, instala o snapshot e o histórico completo, compara os objetos, executa consultas e verifica permissões e reexecução. Ao terminar, remove apenas os bancos de teste criados por ele. Se os binários não estiverem no PATH, configure `PG_BIN` com a pasta `bin` do PostgreSQL.
+
+Em 15/11/2026, essa validação passou no PostgreSQL 18.6. Inclui os exemplos SQL, corrigidos para os nomes e relacionamentos atuais.
+
+## Manter estrutura e documentação sincronizadas
+
+A [API](https://github.com/Tech-2D/api) continua sendo a fonte das migrações. Após uma alteração:
+
+1. Atualize `sql/migrations/` e o executor `sql/migrate.psql`, preservando a ordem numérica e a versão no comentário do schema.
+2. Exporte a estrutura do banco já atualizado usando `pg_dump` da mesma versão principal do servidor ou mais recente. Configure a conexão apenas em arquivo seguro ignorado pelo Git ou variáveis de ambiente.
+3. Regenere os inventários, atualize as explicações e execute os checks.
+
+```sh
+# DATABASE_URL e PG_CA_FILE vêm do ambiente/arquivo seguro; não copie senhas para o repositório.
+node --env-file=/caminho/seguro/conexao.env scripts/export-sql.mjs
+
+# Ou reorganize um dump DDL já obtido:
+node scripts/export-sql.mjs --from /caminho/seguro/estrutura.sql
+
+# Após instalar a referência local, regenere os inventários visuais:
+psql -X -d tech2d_local -v ON_ERROR_STOP=1 -At -f sql/catalog.psql -o docs/_data/schema.json
+psql -X -d tech2d_local -v ON_ERROR_STOP=1 -At -f sql/routines.psql -o docs/_data/routines.json
+npm run check
+npm run check:sql
+```
+
+`PG_DUMP` permite informar o caminho do executável. Para conexões remotas, o exportador usa TLS com validação completa por padrão e aceita `PG_CA_FILE` para o certificado CA. Ele não imprime detalhes privados quando a conexão falha. Revise o diff antes de publicar qualquer exportação.
+
+`docs/_data/catalog.yml`, `table_usage.json` e `column_notes.json` explicam a área do sistema e cada campo. `views.json` documenta a origem e as colunas das views. `sql_inventory.json` é gerado pelo exportador e mantém as contagens de SQL mostradas no site. Os scripts em `sql/migrations/` descrevem estados históricos; os objetos atuais ficam em `sql/atual/`.
+
+## Site da documentação
+
+O GitHub Pages publica a pasta `docs/`. O site usa Tailwind CSS 4 e foi inspirado na organização do [Astro Database Workspace](https://github.com/Astro-Inter/astro-database). Depois de alterar classes ou estilos, gere e inclua o CSS:
+
+```sh
 npm run build:css
 ```
 
-A versão 033 retira o recurso de enquetes e suas quatro tabelas. Publique a API que recusa os caminhos antigos antes de executar a remoção no banco.
-
-A versão 034 remove a tabela vazia de anotações do antigo Caderno Infinito e o contrato `notebookNotes`. Publique a API que recusa esse caminho antes da retirada física da tabela.
+Redis está documentado separadamente, com chaves e TTL. Ele não é instalado pelo DDL do PostgreSQL e não há credenciais nem cópia dos seus valores neste repositório.

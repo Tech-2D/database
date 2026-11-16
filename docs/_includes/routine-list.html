@@ -6,7 +6,7 @@
 {% for routine in include.routines %}
 <details class="catalog-object" id="{{ routine.anchor }}" data-catalog-object>
   <summary><span><strong><code>{{ routine.name | escape }}</code></strong><span class="object-description">{% if routine.comment %}{{ routine.comment | escape }}{% elsif routine.name contains 'ler_' %}Leitura e composição dos dados usados pela API.{% elsif routine.name contains 'gravar_' or routine.name contains 'inserir_' %}Gravação dos valores nas tabelas tipadas.{% else %}Rotina auxiliar de transformação ou manutenção dos dados.{% endif %}</span></span><span class="object-kind">{% if routine.procedure %}Procedure{% else %}Função{% endif %}</span></summary>
-  <div class="object-body"><p><strong>Schema</strong> <code>tech2d</code> · <strong>Linguagem</strong> <code>{{ routine.language | escape }}</code></p><p><strong>Parâmetros</strong> <code>{{ routine.arguments | default: 'Sem parâmetros' | escape }}</code></p>{% unless routine.procedure %}<p><strong>Retorno</strong> <code>{{ routine.result | default: 'Sem retorno' | escape }}</code></p>{% endunless %}</div>
+  <div class="object-body"><p><a href="https://github.com/Tech-2D/database/blob/main/sql/atual/{% if routine.procedure %}procedures{% else %}funcoes{% endif %}/{{ routine.name }}.sql">{% include doc-icon.html name="code" %} Ver código SQL completo</a></p><p><strong>Schema</strong> <code>tech2d</code> · <strong>Linguagem</strong> <code>{{ routine.language | escape }}</code></p><p><strong>Parâmetros</strong> <code>{{ routine.arguments | default: 'Sem parâmetros' | escape }}</code></p>{% unless routine.procedure %}<p><strong>Retorno</strong> <code>{{ routine.result | default: 'Sem retorno' | escape }}</code></p>{% endunless %}</div>
 </details>
 {% endfor %}
 </section>

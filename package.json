@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "build:css": "node node_modules/@tailwindcss/cli/dist/index.mjs -i src/styles.css -o docs/assets/docs.css --minify",
-    "check": "node scripts/check-catalog.mjs"
+    "check": "node scripts/check-catalog.mjs",
+    "export:sql": "node scripts/export-sql.mjs",
+    "check:sql": "node scripts/validate-sql.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.5",

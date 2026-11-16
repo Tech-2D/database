@@ -36,7 +36,8 @@
         <a href="{{ '/postgresql.html' | relative_url }}"{% if page.url == '/postgresql.html' %} aria-current="page"{% endif %}>{% include doc-icon.html name="table" %}Banco de dados</a>
         <a href="{{ '/schemas.html' | relative_url }}"{% if page.url == '/schemas.html' %} aria-current="page"{% endif %}>{% include doc-icon.html name="layers" %}Organização por áreas</a>
         <a href="{{ '/modelagem.html' | relative_url }}"{% if page.url == '/modelagem.html' %} aria-current="page"{% endif %}>{% include doc-icon.html name="diagram" %}Modelagem e relações</a>
-        <a href="{{ '/consultas.html' | relative_url }}"{% if page.url == '/consultas.html' %} aria-current="page"{% endif %}>{% include doc-icon.html name="code" %}Scripts e consultas</a>
+        <a href="{{ '/consultas.html' | relative_url }}"{% if page.url == '/consultas.html' %} aria-current="page"{% endif %}>{% include doc-icon.html name="code" %}Consultas SQL</a>
+        <a href="{{ "/scripts.html" | relative_url }}"{% if page.url == "/scripts.html" %} aria-current="page"{% endif %}>{% include doc-icon.html name="code" %}Scripts de instalação</a>
         <p class="nav-section-label">Objetos do banco</p>
         {% assign tables = site.data.schema | where: 'kind', 'table' %}
         <details class="nav-object-group"{% if page.url == '/postgresql.html' %} open{% endif %}>

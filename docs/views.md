@@ -28,6 +28,7 @@ O Worker autentica a conta, verifica as permissões das rotas e seleciona os cam
 <details class="catalog-object" id="view-{{ view.name }}" data-catalog-object>
   <summary><span><strong><code>{{ view.name }}</code></strong><span class="object-description">{{ view.comment | escape }}</span></span><span class="object-kind">{{ view.columns.size }} colunas</span></summary>
   <div class="object-body">
+    <p><a href="https://github.com/Tech-2D/database/blob/main/sql/atual/views/{{ view.name }}.sql">{% include doc-icon.html name="code" %} Ver CREATE VIEW completo</a></p>
     <p><strong>Origem dos dados</strong></p>
     <ul class="object-relations">
     {% for dependency in view.dependencies %}

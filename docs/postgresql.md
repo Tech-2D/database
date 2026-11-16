@@ -36,6 +36,7 @@ Busque por tabela, coluna ou tipo, ou filtre por área. Cada card explica onde a
     </header>
     <p class="schema-feature">{% include doc-icon.html name="layers" %}{{ usage.feature | escape }}</p>
     <p class="schema-card-description">{{ usage.description | default: object.comment | default: item.title | escape }}</p>
+    <p class="schema-card-description"><a href="https://github.com/Tech-2D/database/blob/main/sql/atual/tabelas/{{ item.name }}.sql">{% include doc-icon.html name="code" %} Ver CREATE TABLE</a> · <a href="{{ "/scripts.html" | relative_url }}">Scripts e instalação</a></p>
     <ul class="schema-columns" aria-label="Colunas de {{ item.name }}">
       {% for column in object.columns %}
       {% assign refs = object.references | where: "column", column.name %}
