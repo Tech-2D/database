@@ -4,7 +4,8 @@
 --
 
 GRANT USAGE ON SCHEMA tech2d TO tech2d_api;
-GRANT USAGE ON SCHEMA tech2d TO assistente_ia_readonly;
+GRANT USAGE ON SCHEMA tech2d TO tech2d_prod_ai_reader;
+GRANT USAGE ON SCHEMA tech2d TO tech2d_prod_ai_quota;
 
 -- Name: FUNCTION consultar_catalogo_agenda(p_turma text, p_incluir_atividades boolean); Type: ACL; Schema: tech2d; Owner: -
 --
@@ -148,6 +149,12 @@ GRANT ALL ON FUNCTION tech2d.remover_nulos_raiz(objeto jsonb) TO tech2d_api;
 REVOKE ALL ON FUNCTION tech2d.revisao_catalogo_publico(catalogo character varying) FROM PUBLIC;
 GRANT ALL ON FUNCTION tech2d.revisao_catalogo_publico(catalogo character varying) TO tech2d_api;
 
+-- Name: FUNCTION travar_gravacao(caminhos text[]); Type: ACL; Schema: tech2d; Owner: -
+--
+
+REVOKE ALL ON FUNCTION tech2d.travar_gravacao(caminhos text[]) FROM PUBLIC;
+GRANT ALL ON FUNCTION tech2d.travar_gravacao(caminhos text[]) TO tech2d_api;
+
 -- Name: FUNCTION vincular_disciplina_notaki(turma_id bigint, disciplina_id bigint); Type: ACL; Schema: tech2d; Owner: -
 --
 
@@ -158,15 +165,70 @@ REVOKE ALL ON FUNCTION tech2d.vincular_disciplina_notaki(turma_id bigint, discip
 
 REVOKE ALL ON FUNCTION tech2d.vincular_nova_disciplina_notaki() FROM PUBLIC;
 
--- Name: TABLE catalogo_horarios; Type: ACL; Schema: tech2d; Owner: -
+-- Name: TABLE apelidos_disciplinas; Type: ACL; Schema: tech2d; Owner: -
 --
 
-GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.apelidos_disciplinas TO tech2d_prod_ai_reader;
+
+-- Name: TABLE apelidos_professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.apelidos_professores TO tech2d_prod_ai_reader;
+
+-- Name: TABLE assistant_class_catalog; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.assistant_class_catalog TO tech2d_prod_ai_reader;
+
+-- Name: TABLE disciplinas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.disciplinas TO tech2d_prod_ai_reader;
+
+-- Name: TABLE assistant_recurring_activities; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.assistant_recurring_activities TO tech2d_prod_ai_reader;
+
+-- Name: TABLE assistant_teacher_schedule; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.assistant_teacher_schedule TO tech2d_prod_ai_reader;
 
 -- Name: TABLE disciplinas_series; Type: ACL; Schema: tech2d; Owner: -
 --
 
 GRANT SELECT ON TABLE tech2d.disciplinas_series TO tech2d_api;
+
+-- Name: TABLE professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.professores TO tech2d_prod_ai_reader;
+
+-- Name: TABLE visao_disciplinas_notas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_api;
+
+-- Name: TABLE catalogo_atividades_professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.catalogo_atividades_professores TO tech2d_prod_ai_reader;
+
+-- Name: TABLE catalogo_horarios; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
+
+-- Name: TABLE limites_mensagens_ia; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.limites_mensagens_ia TO tech2d_prod_ai_quota;
+
+-- Name: TABLE limpeza_anexos_agenda; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.limpeza_anexos_agenda TO tech2d_api;
 
 -- Name: TABLE notas_cadernos; Type: ACL; Schema: tech2d; Owner: -
 --
@@ -183,15 +245,11 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_lancamentos TO tech2d_ap
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_recuperacoes TO tech2d_api;
 
--- Name: TABLE recibos_gravacao; Type: ACL; Schema: tech2d; Owner: -
+-- Name: TABLE uso_diario_assistente; Type: ACL; Schema: tech2d; Owner: -
 --
 
-GRANT SELECT,INSERT ON TABLE tech2d.recibos_gravacao TO tech2d_api;
-
--- Name: TABLE visao_disciplinas_notas; Type: ACL; Schema: tech2d; Owner: -
---
-
-GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_api;
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.uso_diario_assistente TO tech2d_prod_ai_quota;
+GRANT SELECT ON TABLE tech2d.uso_diario_assistente TO tech2d_api;
 
 -- Name: TABLE visao_atividades; Type: ACL; Schema: tech2d; Owner: -
 --
@@ -227,11 +285,6 @@ GRANT SELECT ON TABLE tech2d.visao_notas_resultados TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_perfis_administrativos TO tech2d_api;
-
--- Name: TABLE visao_recibos_gravacao; Type: ACL; Schema: tech2d; Owner: -
---
-
-GRANT SELECT,INSERT ON TABLE tech2d.visao_recibos_gravacao TO tech2d_api;
 
 -- Name: TABLE visitas_aos_sites; Type: ACL; Schema: tech2d; Owner: -
 --

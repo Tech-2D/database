@@ -1,0 +1,1 @@
+-- Carga de referências operacionais omitida da instalação pública de estrutura.

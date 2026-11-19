@@ -5,6 +5,8 @@
       title: Atividades da Agenda
     - name: anexos_atividade
       title: Metadados dos arquivos anexados às atividades
+    - name: limpeza_anexos_agenda
+      title: Fila de limpeza de anexos
     - name: regras_recorrencia
       title: Regras de repetição
     - name: regras_retencao
@@ -70,3 +72,17 @@
       title: Notas e pesos por semestre
     - name: notas_recuperacoes
       title: Recuperação final
+
+- id: assistente
+  name: Assistente
+  objects:
+    - name: apelidos_disciplinas
+      title: Disciplina no Assistente
+    - name: apelidos_professores
+      title: Professor no Assistente
+    - name: limites_mensagens_ia
+      title: Cota de mensagens do Assistente
+    - name: uso_diario_assistente
+      title: Estatísticas do Assistente
+    - name: vinculos_professores_turmas
+      title: Professor responsável por turma e disciplina

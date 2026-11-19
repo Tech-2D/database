@@ -24,7 +24,7 @@ function create(suffix) {
   run('createdb', [name]); databases.push(name); return name
 }
 function dump(db) {
-  return run('pg_dump', ['-d', db, '--schema-only', '--schema=tech2d', '--no-owner', '--no-privileges', '--no-tablespaces', '--restrict-key=Tech2dValidation']).replace(/\r\n/g, '\n')
+  return run('pg_dump', ['-d', db, '--schema-only', '--schema=tech2d', '--no-owner', '--no-privileges', '--no-tablespaces', '--restrict-key=Tech2dValidation']).replace(/\r+\n/g, '\n')
 }
 try {
   const snapshot = create('snapshot')

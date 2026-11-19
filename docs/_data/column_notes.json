@@ -10,6 +10,20 @@
     "enviado_em": "Momento do envio, no formato ISO da API.",
     "enviado_por": "Identifica quem enviou o material, para atribuir a origem do anexo dentro do fluxo autorizado de arquivos."
   },
+  "apelidos_disciplinas": {
+    "id": "Identificador numérico gerado para o registro no PostgreSQL.",
+    "id_disciplina": "Identifica a disciplina oficial que o Assistente deve consultar para este apelido.",
+    "apelido": "Texto alternativo usado para reconhecer a entidade no Assistente.",
+    "chave_normalizada": "Forma padronizada para localizar o apelido durante a busca.",
+    "criado_em": "Momento em que o registro foi criado no banco de dados."
+  },
+  "apelidos_professores": {
+    "id": "Identificador numérico gerado para o registro no PostgreSQL.",
+    "id_professor": "Identifica o professor oficial que o Assistente deve procurar na grade.",
+    "apelido": "Texto alternativo usado para reconhecer a entidade no Assistente.",
+    "chave_normalizada": "Forma padronizada para localizar o apelido durante a busca.",
+    "criado_em": "Momento em que o registro foi criado no banco de dados."
+  },
   "atividades": {
     "id_atividade": "Identificador numérico próprio de atividades. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "titulo": "Nome da entrega ou compromisso mostrado no calendário, nos detalhes e nos resumos. Permite identificar rapidamente a atividade.",
@@ -99,16 +113,14 @@
     "descricao": "Texto da etapa dentro do cartão. Define o que precisa ser feito antes de marcar este item como concluído.",
     "concluido": "Estado de conclusão desta etapa do cartão. Permite acompanhar o checklist sem marcar todo o cartão como concluído."
   },
-  "participantes_kanban": {
-    "id_participante_kanban": "Identificador numérico próprio de participantes_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
-    "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
-    "id_usuario": "UID da conta autorizada a participar. O controle de acesso verifica este vínculo, não apenas o nome ou e-mail exibido.",
-    "email": "E-mail do participante para identificação no gerenciamento do quadro; não substitui o UID na autorização.",
-    "nome": "Nome apresentado na lista de membros e na atribuição de tarefas. É informação de exibição, não uma chave de acesso.",
-    "criado_em": "Momento de criação, no formato ISO da API.",
-    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
-    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
-    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
+  "limites_mensagens_ia": {
+    "firebase_uid": "Identifica a conta autenticada sujeita à cota diária.",
+    "data_uso": "Data de Brasília à qual o contador atual se refere.",
+    "quantidade": "Quantidade de mensagens admitidas pela cota nessa data."
+  },
+  "limpeza_anexos_agenda": {
+    "chave_arquivo": "Localizador do objeto no R2 desvinculado da atividade removida.",
+    "tentar_apos": "Momento a partir do qual a próxima tentativa de limpeza pode ocorrer."
   },
   "notas_cadernos": {
     "id_usuario": "UID do dono do caderno confirmado pelo token. As políticas RLS usam essa identidade para impedir acesso às notas de outra conta.",
@@ -138,6 +150,35 @@
     "ano_serie": "Série de 1 a 3 do caderno. As chaves estrangeiras validam se a matéria é oferecida para essa série.",
     "id_disciplina": "Identidade da matéria no catálogo compartilhado disciplinas. Junto com ano_serie, referencia disciplinas_series e impede notas em uma matéria incompatível.",
     "nota": "Nota da recuperação final, entre 0 e 10. A visão a combina com a média anual para calcular o resultado final quando a recuperação é necessária."
+  },
+  "participantes_kanban": {
+    "id_participante_kanban": "Identificador numérico próprio de participantes_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
+    "referencia_quadro": "Identificador externo do quadro compartilhado ou removido.",
+    "id_usuario": "UID da conta autorizada a participar. O controle de acesso verifica este vínculo, não apenas o nome ou e-mail exibido.",
+    "email": "E-mail do participante para identificação no gerenciamento do quadro; não substitui o UID na autorização.",
+    "nome": "Nome apresentado na lista de membros e na atribuição de tarefas. É informação de exibição, não uma chave de acesso.",
+    "criado_em": "Momento de criação, no formato ISO da API.",
+    "versao": "Versão de edição desta entidade. A API compara e incrementa este número para detectar alterações concorrentes e evitar sobrescrever dados.",
+    "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
+    "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
+  },
+  "perfis": {
+    "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",
+    "empresa": "Empresa informada pela pessoa no perfil público. Dá contexto profissional no diretório da comunidade.",
+    "turma_informada": "Texto livre informado pelo dono do perfil, como 2ºD. É informação de apresentação e não define a turma autorizada de um representante. Por não exigir uma turma escolar cadastrada, permanece textual.",
+    "sala": "Descrição da sala ou localização.",
+    "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
+    "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
+    "alterado_em": "Momento da última alteração, no formato ISO da API.",
+    "versao": "Versão de edição dos dados de apresentação do perfil. Nula quando a conta apenas configurou o resumo e ainda não publicou perfil; essas linhas não aparecem no diretório público.",
+    "atualizado_em": "Data e hora da última gravação dos dados de apresentação do perfil. Nula quando ainda não há perfil publicado; a preferência de resumo usa resumo_atualizado_em.",
+    "referencia_api": "UID da conta esperado pela API. Identifica a mesma linha de perfil tanto na apresentação pública quanto nas preferências privadas de resumo, com projeções e permissões separadas.",
+    "id_perfil": "Identificador numérico do perfil do usuário. É a chave primária da tabela perfis e permanece estável ao editar as informações da conta.",
+    "resumo_semanal_ativo": "Preferência privada de receber o resumo semanal por e-mail. Verdadeiro inscreve, falso desliga o envio e nulo indica que a pessoa ainda não configurou essa preferência.",
+    "id_turma_resumo": "FK para turmas.id_turma. Escolhe as atividades da sala incluídas no resumo da conta. É independente de turma_informada, que é apenas o texto de apresentação do perfil público.",
+    "resumo_alterado_em_ms": "Momento em que a preferência foi atualizada, em milissegundos desde o Unix epoch. Preserva o formato consumido pelo formulário e pelo serviço de e-mail.",
+    "resumo_versao": "Versão de edição das preferências privadas de resumo. Evita que editar a inscrição sobrescreva o perfil e permite detectar conflitos entre duas alterações da inscrição. Nula quando não há preferência cadastrada.",
+    "resumo_atualizado_em": "Data e hora da última gravação das preferências do resumo. Nula quando a conta ainda não configurou a inscrição."
   },
   "perfis_administrativos": {
     "id_perfil_administrativo": "Identificador numérico próprio de perfis_administrativos. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
@@ -228,29 +269,24 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
+  "uso_diario_assistente": {
+    "dia": "Data de Brasília em que as mensagens foram admitidas.",
+    "mensagens": "Total de mensagens admitidas pelo Assistente no dia."
+  },
+  "vinculos_professores_turmas": {
+    "id": "Identificador numérico gerado para o registro no PostgreSQL.",
+    "id_turma": "Identifica a turma escolar para a qual o vínculo se aplica.",
+    "id_disciplina": "Identifica a matéria atribuída ao professor nesse vínculo.",
+    "id_professor": "Identifica a pessoa responsável pela disciplina no período.",
+    "vigencia_inicio": "Primeira data em que o vínculo é considerado nas consultas.",
+    "vigencia_fim": "Última data em que o vínculo se aplica, quando há término.",
+    "criado_em": "Momento em que o registro foi criado no banco de dados."
+  },
   "visitas_aos_sites": {
     "dia": "Data local da visita no horário de Brasília. Sustenta os agrupamentos diários do painel e o corte de retenção.",
     "intervalo_meia_hora": "Identifica a janela de 30 minutos usada para deduplicar visitas. Recarregar o site dentro da mesma janela não cria outra visita para a mesma chave.",
     "tipo_visitante": "Categoria da chave de visitante. O registro atual exige autenticação; a categoria anônima preserva a leitura do histórico existente.",
     "chave_visitante": "UID para acessos autenticados ou código derivado para o histórico anônimo. Permite deduplicar visitas sem guardar um IP literal.",
     "site": "Origem da visita: agenda, professores ou pegaki (identificador técnico da área de Notas). Permite comparar o uso de cada site no mesmo painel. O Kanban também pode ser contabilizado separadamente."
-  },
-  "perfis": {
-    "nome": "Nome que a pessoa escolheu publicar no diretório. É a identificação apresentada aos demais usuários.",
-    "empresa": "Empresa informada pela pessoa no perfil público. Dá contexto profissional no diretório da comunidade.",
-    "turma_informada": "Texto livre informado pelo dono do perfil, como 2ºD. É informação de apresentação e não define a turma autorizada de um representante. Por não exigir uma turma escolar cadastrada, permanece textual.",
-    "sala": "Descrição da sala ou localização.",
-    "andar": "Andar informado pela própria pessoa em seu perfil público. Complementa a sala de localização; não é o andar de uma aula específica.",
-    "url_foto": "Endereço da foto pública no Cloudinary. Permite exibir a imagem sem guardar seu conteúdo binário no PostgreSQL.",
-    "alterado_em": "Momento da última alteração, no formato ISO da API.",
-    "versao": "Versão de edição dos dados de apresentação do perfil. Nula quando a conta apenas configurou o resumo e ainda não publicou perfil; essas linhas não aparecem no diretório público.",
-    "atualizado_em": "Data e hora da última gravação dos dados de apresentação do perfil. Nula quando ainda não há perfil publicado; a preferência de resumo usa resumo_atualizado_em.",
-    "referencia_api": "UID da conta esperado pela API. Identifica a mesma linha de perfil tanto na apresentação pública quanto nas preferências privadas de resumo, com projeções e permissões separadas.",
-    "id_perfil": "Identificador numérico do perfil do usuário. É a chave primária da tabela perfis e permanece estável ao editar as informações da conta.",
-    "resumo_semanal_ativo": "Preferência privada de receber o resumo semanal por e-mail. Verdadeiro inscreve, falso desliga o envio e nulo indica que a pessoa ainda não configurou essa preferência.",
-    "id_turma_resumo": "FK para turmas.id_turma. Escolhe as atividades da sala incluídas no resumo da conta. É independente de turma_informada, que é apenas o texto de apresentação do perfil público.",
-    "resumo_alterado_em_ms": "Momento em que a preferência foi atualizada, em milissegundos desde o Unix epoch. Preserva o formato consumido pelo formulário e pelo serviço de e-mail.",
-    "resumo_versao": "Versão de edição das preferências privadas de resumo. Evita que editar a inscrição sobrescreva o perfil e permite detectar conflitos entre duas alterações da inscrição. Nula quando não há preferência cadastrada.",
-    "resumo_atualizado_em": "Data e hora da última gravação das preferências do resumo. Nula quando a conta ainda não configurou a inscrição."
   }
 }

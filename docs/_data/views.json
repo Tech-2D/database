@@ -1,5 +1,182 @@
 [
   {
+    "name": "assistant_class_catalog",
+    "comment": "Turmas aprovadas usadas pelo Assistente para resolver o filtro de turma.",
+    "columns": [
+      {
+        "name": "id",
+        "source": "id",
+        "type": "text"
+      }
+    ],
+    "dependencies": [
+      "turmas_agenda"
+    ]
+  },
+  {
+    "name": "assistant_recurring_activities",
+    "comment": "Regras de repetição consultadas pelo Assistente ao listar atividades da Agenda.",
+    "columns": [
+      {
+        "name": "id",
+        "source": "id",
+        "type": "character varying(320)"
+      },
+      {
+        "name": "data",
+        "source": "data",
+        "type": "jsonb"
+      }
+    ],
+    "dependencies": [
+      "disciplinas",
+      "regras_recorrencia",
+      "turmas"
+    ]
+  },
+  {
+    "name": "assistant_teacher_schedule",
+    "comment": "Grade escolar consultada pelo Assistente ao buscar aulas de professores.",
+    "columns": [
+      {
+        "name": "id_professor",
+        "source": "id_professor",
+        "type": "bigint"
+      },
+      {
+        "name": "dia_semana",
+        "source": "dia_semana",
+        "type": "smallint"
+      },
+      {
+        "name": "hora_inicio",
+        "source": "hora_inicio",
+        "type": "time(0) without time zone"
+      },
+      {
+        "name": "hora_fim",
+        "source": "hora_fim",
+        "type": "time(0) without time zone"
+      },
+      {
+        "name": "disciplina",
+        "source": "disciplina",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "turma",
+        "source": "turma",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "andar",
+        "source": "andar",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "sala",
+        "source": "sala",
+        "type": "character varying(500)"
+      }
+    ],
+    "dependencies": [
+      "disciplinas",
+      "faixas_horario",
+      "horarios_aula",
+      "turmas"
+    ]
+  },
+  {
+    "name": "catalogo_atividades_professores",
+    "comment": "Atividades da Agenda com vínculos de turma, disciplina e professor.",
+    "columns": [
+      {
+        "name": "id_atividade",
+        "source": "id_atividade",
+        "type": "character varying(320)"
+      },
+      {
+        "name": "titulo",
+        "source": "titulo",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "tipo",
+        "source": "tipo",
+        "type": "character varying(32)"
+      },
+      {
+        "name": "data",
+        "source": "data",
+        "type": "date"
+      },
+      {
+        "name": "hora",
+        "source": "hora",
+        "type": "text"
+      },
+      {
+        "name": "id_disciplina",
+        "source": "id_disciplina",
+        "type": "bigint"
+      },
+      {
+        "name": "disciplina",
+        "source": "disciplina",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "id_turma",
+        "source": "id_turma",
+        "type": "bigint"
+      },
+      {
+        "name": "turma",
+        "source": "turma",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "id_professor",
+        "source": "id_professor",
+        "type": "bigint"
+      },
+      {
+        "name": "professor",
+        "source": "professor",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "estado_atribuicao",
+        "source": "estado_atribuicao",
+        "type": "text"
+      },
+      {
+        "name": "disciplina_original",
+        "source": "disciplina_original",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "turma_original",
+        "source": "turma_original",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "referencia_recorrencia",
+        "source": "referencia_recorrencia",
+        "type": "character varying(320)"
+      }
+    ],
+    "dependencies": [
+      "atividades",
+      "disciplinas",
+      "professores",
+      "regras_recorrencia",
+      "turmas",
+      "vinculos_professores_turmas",
+      "visao_disciplinas_notas"
+    ]
+  },
+  {
     "name": "catalogo_horarios",
     "comment": "Reúne professor, disciplina, turma, faixa de horário, andar e sala.",
     "dependencies": [

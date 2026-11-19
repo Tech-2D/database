@@ -8,5 +8,11 @@ BEGIN
   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'assistente_ia_readonly') THEN
     CREATE ROLE assistente_ia_readonly NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
   END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'tech2d_prod_ai_reader') THEN
+    CREATE ROLE tech2d_prod_ai_reader NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'tech2d_prod_ai_quota') THEN
+    CREATE ROLE tech2d_prod_ai_quota NOLOGIN;
+  END IF;
 END;
 $$;

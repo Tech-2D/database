@@ -441,6 +441,15 @@
         "procedure": false
     },
     {
+        "name": "travar_gravacao",
+        "anchor": "rotina-travar_gravacao-1adbc070",
+        "result": "void",
+        "comment": null,
+        "language": "plpgsql",
+        "arguments": "caminhos text[]",
+        "procedure": false
+    },
+    {
         "name": "vincular_disciplina_notaki",
         "anchor": "rotina-vincular_disciplina_notaki-39108927",
         "result": "void",

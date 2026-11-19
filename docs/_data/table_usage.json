@@ -3,6 +3,14 @@
     "feature": "Atividade · Materiais e downloads",
     "description": "Usada ao criar, editar e abrir os materiais de uma atividade. Guarda os metadados dos anexos e o vínculo id_atividade; a API os retorna em sequência estável pelo ID, sem coluna ordem; o conteúdo binário permanece no Cloudflare R2, com download autorizado pela API."
   },
+  "apelidos_disciplinas": {
+    "feature": "Disciplina no Assistente",
+    "description": "Relaciona formas alternativas de escrever uma disciplina ao catálogo escolar usado pelas consultas do Assistente."
+  },
+  "apelidos_professores": {
+    "feature": "Professor no Assistente",
+    "description": "Relaciona nomes alternativos de professores à identidade usada pelo Assistente na consulta da grade escolar."
+  },
   "atividades": {
     "feature": "Calendário · Dia, semana, mês e detalhes",
     "description": "Alimenta o calendário, os links diretos e as automações. id_disciplina referencia o catálogo de disciplinas; id_turma referencia o mesmo catálogo escolar usado pelos horários. id_regra_recorrencia liga uma ocorrência à regra que a gerou. Os nomes exibidos são reconstruídos pelas funções SQL, sem repetir nomes de catálogos no registro."
@@ -39,9 +47,13 @@
     "feature": "Meu Kanban · Checklist de uma tarefa",
     "description": "Guarda as pequenas etapas de um cartão, separadas do texto da descrição. Permite ordenar os itens e marcar cada um como concluído sem perder sua relação com o cartão."
   },
-  "participantes_kanban": {
-    "feature": "Kanban compartilhado · Membros autorizados",
-    "description": "Registra quais contas podem acessar um quadro compartilhado. A API usa este vínculo do PostgreSQL para autorizar o acesso. Solicitações de acesso ficam no Redis e sua expiração não revoga a participação."
+  "limites_mensagens_ia": {
+    "feature": "Cota de mensagens do Assistente",
+    "description": "O Assistente mantém a data e o contador atual de cada conta sujeita ao limite diário. O contador é reiniciado no primeiro uso de um novo dia."
+  },
+  "limpeza_anexos_agenda": {
+    "feature": "Limpeza de arquivos da Agenda",
+    "description": "A exclusão de uma atividade por expurgo ou recorrência registra os arquivos na fila antes da confirmação no banco. Depois da confirmação, o Worker remove os objetos no R2 e repete tentativas pendentes."
   },
   "notas_cadernos": {
     "feature": "Notas · Meu caderno de notas",
@@ -54,6 +66,14 @@
   "notas_recuperacoes": {
     "feature": "Notas · Recuperação final",
     "description": "Guarda a nota de recuperação final separada das avaliações semestrais. A visão de resultados combina esse valor com a média anual conforme a regra do caderno. RLS mantém o isolamento por conta."
+  },
+  "participantes_kanban": {
+    "feature": "Kanban compartilhado · Membros autorizados",
+    "description": "Registra quais contas podem acessar um quadro compartilhado. A API usa este vínculo do PostgreSQL para autorizar o acesso. Solicitações de acesso ficam no Redis e sua expiração não revoga a participação."
+  },
+  "perfis": {
+    "feature": "Conta · Perfil e configurações do resumo",
+    "description": "Reúne os dados de apresentação do perfil e a preferência privada de resumo semanal do mesmo usuário. O editor de perfil usa nome, empresa, turma informada, sala, andar e foto; as Configurações e o serviço de e-mail usam resumo_semanal_ativo e id_turma_resumo. A API publica somente os campos de apresentação e somente quando a pessoa possui perfil publicado. Configurar apenas o resumo não publica um perfil vazio. As duas partes têm versões independentes para não sobrescrever uma à outra. Autenticação e senha continuam no Firebase Authentication."
   },
   "perfis_administrativos": {
     "feature": "Login · Permissões de administradores e representantes",
@@ -91,12 +111,16 @@
     "feature": "Agenda · Turmas habilitadas pela administração",
     "description": "Guarda a habilitação de uma Agenda para uma turma escolar existente, por id_turma, além da aprovação e de sua origem. Não mantém outro cadastro de nomes: turmas é o catálogo e referencia_agenda preserva o identificador público. Há no máximo uma habilitação por turma."
   },
+  "uso_diario_assistente": {
+    "feature": "Estatísticas do Assistente",
+    "description": "Armazena os totais diários mostrados nas estatísticas administrativas, inclusive as mensagens das contas isentas da cota. Preserva apenas dia e quantidade."
+  },
+  "vinculos_professores_turmas": {
+    "feature": "Professor responsável por turma e disciplina",
+    "description": "O Assistente consulta o vínculo vigente para identificar o professor associado a uma disciplina em determinada turma."
+  },
   "visitas_aos_sites": {
     "feature": "Administração · Estatísticas de acesso",
     "description": "Alimenta os totais, a comparação entre sites e a data da última visita de cada conta à Agenda. A combinação de data, intervalo, visitante e site evita contar várias vezes a mesma visita dentro de uma janela de meia hora. A retenção é de 90 dias."
-  },
-  "perfis": {
-    "feature": "Conta · Perfil e configurações do resumo",
-    "description": "Reúne os dados de apresentação do perfil e a preferência privada de resumo semanal do mesmo usuário. O editor de perfil usa nome, empresa, turma informada, sala, andar e foto; as Configurações e o serviço de e-mail usam resumo_semanal_ativo e id_turma_resumo. A API publica somente os campos de apresentação e somente quando a pessoa possui perfil publicado. Configurar apenas o resumo não publica um perfil vazio. As duas partes têm versões independentes para não sobrescrever uma à outra. Autenticação e senha continuam no Firebase Authentication."
   }
 }

@@ -37,7 +37,7 @@ try {
   const from = process.argv.indexOf('--from')
   if (from !== -1 && !process.argv[from + 1]) throw Error('DUMP_FILE_REQUIRED')
   let sql = from === -1 ? dumpSchema() : await readFile(process.argv[from + 1], 'utf8')
-  sql = sql.replace(/\r\n/g, '\n').replace(/^-- (Started|Completed) on .*\n/gm, '')
+  sql = sql.replace(/\r+\n/g, '\n').replace(/^-- (Started|Completed) on .*\n/gm, '')
   if (!sql.includes('CREATE SCHEMA tech2d;') || /^(COPY |INSERT INTO )/m.test(sql)) throw Error('EXPECTED_SCHEMA_ONLY_DUMP')
   const marker = sql.match(/tech2d-schema-version:([\w]+)/)?.[1]
   if (!marker) throw Error('SCHEMA_VERSION_MISSING')

@@ -2,7 +2,7 @@
 
 Documentação e scripts do PostgreSQL e do Redis usados pela Agenda e pelo Cadê o professor. [Abrir documentação](https://tech-2d.github.io/database/).
 
-A estrutura consolidada foi extraída do PostgreSQL na versão **061_simplificar_recorrencias**: **25 tabelas, 15 views e 51 funções** no schema `tech2d`. Não há procedures atualmente. O inventário inclui sequências, índices, constraints, trigger, políticas RLS, comentários e permissões. A exportação contém apenas definições, sem registros de usuários ou credenciais.
+A estrutura consolidada foi extraída do PostgreSQL na versão **068_fila_anexos_e_travas**: **31 tabelas, 19 views e 52 funções** no schema `tech2d`. Não há procedures atualmente. O inventário inclui sequências, índices, constraints, trigger, políticas RLS, comentários e permissões. A exportação contém apenas definições, sem registros de usuários ou credenciais.
 
 | Conteúdo | Onde encontrar |
 | --- | --- |
@@ -52,7 +52,7 @@ Em 15/11/2026, essa validação passou no PostgreSQL 18.6. Inclui os exemplos SQ
 
 ## Manter estrutura e documentação sincronizadas
 
-A [API](https://github.com/Tech-2D/api) continua sendo a fonte das migrações. Após uma alteração:
+A [API](https://github.com/Tech-2D/api) continua sendo a fonte das migrações. As cargas de dados operacionais ficam na API. A referência pública contém a estrutura SQL. Após uma alteração:
 
 1. Atualize `sql/migrations/` e o executor `sql/migrate.psql`, preservando a ordem numérica e a versão no comentário do schema.
 2. Exporte a estrutura do banco já atualizado usando `pg_dump` da mesma versão principal do servidor ou mais recente. Configure a conexão apenas em arquivo seguro ignorado pelo Git ou variáveis de ambiente.

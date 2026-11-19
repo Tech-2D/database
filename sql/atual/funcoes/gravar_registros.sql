@@ -19,7 +19,7 @@ DECLARE
   id_pai bigint;
   espaco_compartilhado boolean;
 BEGIN
-  PERFORM pg_advisory_xact_lock(hashtext('tech2d-application-commit'));
+  PERFORM tech2d.travar_gravacao(ARRAY(SELECT item_lote->>'path' FROM jsonb_array_elements(lote) AS item_lote));
   FOR item IN SELECT r.path,r.data FROM jsonb_to_recordset(lote) AS r(path text,data jsonb)
     ORDER BY (data IS NULL), CASE WHEN path LIKE 'recurringActivities/%' THEN 0 ELSE 1 END,length(path),path
   LOOP

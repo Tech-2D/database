@@ -3,7 +3,7 @@
 -- Name: SCHEMA tech2d; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:061_simplificar_recorrencias';
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:068_fila_anexos_e_travas';
 
 -- Name: FUNCTION buscar_id_turma(valor text); Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -100,10 +100,225 @@ COMMENT ON COLUMN tech2d.anexos_atividade.enviado_em IS 'Campo uploadedAt no con
 
 COMMENT ON COLUMN tech2d.anexos_atividade.enviado_por IS 'Campo uploadedBy no contrato da API.';
 
+-- Name: TABLE apelidos_disciplinas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.apelidos_disciplinas IS 'Apelidos aprovados usados pela IA para identificar disciplinas.';
+
+-- Name: TABLE apelidos_professores; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.apelidos_professores IS 'Apelidos aprovados usados pela IA para identificar professores.';
+
 -- Name: SEQUENCE ids_entidades; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
 COMMENT ON SEQUENCE tech2d.ids_entidades IS 'Gera novos IDs numéricos sem reutilizar os IDs existentes.';
+
+-- Name: TABLE turmas_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.turmas_agenda IS 'Turmas habilitadas na Agenda';
+
+-- Name: COLUMN turmas_agenda.id_turma_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.id_turma_agenda IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+
+-- Name: COLUMN turmas_agenda.ativa; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.ativa IS 'Campo active no contrato da API.';
+
+-- Name: COLUMN turmas_agenda.referencia_pedido; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.referencia_pedido IS 'Campo requestId no contrato da API.';
+
+-- Name: COLUMN turmas_agenda.aprovada_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.aprovada_em IS 'Campo approvedAt no contrato da API.';
+
+-- Name: COLUMN turmas_agenda.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
+
+-- Name: COLUMN turmas_agenda.versao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+
+-- Name: COLUMN turmas_agenda.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
+
+-- Name: COLUMN turmas_agenda.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
+
+-- Name: TABLE disciplinas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.disciplinas IS 'Nomes das disciplinas reutilizadas pelos horários.';
+
+-- Name: COLUMN disciplinas.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.disciplinas.id_disciplina IS 'Identificador numérico de disciplinas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+-- Name: TABLE regras_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.regras_recorrencia IS 'Regras de repetição';
+
+-- Name: COLUMN regras_recorrencia.id_regra_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.id_regra_recorrencia IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+
+-- Name: COLUMN regras_recorrencia.titulo; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.titulo IS 'Campo title no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.descricao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.descricao IS 'Campo description no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.tipo_atividade; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.tipo_atividade IS 'Campo type no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.hora_atividade; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.hora_atividade IS 'Campo time no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.criado_por; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.criado_por IS 'Campo createdBy no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.criado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.criado_em IS 'Campo createdAt no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.data_inicio; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.data_inicio IS 'Campo startDate no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.data_fim; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.data_fim IS 'Campo endDate no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.ativa; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.ativa IS 'Campo active no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.intervalo_semanas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.intervalo_semanas IS 'Campo intervalWeeks no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.dias_semana; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.dias_semana IS 'Campo weekdays no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.id_disciplina IS 'FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.';
+
+-- Name: COLUMN regras_recorrencia.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
+
+-- Name: COLUMN regras_recorrencia.versao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+
+-- Name: COLUMN regras_recorrencia.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
+
+-- Name: COLUMN regras_recorrencia.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
+
+-- Name: TABLE turmas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.turmas IS 'Nomes das turmas do catálogo de horários.';
+
+-- Name: COLUMN turmas.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas.id_turma IS 'Identificador numérico de turmas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+-- Name: COLUMN turmas.referencia_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas.referencia_agenda IS 'Identificador textual estável da turma na Agenda, como 2° TECH D. É guardado uma única vez; os vínculos das tabelas usam id_turma.';
+
+-- Name: TABLE faixas_horario; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.faixas_horario IS 'Pares de horário de início e fim reutilizados pelas aulas.';
+
+-- Name: COLUMN faixas_horario.id_faixa_horario; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.faixas_horario.id_faixa_horario IS 'Identificador numérico de faixas_horario. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+-- Name: TABLE horarios_aula; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.horarios_aula IS 'Liga professor, disciplina, turma e faixa de horário a um dia da semana.';
+
+-- Name: COLUMN horarios_aula.id_horario_aula; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.id_horario_aula IS 'Identificador textual do horário preservado no contrato da API. id_horario_interno identifica o mesmo horário internamente.';
+
+-- Name: COLUMN horarios_aula.id_horario_interno; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.id_horario_interno IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+
+-- Name: COLUMN horarios_aula.andar; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.andar IS 'Andar informado para a aula.';
+
+-- Name: COLUMN horarios_aula.sala; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.sala IS 'Descrição da sala ou localização da aula.';
+
+-- Name: COLUMN horarios_aula.versao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+
+-- Name: COLUMN horarios_aula.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
 
 -- Name: TABLE atividades; Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -250,55 +465,40 @@ COMMENT ON COLUMN tech2d.cartoes_kanban.etiquetas IS 'Campo labels no contrato d
 
 COMMENT ON COLUMN tech2d.cartoes_kanban.referencias_atividades IS 'Campo activityIds no contrato da API.';
 
--- Name: TABLE horarios_aula; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE disciplinas_series; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON TABLE tech2d.horarios_aula IS 'Liga professor, disciplina, turma e faixa de horário a um dia da semana.';
+COMMENT ON TABLE tech2d.disciplinas_series IS 'Vínculo entre o catálogo compartilhado de disciplinas e as séries do Ensino Médio. A área de Notas consulta esse vínculo para validar notas, sem duplicar os nomes das matérias.';
 
--- Name: COLUMN horarios_aula.id_horario_aula; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: COLUMN disciplinas_series.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.id_horario_aula IS 'Identificador textual do horário preservado no contrato da API. id_horario_interno identifica o mesmo horário internamente.';
+COMMENT ON COLUMN tech2d.disciplinas_series.id_disciplina IS 'Disciplina do catálogo geral, também usado pelos horários. A chave estrangeira impede uma matéria inexistente.';
 
--- Name: COLUMN horarios_aula.id_horario_interno; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: COLUMN disciplinas_series.ano_serie; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.id_horario_interno IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+COMMENT ON COLUMN tech2d.disciplinas_series.ano_serie IS 'Série de 1 a 3 em que a disciplina é oferecida. Compõe a chave para reutilizar a mesma matéria em séries diferentes.';
 
--- Name: COLUMN horarios_aula.andar; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE professores; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.andar IS 'Andar informado para a aula.';
+COMMENT ON TABLE tech2d.professores IS 'Nomes de professores reutilizados pelos horários.';
 
--- Name: COLUMN horarios_aula.sala; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: COLUMN professores.id_professor; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.sala IS 'Descrição da sala ou localização da aula.';
+COMMENT ON COLUMN tech2d.professores.id_professor IS 'Identificador numérico de professores. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
 
--- Name: COLUMN horarios_aula.versao; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE vinculos_professores_turmas; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+COMMENT ON TABLE tech2d.vinculos_professores_turmas IS 'Professor confirmado por turma e disciplina durante uma vigência.';
 
--- Name: COLUMN horarios_aula.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: VIEW visao_disciplinas_notas; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
-
--- Name: TABLE turmas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.turmas IS 'Nomes das turmas do catálogo de horários.';
-
--- Name: COLUMN turmas.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas.id_turma IS 'Identificador numérico de turmas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
--- Name: COLUMN turmas.referencia_agenda; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas.referencia_agenda IS 'Identificador textual estável da turma na Agenda, como 2° TECH D. É guardado uma única vez; os vínculos das tabelas usam id_turma.';
+COMMENT ON VIEW tech2d.visao_disciplinas_notas IS 'Projeção do catálogo compartilhado para o Notas. Conserva os rótulos que o frontend usa como chaves, sem armazenar outro catálogo de nomes.';
 
 -- Name: VIEW catalogo_horarios; Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -339,31 +539,6 @@ COMMENT ON COLUMN tech2d.colunas_kanban.cor IS 'Campo color no contrato da API.'
 --
 
 COMMENT ON COLUMN tech2d.colunas_kanban.concluida IS 'Campo done no contrato da API.';
-
--- Name: TABLE disciplinas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.disciplinas IS 'Nomes das disciplinas reutilizadas pelos horários.';
-
--- Name: COLUMN disciplinas.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.disciplinas.id_disciplina IS 'Identificador numérico de disciplinas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
--- Name: TABLE disciplinas_series; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.disciplinas_series IS 'Vínculo entre o catálogo compartilhado de disciplinas e as séries do Ensino Médio. A área de Notas consulta esse vínculo para validar notas, sem duplicar os nomes das matérias.';
-
--- Name: COLUMN disciplinas_series.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.disciplinas_series.id_disciplina IS 'Disciplina do catálogo geral, também usado pelos horários. A chave estrangeira impede uma matéria inexistente.';
-
--- Name: COLUMN disciplinas_series.ano_serie; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.disciplinas_series.ano_serie IS 'Série de 1 a 3 em que a disciplina é oferecida. Compõe a chave para reutilizar a mesma matéria em séries diferentes.';
 
 -- Name: TABLE espacos_kanban; Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -415,16 +590,6 @@ COMMENT ON COLUMN tech2d.espacos_kanban.referencia_api IS 'Identificador externo
 
 COMMENT ON COLUMN tech2d.espacos_kanban.compartilhado IS 'Distingue espaços pessoais e compartilhados no contrato da API.';
 
--- Name: TABLE faixas_horario; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.faixas_horario IS 'Pares de horário de início e fim reutilizados pelas aulas.';
-
--- Name: COLUMN faixas_horario.id_faixa_horario; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.faixas_horario.id_faixa_horario IS 'Identificador numérico de faixas_horario. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
 -- Name: TABLE itens_checklist; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
@@ -454,6 +619,11 @@ COMMENT ON COLUMN tech2d.itens_checklist.descricao IS 'Campo text no contrato da
 --
 
 COMMENT ON COLUMN tech2d.itens_checklist.concluido IS 'Campo done no contrato da API.';
+
+-- Name: TABLE limpeza_anexos_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.limpeza_anexos_agenda IS 'Fila de limpeza de anexos R2 desvinculados pelo expurgo e por recorrências.';
 
 -- Name: TABLE notas_cadernos; Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -660,16 +830,6 @@ COMMENT ON COLUMN tech2d.perfis_administrativos.atualizado_em IS 'Instante da ú
 
 COMMENT ON COLUMN tech2d.perfis_administrativos.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
 
--- Name: TABLE professores; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.professores IS 'Nomes de professores reutilizados pelos horários.';
-
--- Name: COLUMN professores.id_professor; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.professores.id_professor IS 'Identificador numérico de professores. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
 -- Name: TABLE quadros_kanban; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
@@ -714,96 +874,6 @@ COMMENT ON TABLE tech2d.recibos_gravacao IS 'Recibos que impedem uma gravação 
 --
 
 COMMENT ON COLUMN tech2d.recibos_gravacao.id_recibo_gravacao IS 'Identificador externo do lote confirmado, recebido em commit.id. O valor continua estável nos reenvios e é exposto como id pela view de recibos.';
-
--- Name: TABLE regras_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.regras_recorrencia IS 'Regras de repetição';
-
--- Name: COLUMN regras_recorrencia.id_regra_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.id_regra_recorrencia IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
-
--- Name: COLUMN regras_recorrencia.titulo; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.titulo IS 'Campo title no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.descricao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.descricao IS 'Campo description no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.tipo_atividade; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.tipo_atividade IS 'Campo type no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.hora_atividade; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.hora_atividade IS 'Campo time no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.criado_por; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.criado_por IS 'Campo createdBy no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.criado_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.criado_em IS 'Campo createdAt no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.data_inicio; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.data_inicio IS 'Campo startDate no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.data_fim; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.data_fim IS 'Campo endDate no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.ativa; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.ativa IS 'Campo active no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.intervalo_semanas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.intervalo_semanas IS 'Campo intervalWeeks no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.dias_semana; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.dias_semana IS 'Campo weekdays no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.id_disciplina IS 'FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.';
-
--- Name: COLUMN regras_recorrencia.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
-
--- Name: COLUMN regras_recorrencia.versao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
-
--- Name: COLUMN regras_recorrencia.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
-
--- Name: COLUMN regras_recorrencia.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
 
 -- Name: TABLE regras_retencao; Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -930,55 +1000,10 @@ COMMENT ON COLUMN tech2d.sugestoes_melhoria.atualizado_em IS 'Instante da últim
 
 COMMENT ON COLUMN tech2d.sugestoes_melhoria.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
 
--- Name: TABLE turmas_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE uso_diario_assistente; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON TABLE tech2d.turmas_agenda IS 'Turmas habilitadas na Agenda';
-
--- Name: COLUMN turmas_agenda.id_turma_agenda; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.id_turma_agenda IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
-
--- Name: COLUMN turmas_agenda.ativa; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.ativa IS 'Campo active no contrato da API.';
-
--- Name: COLUMN turmas_agenda.referencia_pedido; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.referencia_pedido IS 'Campo requestId no contrato da API.';
-
--- Name: COLUMN turmas_agenda.aprovada_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.aprovada_em IS 'Campo approvedAt no contrato da API.';
-
--- Name: COLUMN turmas_agenda.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
-
--- Name: COLUMN turmas_agenda.versao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
-
--- Name: COLUMN turmas_agenda.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
-
--- Name: COLUMN turmas_agenda.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
-
--- Name: VIEW visao_disciplinas_notas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON VIEW tech2d.visao_disciplinas_notas IS 'Projeção do catálogo compartilhado para o Notas. Conserva os rótulos que o frontend usa como chaves, sem armazenar outro catálogo de nomes.';
+COMMENT ON TABLE tech2d.uso_diario_assistente IS 'Total de mensagens aceitas pelo Assistente por dia de Brasília.';
 
 -- Name: VIEW visao_atividades; Type: COMMENT; Schema: tech2d; Owner: -
 --

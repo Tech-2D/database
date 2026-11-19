@@ -30,7 +30,7 @@ CREATE SCHEMA tech2d;
 -- Name: SCHEMA tech2d; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:061_simplificar_recorrencias';
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:068_fila_anexos_e_travas';
 
 
 --
@@ -204,6 +204,9 @@ DECLARE
   fim time;
   turma_catalogo bigint;
   disciplina_catalogo bigint;
+  professor_catalogo bigint;
+  nome_professor text;
+  chave_professor text;
 BEGIN
   IF ((objeto->>'startTime') ~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'
     AND (objeto->>'endTime') ~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'
@@ -213,15 +216,27 @@ BEGIN
   END IF;
   inicio := (objeto->>'startTime')::time;
   fim := (objeto->>'endTime')::time;
-  INSERT INTO tech2d.professores(nome) VALUES(objeto->>'professor') ON CONFLICT(nome) DO NOTHING;
+  nome_professor := btrim(regexp_replace(objeto->>'professor', '[[:space:]]+', ' ', 'g'));
+  chave_professor := lower(nome_professor);
+  PERFORM pg_advisory_xact_lock(hashtext('tech2d-professor'), hashtext(chave_professor));
+  SELECT id_professor INTO professor_catalogo
+  FROM tech2d.professores
+  WHERE lower(btrim(regexp_replace(nome, '[[:space:]]+', ' ', 'g'))) = chave_professor
+  ORDER BY (nome = nome_professor) DESC, id_professor
+  LIMIT 1;
+  IF professor_catalogo IS NULL THEN
+    INSERT INTO tech2d.professores(nome) VALUES (nome_professor)
+    ON CONFLICT(nome) DO UPDATE SET nome = EXCLUDED.nome
+    RETURNING id_professor INTO professor_catalogo;
+  END IF;
   disciplina_catalogo:=tech2d.resolver_disciplina(objeto->>'subject');
   turma_catalogo:=tech2d.resolver_turma(objeto->>'className',false);
   INSERT INTO tech2d.faixas_horario(hora_inicio,hora_fim) VALUES(inicio,fim) ON CONFLICT(hora_inicio,hora_fim) DO NOTHING;
   INSERT INTO tech2d.horarios_aula (versao,atualizado_em,id_horario_aula,id_horario_interno,id_professor,id_disciplina,id_turma,id_faixa_horario,dia_semana,ativo,andar,sala,criado_em,alterado_em)
-  SELECT 1,now(),chave_api,alvo,p.id_professor,d.id_disciplina,t.id_turma,f.id_faixa_horario,(objeto->>'dayOfWeek')::smallint,(objeto->>'active')::boolean,
+  SELECT 1,now(),chave_api,alvo,professor_catalogo,d.id_disciplina,t.id_turma,f.id_faixa_horario,(objeto->>'dayOfWeek')::smallint,(objeto->>'active')::boolean,
     objeto->>'floor',objeto->>'roomDescription',objeto->>'createdAt',objeto->>'updatedAt'
-  FROM tech2d.professores p,tech2d.disciplinas d,tech2d.turmas t,tech2d.faixas_horario f
-  WHERE p.nome=objeto->>'professor' AND d.id_disciplina=disciplina_catalogo AND t.id_turma=turma_catalogo
+  FROM tech2d.disciplinas d,tech2d.turmas t,tech2d.faixas_horario f
+  WHERE d.id_disciplina=disciplina_catalogo AND t.id_turma=turma_catalogo
     AND f.hora_inicio=inicio AND f.hora_fim=fim
   ON CONFLICT(id_horario_aula) DO UPDATE SET versao=horarios_aula.versao+1, atualizado_em=excluded.atualizado_em, id_horario_interno=excluded.id_horario_interno,id_professor=excluded.id_professor,
     id_disciplina=excluded.id_disciplina,id_turma=excluded.id_turma,id_faixa_horario=excluded.id_faixa_horario,
@@ -292,7 +307,7 @@ DECLARE
   id_pai bigint;
   espaco_compartilhado boolean;
 BEGIN
-  PERFORM pg_advisory_xact_lock(hashtext('tech2d-application-commit'));
+  PERFORM tech2d.travar_gravacao(ARRAY(SELECT item_lote->>'path' FROM jsonb_array_elements(lote) AS item_lote));
   FOR item IN SELECT r.path,r.data FROM jsonb_to_recordset(lote) AS r(path text,data jsonb)
     ORDER BY (data IS NULL), CASE WHEN path LIKE 'recurringActivities/%' THEN 0 ELSE 1 END,length(path),path
   LOOP
@@ -1190,6 +1205,35 @@ COMMENT ON FUNCTION tech2d.revisao_catalogo_publico(catalogo character varying) 
 
 
 --
+-- Name: travar_gravacao(text[]); Type: FUNCTION; Schema: tech2d; Owner: -
+--
+
+CREATE FUNCTION tech2d.travar_gravacao(caminhos text[]) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'pg_catalog'
+    AS $$
+DECLARE
+  inclui_kanban boolean;
+  inclui_agenda boolean;
+BEGIN
+  SELECT coalesce(bool_or(kanban), false), coalesce(bool_or(NOT kanban), true)
+  INTO inclui_kanban, inclui_agenda
+  FROM (
+    SELECT coalesce(split_part(caminho,'/',1) IN
+      ('personalKanban','sharedKanban','kanbanMemberships','kanbanRequests'), false) AS kanban
+    FROM unnest(caminhos) AS caminho
+  ) escopos;
+  IF inclui_agenda THEN
+    PERFORM pg_advisory_xact_lock(hashtext('tech2d-application-commit'));
+  END IF;
+  IF inclui_kanban THEN
+    PERFORM pg_advisory_xact_lock(hashtext('tech2d-kanban-commit'));
+  END IF;
+END
+$$;
+
+
+--
 -- Name: vincular_disciplina_notaki(bigint, bigint); Type: FUNCTION; Schema: tech2d; Owner: -
 --
 
@@ -1336,6 +1380,78 @@ ALTER TABLE tech2d.anexos_atividade ALTER COLUMN id_anexo_atividade ADD GENERATE
 
 
 --
+-- Name: apelidos_disciplinas; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.apelidos_disciplinas (
+    id bigint NOT NULL,
+    id_disciplina bigint NOT NULL,
+    apelido text NOT NULL,
+    chave_normalizada text NOT NULL,
+    criado_em timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT apelidos_disciplinas_apelido_check CHECK ((btrim(apelido) <> ''::text)),
+    CONSTRAINT apelidos_disciplinas_chave_normalizada_check CHECK ((btrim(chave_normalizada) <> ''::text))
+);
+
+
+--
+-- Name: TABLE apelidos_disciplinas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.apelidos_disciplinas IS 'Apelidos aprovados usados pela IA para identificar disciplinas.';
+
+
+--
+-- Name: apelidos_disciplinas_id_seq; Type: SEQUENCE; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE tech2d.apelidos_disciplinas ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME tech2d.apelidos_disciplinas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: apelidos_professores; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.apelidos_professores (
+    id bigint NOT NULL,
+    id_professor bigint NOT NULL,
+    apelido text NOT NULL,
+    chave_normalizada text NOT NULL,
+    criado_em timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT apelidos_professores_apelido_check CHECK ((btrim(apelido) <> ''::text)),
+    CONSTRAINT apelidos_professores_chave_normalizada_check CHECK ((btrim(chave_normalizada) <> ''::text))
+);
+
+
+--
+-- Name: TABLE apelidos_professores; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.apelidos_professores IS 'Apelidos aprovados usados pela IA para identificar professores.';
+
+
+--
+-- Name: apelidos_professores_id_seq; Type: SEQUENCE; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE tech2d.apelidos_professores ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME tech2d.apelidos_professores_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: ids_entidades; Type: SEQUENCE; Schema: tech2d; Owner: -
 --
 
@@ -1352,6 +1468,439 @@ CREATE SEQUENCE tech2d.ids_entidades
 --
 
 COMMENT ON SEQUENCE tech2d.ids_entidades IS 'Gera novos IDs numéricos sem reutilizar os IDs existentes.';
+
+
+--
+-- Name: turmas_agenda; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.turmas_agenda (
+    id_turma_agenda bigint DEFAULT nextval('tech2d.ids_entidades'::regclass) CONSTRAINT turmas_agenda_id_registro_not_null NOT NULL,
+    ativa boolean,
+    referencia_pedido character varying(180),
+    aprovada_em character varying(40),
+    id_turma bigint,
+    versao bigint NOT NULL,
+    atualizado_em timestamp with time zone NOT NULL,
+    referencia_api character varying(320) NOT NULL,
+    CONSTRAINT turmas_agenda_referencia_api_check CHECK (((referencia_api)::text <> ''::text)),
+    CONSTRAINT turmas_agenda_versao_check CHECK ((versao > 0))
+);
+
+
+--
+-- Name: TABLE turmas_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.turmas_agenda IS 'Turmas habilitadas na Agenda';
+
+
+--
+-- Name: COLUMN turmas_agenda.id_turma_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.id_turma_agenda IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+
+
+--
+-- Name: COLUMN turmas_agenda.ativa; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.ativa IS 'Campo active no contrato da API.';
+
+
+--
+-- Name: COLUMN turmas_agenda.referencia_pedido; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.referencia_pedido IS 'Campo requestId no contrato da API.';
+
+
+--
+-- Name: COLUMN turmas_agenda.aprovada_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.aprovada_em IS 'Campo approvedAt no contrato da API.';
+
+
+--
+-- Name: COLUMN turmas_agenda.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
+
+
+--
+-- Name: COLUMN turmas_agenda.versao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+
+
+--
+-- Name: COLUMN turmas_agenda.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
+
+
+--
+-- Name: COLUMN turmas_agenda.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas_agenda.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
+
+
+--
+-- Name: assistant_class_catalog; Type: VIEW; Schema: tech2d; Owner: -
+--
+
+CREATE VIEW tech2d.assistant_class_catalog AS
+ SELECT (referencia_api)::text AS id
+   FROM tech2d.turmas_agenda a
+  WHERE ativa;
+
+
+--
+-- Name: disciplinas; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.disciplinas (
+    id_disciplina bigint CONSTRAINT school_subjects_id_not_null NOT NULL,
+    nome character varying(150) CONSTRAINT school_subjects_name_not_null NOT NULL,
+    CONSTRAINT school_subjects_name_check CHECK ((btrim((nome)::text) <> ''::text))
+);
+
+
+--
+-- Name: TABLE disciplinas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.disciplinas IS 'Nomes das disciplinas reutilizadas pelos horários.';
+
+
+--
+-- Name: COLUMN disciplinas.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.disciplinas.id_disciplina IS 'Identificador numérico de disciplinas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+
+--
+-- Name: regras_recorrencia; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.regras_recorrencia (
+    id_regra_recorrencia bigint DEFAULT nextval('tech2d.ids_entidades'::regclass) CONSTRAINT regras_recorrencia_id_registro_not_null NOT NULL,
+    titulo character varying(120),
+    descricao character varying(2000),
+    tipo_atividade character varying(32),
+    hora_atividade time without time zone,
+    criado_por character varying(128),
+    criado_em character varying(40),
+    data_inicio date,
+    data_fim date,
+    ativa boolean,
+    intervalo_semanas smallint,
+    dias_semana smallint[],
+    id_disciplina bigint,
+    id_turma bigint,
+    versao bigint NOT NULL,
+    atualizado_em timestamp with time zone NOT NULL,
+    referencia_api character varying(320) NOT NULL,
+    CONSTRAINT regras_recorrencia_referencia_api_check CHECK (((referencia_api)::text <> ''::text)),
+    CONSTRAINT regras_recorrencia_versao_check CHECK ((versao > 0))
+);
+
+
+--
+-- Name: TABLE regras_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.regras_recorrencia IS 'Regras de repetição';
+
+
+--
+-- Name: COLUMN regras_recorrencia.id_regra_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.id_regra_recorrencia IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.titulo; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.titulo IS 'Campo title no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.descricao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.descricao IS 'Campo description no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.tipo_atividade; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.tipo_atividade IS 'Campo type no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.hora_atividade; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.hora_atividade IS 'Campo time no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.criado_por; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.criado_por IS 'Campo createdBy no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.criado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.criado_em IS 'Campo createdAt no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.data_inicio; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.data_inicio IS 'Campo startDate no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.data_fim; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.data_fim IS 'Campo endDate no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.ativa; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.ativa IS 'Campo active no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.intervalo_semanas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.intervalo_semanas IS 'Campo intervalWeeks no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.dias_semana; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.dias_semana IS 'Campo weekdays no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.id_disciplina IS 'FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.versao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
+
+
+--
+-- Name: COLUMN regras_recorrencia.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.regras_recorrencia.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
+
+
+--
+-- Name: turmas; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.turmas (
+    id_turma bigint CONSTRAINT school_classes_id_not_null NOT NULL,
+    nome character varying(150) CONSTRAINT school_classes_name_not_null NOT NULL,
+    referencia_agenda character varying(150),
+    CONSTRAINT school_classes_name_check CHECK ((btrim((nome)::text) <> ''::text))
+);
+
+
+--
+-- Name: TABLE turmas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.turmas IS 'Nomes das turmas do catálogo de horários.';
+
+
+--
+-- Name: COLUMN turmas.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas.id_turma IS 'Identificador numérico de turmas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+
+--
+-- Name: COLUMN turmas.referencia_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.turmas.referencia_agenda IS 'Identificador textual estável da turma na Agenda, como 2° TECH D. É guardado uma única vez; os vínculos das tabelas usam id_turma.';
+
+
+--
+-- Name: assistant_recurring_activities; Type: VIEW; Schema: tech2d; Owner: -
+--
+
+CREATE VIEW tech2d.assistant_recurring_activities AS
+ SELECT r.referencia_api AS id,
+    jsonb_strip_nulls(jsonb_build_object('turmaId', COALESCE(t.referencia_agenda, t.nome), 'subject', d.nome, 'active', r.ativa, 'type', r.tipo_atividade, 'startDate', r.data_inicio, 'endDate', r.data_fim, 'weekdays', r.dias_semana, 'intervalWeeks', r.intervalo_semanas, 'time', to_char((r.hora_atividade)::interval, 'HH24:MI'::text), 'title', r.titulo)) AS data
+   FROM ((tech2d.regras_recorrencia r
+     LEFT JOIN tech2d.turmas t USING (id_turma))
+     LEFT JOIN tech2d.disciplinas d USING (id_disciplina));
+
+
+--
+-- Name: faixas_horario; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.faixas_horario (
+    id_faixa_horario bigint CONSTRAINT school_time_slots_id_not_null NOT NULL,
+    hora_inicio time(0) without time zone CONSTRAINT school_time_slots_start_time_not_null NOT NULL,
+    hora_fim time(0) without time zone CONSTRAINT school_time_slots_end_time_not_null NOT NULL,
+    CONSTRAINT school_time_slots_check CHECK ((hora_inicio < hora_fim))
+);
+
+
+--
+-- Name: TABLE faixas_horario; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.faixas_horario IS 'Pares de horário de início e fim reutilizados pelas aulas.';
+
+
+--
+-- Name: COLUMN faixas_horario.id_faixa_horario; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.faixas_horario.id_faixa_horario IS 'Identificador numérico de faixas_horario. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+
+--
+-- Name: horarios_aula; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.horarios_aula (
+    id_horario_aula character varying(320) CONSTRAINT school_schedules_id_not_null NOT NULL,
+    id_professor bigint CONSTRAINT school_schedules_teacher_id_not_null NOT NULL,
+    id_disciplina bigint CONSTRAINT school_schedules_subject_id_not_null NOT NULL,
+    id_turma bigint CONSTRAINT school_schedules_class_id_not_null NOT NULL,
+    id_faixa_horario bigint CONSTRAINT school_schedules_time_slot_id_not_null NOT NULL,
+    dia_semana smallint CONSTRAINT school_schedules_day_of_week_not_null NOT NULL,
+    ativo boolean CONSTRAINT school_schedules_active_not_null NOT NULL,
+    id_horario_interno bigint DEFAULT nextval('tech2d.ids_entidades'::regclass) CONSTRAINT horarios_aula_id_registro_not_null NOT NULL,
+    andar character varying(80),
+    sala character varying(500),
+    criado_em character varying(40),
+    alterado_em character varying(40),
+    versao bigint NOT NULL,
+    atualizado_em timestamp with time zone NOT NULL,
+    CONSTRAINT horarios_aula_versao_check CHECK ((versao > 0)),
+    CONSTRAINT school_schedules_day_of_week_check CHECK (((dia_semana >= 0) AND (dia_semana <= 6)))
+);
+
+
+--
+-- Name: TABLE horarios_aula; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.horarios_aula IS 'Liga professor, disciplina, turma e faixa de horário a um dia da semana.';
+
+
+--
+-- Name: COLUMN horarios_aula.id_horario_aula; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.id_horario_aula IS 'Identificador textual do horário preservado no contrato da API. id_horario_interno identifica o mesmo horário internamente.';
+
+
+--
+-- Name: COLUMN horarios_aula.id_horario_interno; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.id_horario_interno IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+
+
+--
+-- Name: COLUMN horarios_aula.andar; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.andar IS 'Andar informado para a aula.';
+
+
+--
+-- Name: COLUMN horarios_aula.sala; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.sala IS 'Descrição da sala ou localização da aula.';
+
+
+--
+-- Name: COLUMN horarios_aula.versao; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+
+
+--
+-- Name: COLUMN horarios_aula.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.horarios_aula.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
+
+
+--
+-- Name: assistant_teacher_schedule; Type: VIEW; Schema: tech2d; Owner: -
+--
+
+CREATE VIEW tech2d.assistant_teacher_schedule AS
+ SELECT h.id_professor,
+    h.dia_semana,
+    f.hora_inicio,
+    f.hora_fim,
+    d.nome AS disciplina,
+    t.nome AS turma,
+    h.andar,
+    h.sala
+   FROM (((tech2d.horarios_aula h
+     JOIN tech2d.faixas_horario f USING (id_faixa_horario))
+     JOIN tech2d.disciplinas d USING (id_disciplina))
+     JOIN tech2d.turmas t USING (id_turma))
+  WHERE h.ativo;
 
 
 --
@@ -1619,109 +2168,149 @@ ALTER TABLE tech2d.cartoes_kanban ALTER COLUMN id_cartao_kanban ADD GENERATED AL
 
 
 --
--- Name: horarios_aula; Type: TABLE; Schema: tech2d; Owner: -
+-- Name: disciplinas_series; Type: TABLE; Schema: tech2d; Owner: -
 --
 
-CREATE TABLE tech2d.horarios_aula (
-    id_horario_aula character varying(320) CONSTRAINT school_schedules_id_not_null NOT NULL,
-    id_professor bigint CONSTRAINT school_schedules_teacher_id_not_null NOT NULL,
-    id_disciplina bigint CONSTRAINT school_schedules_subject_id_not_null NOT NULL,
-    id_turma bigint CONSTRAINT school_schedules_class_id_not_null NOT NULL,
-    id_faixa_horario bigint CONSTRAINT school_schedules_time_slot_id_not_null NOT NULL,
-    dia_semana smallint CONSTRAINT school_schedules_day_of_week_not_null NOT NULL,
-    ativo boolean CONSTRAINT school_schedules_active_not_null NOT NULL,
-    id_horario_interno bigint DEFAULT nextval('tech2d.ids_entidades'::regclass) CONSTRAINT horarios_aula_id_registro_not_null NOT NULL,
-    andar character varying(80),
-    sala character varying(500),
-    criado_em character varying(40),
-    alterado_em character varying(40),
-    versao bigint NOT NULL,
-    atualizado_em timestamp with time zone NOT NULL,
-    CONSTRAINT horarios_aula_versao_check CHECK ((versao > 0)),
-    CONSTRAINT school_schedules_day_of_week_check CHECK (((dia_semana >= 0) AND (dia_semana <= 6)))
+CREATE TABLE tech2d.disciplinas_series (
+    id_disciplina bigint NOT NULL,
+    ano_serie smallint NOT NULL,
+    CONSTRAINT disciplinas_series_ano_serie_check CHECK (((ano_serie >= 1) AND (ano_serie <= 3)))
 );
 
 
 --
--- Name: TABLE horarios_aula; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE disciplinas_series; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON TABLE tech2d.horarios_aula IS 'Liga professor, disciplina, turma e faixa de horário a um dia da semana.';
-
-
---
--- Name: COLUMN horarios_aula.id_horario_aula; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.horarios_aula.id_horario_aula IS 'Identificador textual do horário preservado no contrato da API. id_horario_interno identifica o mesmo horário internamente.';
+COMMENT ON TABLE tech2d.disciplinas_series IS 'Vínculo entre o catálogo compartilhado de disciplinas e as séries do Ensino Médio. A área de Notas consulta esse vínculo para validar notas, sem duplicar os nomes das matérias.';
 
 
 --
--- Name: COLUMN horarios_aula.id_horario_interno; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: COLUMN disciplinas_series.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.id_horario_interno IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
-
-
---
--- Name: COLUMN horarios_aula.andar; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.horarios_aula.andar IS 'Andar informado para a aula.';
+COMMENT ON COLUMN tech2d.disciplinas_series.id_disciplina IS 'Disciplina do catálogo geral, também usado pelos horários. A chave estrangeira impede uma matéria inexistente.';
 
 
 --
--- Name: COLUMN horarios_aula.sala; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: COLUMN disciplinas_series.ano_serie; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.sala IS 'Descrição da sala ou localização da aula.';
-
-
---
--- Name: COLUMN horarios_aula.versao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.horarios_aula.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
+COMMENT ON COLUMN tech2d.disciplinas_series.ano_serie IS 'Série de 1 a 3 em que a disciplina é oferecida. Compõe a chave para reutilizar a mesma matéria em séries diferentes.';
 
 
 --
--- Name: COLUMN horarios_aula.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: professores; Type: TABLE; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.horarios_aula.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
-
-
---
--- Name: turmas; Type: TABLE; Schema: tech2d; Owner: -
---
-
-CREATE TABLE tech2d.turmas (
-    id_turma bigint CONSTRAINT school_classes_id_not_null NOT NULL,
-    nome character varying(150) CONSTRAINT school_classes_name_not_null NOT NULL,
-    referencia_agenda character varying(150),
-    CONSTRAINT school_classes_name_check CHECK ((btrim((nome)::text) <> ''::text))
+CREATE TABLE tech2d.professores (
+    id_professor bigint CONSTRAINT school_teachers_id_not_null NOT NULL,
+    nome character varying(150) CONSTRAINT school_teachers_name_not_null NOT NULL,
+    CONSTRAINT school_teachers_name_check CHECK ((btrim((nome)::text) <> ''::text))
 );
 
 
 --
--- Name: TABLE turmas; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE professores; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON TABLE tech2d.turmas IS 'Nomes das turmas do catálogo de horários.';
-
-
---
--- Name: COLUMN turmas.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas.id_turma IS 'Identificador numérico de turmas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+COMMENT ON TABLE tech2d.professores IS 'Nomes de professores reutilizados pelos horários.';
 
 
 --
--- Name: COLUMN turmas.referencia_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: COLUMN professores.id_professor; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.turmas.referencia_agenda IS 'Identificador textual estável da turma na Agenda, como 2° TECH D. É guardado uma única vez; os vínculos das tabelas usam id_turma.';
+COMMENT ON COLUMN tech2d.professores.id_professor IS 'Identificador numérico de professores. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
+
+
+--
+-- Name: vinculos_professores_turmas; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.vinculos_professores_turmas (
+    id bigint NOT NULL,
+    id_turma bigint NOT NULL,
+    id_disciplina bigint NOT NULL,
+    id_professor bigint NOT NULL,
+    vigencia_inicio date NOT NULL,
+    vigencia_fim date,
+    criado_em timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT vinculos_professores_turmas_check CHECK (((vigencia_fim IS NULL) OR (vigencia_fim >= vigencia_inicio)))
+);
+
+
+--
+-- Name: TABLE vinculos_professores_turmas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.vinculos_professores_turmas IS 'Professor confirmado por turma e disciplina durante uma vigência.';
+
+
+--
+-- Name: visao_disciplinas_notas; Type: VIEW; Schema: tech2d; Owner: -
+--
+
+CREATE VIEW tech2d.visao_disciplinas_notas AS
+ SELECT d.id_disciplina AS id,
+    s.ano_serie,
+    (
+        CASE d.nome
+            WHEN 'Desenvolvimento de Aplicação Dinâmica'::text THEN 'Desenvolvimento Aplicação Dinâmica'::character varying
+            WHEN 'Engenharia e Qualidae de Software'::text THEN 'Engenharia e Qualidade de Software'::character varying
+            WHEN 'Língua Portuguesa e Suas Literaturas'::text THEN 'Língua Portuguesa e suas Literaturas'::character varying
+            WHEN 'Matemática 9-Banco de dados'::text THEN 'Matemática 9-Banco de Dados'::character varying
+            WHEN 'Lingua inglesa'::text THEN 'Língua Inglesa'::character varying
+            WHEN 'Biologia 2 - ESG'::text THEN 'Biologia 2-ESG-Environment, Social and Governance'::character varying
+            WHEN 'Matemática 14-Inteligência Artificial'::text THEN 'Matemática 14 - Inteligência Artificial'::character varying
+            ELSE d.nome
+        END)::character varying(160) AS nome
+   FROM (tech2d.disciplinas_series s
+     JOIN tech2d.disciplinas d ON ((d.id_disciplina = s.id_disciplina)));
+
+
+--
+-- Name: VIEW visao_disciplinas_notas; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON VIEW tech2d.visao_disciplinas_notas IS 'Projeção do catálogo compartilhado para o Notas. Conserva os rótulos que o frontend usa como chaves, sem armazenar outro catálogo de nomes.';
+
+
+--
+-- Name: catalogo_atividades_professores; Type: VIEW; Schema: tech2d; Owner: -
+--
+
+CREATE VIEW tech2d.catalogo_atividades_professores AS
+ SELECT a.referencia_api AS id_atividade,
+    a.titulo,
+    a.tipo_atividade AS tipo,
+    a.data_atividade AS data,
+    to_char((a.hora_atividade)::interval, 'HH24:MI'::text) AS hora,
+    a.id_disciplina,
+    d.nome AS disciplina,
+    a.id_turma,
+    t.nome AS turma,
+    p.id_professor,
+    p.nome AS professor,
+        CASE
+            WHEN (a.id_turma IS NULL) THEN 'atividade_geral'::text
+            WHEN (a.id_disciplina IS NULL) THEN 'disciplina_pendente'::text
+            WHEN (p.id_professor IS NULL) THEN 'professor_pendente'::text
+            ELSE 'associado'::text
+        END AS estado_atribuicao,
+    (COALESCE(( SELECT n.nome
+           FROM tech2d.visao_disciplinas_notas n
+          WHERE (n.id = d.id_disciplina)
+          ORDER BY n.ano_serie DESC
+         LIMIT 1), d.nome))::character varying(150) AS disciplina_original,
+    COALESCE(t.referencia_agenda, t.nome) AS turma_original,
+    r.referencia_api AS referencia_recorrencia
+   FROM (((((tech2d.atividades a
+     LEFT JOIN tech2d.regras_recorrencia r USING (id_regra_recorrencia))
+     LEFT JOIN tech2d.disciplinas d ON ((d.id_disciplina = a.id_disciplina)))
+     LEFT JOIN tech2d.turmas t ON ((t.id_turma = a.id_turma)))
+     LEFT JOIN tech2d.vinculos_professores_turmas x ON ((((x.id_turma = a.id_turma) AND (x.id_disciplina = a.id_disciplina)) AND (a.data_atividade <@ daterange(x.vigencia_inicio, x.vigencia_fim, '[]'::text)))))
+     LEFT JOIN tech2d.professores p ON ((p.id_professor = x.id_professor)));
 
 
 --
@@ -1825,63 +2414,6 @@ ALTER TABLE tech2d.colunas_kanban ALTER COLUMN id_coluna_kanban ADD GENERATED AL
 
 
 --
--- Name: disciplinas; Type: TABLE; Schema: tech2d; Owner: -
---
-
-CREATE TABLE tech2d.disciplinas (
-    id_disciplina bigint CONSTRAINT school_subjects_id_not_null NOT NULL,
-    nome character varying(150) CONSTRAINT school_subjects_name_not_null NOT NULL,
-    CONSTRAINT school_subjects_name_check CHECK ((btrim((nome)::text) <> ''::text))
-);
-
-
---
--- Name: TABLE disciplinas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.disciplinas IS 'Nomes das disciplinas reutilizadas pelos horários.';
-
-
---
--- Name: COLUMN disciplinas.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.disciplinas.id_disciplina IS 'Identificador numérico de disciplinas. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
-
---
--- Name: disciplinas_series; Type: TABLE; Schema: tech2d; Owner: -
---
-
-CREATE TABLE tech2d.disciplinas_series (
-    id_disciplina bigint NOT NULL,
-    ano_serie smallint NOT NULL,
-    CONSTRAINT disciplinas_series_ano_serie_check CHECK (((ano_serie >= 1) AND (ano_serie <= 3)))
-);
-
-
---
--- Name: TABLE disciplinas_series; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.disciplinas_series IS 'Vínculo entre o catálogo compartilhado de disciplinas e as séries do Ensino Médio. A área de Notas consulta esse vínculo para validar notas, sem duplicar os nomes das matérias.';
-
-
---
--- Name: COLUMN disciplinas_series.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.disciplinas_series.id_disciplina IS 'Disciplina do catálogo geral, também usado pelos horários. A chave estrangeira impede uma matéria inexistente.';
-
-
---
--- Name: COLUMN disciplinas_series.ano_serie; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.disciplinas_series.ano_serie IS 'Série de 1 a 3 em que a disciplina é oferecida. Compõe a chave para reutilizar a mesma matéria em séries diferentes.';
-
-
---
 -- Name: espacos_kanban; Type: TABLE; Schema: tech2d; Owner: -
 --
 
@@ -1971,32 +2503,6 @@ COMMENT ON COLUMN tech2d.espacos_kanban.compartilhado IS 'Distingue espaços pes
 
 
 --
--- Name: faixas_horario; Type: TABLE; Schema: tech2d; Owner: -
---
-
-CREATE TABLE tech2d.faixas_horario (
-    id_faixa_horario bigint CONSTRAINT school_time_slots_id_not_null NOT NULL,
-    hora_inicio time(0) without time zone CONSTRAINT school_time_slots_start_time_not_null NOT NULL,
-    hora_fim time(0) without time zone CONSTRAINT school_time_slots_end_time_not_null NOT NULL,
-    CONSTRAINT school_time_slots_check CHECK ((hora_inicio < hora_fim))
-);
-
-
---
--- Name: TABLE faixas_horario; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.faixas_horario IS 'Pares de horário de início e fim reutilizados pelas aulas.';
-
-
---
--- Name: COLUMN faixas_horario.id_faixa_horario; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.faixas_horario.id_faixa_horario IS 'Identificador numérico de faixas_horario. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
-
---
 -- Name: itens_checklist; Type: TABLE; Schema: tech2d; Owner: -
 --
 
@@ -2065,6 +2571,36 @@ ALTER TABLE tech2d.itens_checklist ALTER COLUMN id_item_checklist ADD GENERATED 
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: limites_mensagens_ia; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.limites_mensagens_ia (
+    firebase_uid text NOT NULL,
+    data_uso date NOT NULL,
+    quantidade integer NOT NULL,
+    CONSTRAINT limites_mensagens_ia_firebase_uid_check CHECK (((length(firebase_uid) >= 1) AND (length(firebase_uid) <= 128))),
+    CONSTRAINT limites_mensagens_ia_quantidade_check CHECK ((quantidade >= 0))
+);
+
+
+--
+-- Name: limpeza_anexos_agenda; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.limpeza_anexos_agenda (
+    chave_arquivo text NOT NULL,
+    tentar_apos timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE limpeza_anexos_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON TABLE tech2d.limpeza_anexos_agenda IS 'Fila de limpeza de anexos R2 desvinculados pelo expurgo e por recorrências.';
 
 
 --
@@ -2479,31 +3015,6 @@ COMMENT ON COLUMN tech2d.perfis_administrativos.referencia_api IS 'Identificador
 
 
 --
--- Name: professores; Type: TABLE; Schema: tech2d; Owner: -
---
-
-CREATE TABLE tech2d.professores (
-    id_professor bigint CONSTRAINT school_teachers_id_not_null NOT NULL,
-    nome character varying(150) CONSTRAINT school_teachers_name_not_null NOT NULL,
-    CONSTRAINT school_teachers_name_check CHECK ((btrim((nome)::text) <> ''::text))
-);
-
-
---
--- Name: TABLE professores; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.professores IS 'Nomes de professores reutilizados pelos horários.';
-
-
---
--- Name: COLUMN professores.id_professor; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.professores.id_professor IS 'Identificador numérico de professores. É a chave primária desta entidade e o destino dos relacionamentos correspondentes.';
-
-
---
 -- Name: quadros_kanban; Type: TABLE; Schema: tech2d; Owner: -
 --
 
@@ -2606,159 +3117,6 @@ COMMENT ON TABLE tech2d.recibos_gravacao IS 'Recibos que impedem uma gravação 
 --
 
 COMMENT ON COLUMN tech2d.recibos_gravacao.id_recibo_gravacao IS 'Identificador externo do lote confirmado, recebido em commit.id. O valor continua estável nos reenvios e é exposto como id pela view de recibos.';
-
-
---
--- Name: regras_recorrencia; Type: TABLE; Schema: tech2d; Owner: -
---
-
-CREATE TABLE tech2d.regras_recorrencia (
-    id_regra_recorrencia bigint DEFAULT nextval('tech2d.ids_entidades'::regclass) CONSTRAINT regras_recorrencia_id_registro_not_null NOT NULL,
-    titulo character varying(120),
-    descricao character varying(2000),
-    tipo_atividade character varying(32),
-    hora_atividade time without time zone,
-    criado_por character varying(128),
-    criado_em character varying(40),
-    data_inicio date,
-    data_fim date,
-    ativa boolean,
-    intervalo_semanas smallint,
-    dias_semana smallint[],
-    id_disciplina bigint,
-    id_turma bigint,
-    versao bigint NOT NULL,
-    atualizado_em timestamp with time zone NOT NULL,
-    referencia_api character varying(320) NOT NULL,
-    CONSTRAINT regras_recorrencia_referencia_api_check CHECK (((referencia_api)::text <> ''::text)),
-    CONSTRAINT regras_recorrencia_versao_check CHECK ((versao > 0))
-);
-
-
---
--- Name: TABLE regras_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON TABLE tech2d.regras_recorrencia IS 'Regras de repetição';
-
-
---
--- Name: COLUMN regras_recorrencia.id_regra_recorrencia; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.id_regra_recorrencia IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
-
-
---
--- Name: COLUMN regras_recorrencia.titulo; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.titulo IS 'Campo title no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.descricao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.descricao IS 'Campo description no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.tipo_atividade; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.tipo_atividade IS 'Campo type no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.hora_atividade; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.hora_atividade IS 'Campo time no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.criado_por; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.criado_por IS 'Campo createdBy no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.criado_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.criado_em IS 'Campo createdAt no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.data_inicio; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.data_inicio IS 'Campo startDate no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.data_fim; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.data_fim IS 'Campo endDate no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.ativa; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.ativa IS 'Campo active no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.intervalo_semanas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.intervalo_semanas IS 'Campo intervalWeeks no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.dias_semana; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.dias_semana IS 'Campo weekdays no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.id_disciplina; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.id_disciplina IS 'FK para disciplinas.id_disciplina. Reutiliza a matéria do catálogo compartilhado com horários e Notas; o rótulo exibido é reconstruído pela API.';
-
-
---
--- Name: COLUMN regras_recorrencia.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
-
-
---
--- Name: COLUMN regras_recorrencia.versao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
-
-
---
--- Name: COLUMN regras_recorrencia.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
-
-
---
--- Name: COLUMN regras_recorrencia.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.regras_recorrencia.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
 
 
 --
@@ -3036,113 +3394,35 @@ COMMENT ON COLUMN tech2d.sugestoes_melhoria.referencia_api IS 'Identificador ext
 
 
 --
--- Name: turmas_agenda; Type: TABLE; Schema: tech2d; Owner: -
+-- Name: uso_diario_assistente; Type: TABLE; Schema: tech2d; Owner: -
 --
 
-CREATE TABLE tech2d.turmas_agenda (
-    id_turma_agenda bigint DEFAULT nextval('tech2d.ids_entidades'::regclass) CONSTRAINT turmas_agenda_id_registro_not_null NOT NULL,
-    ativa boolean,
-    referencia_pedido character varying(180),
-    aprovada_em character varying(40),
-    id_turma bigint,
-    versao bigint NOT NULL,
-    atualizado_em timestamp with time zone NOT NULL,
-    referencia_api character varying(320) NOT NULL,
-    CONSTRAINT turmas_agenda_referencia_api_check CHECK (((referencia_api)::text <> ''::text)),
-    CONSTRAINT turmas_agenda_versao_check CHECK ((versao > 0))
+CREATE TABLE tech2d.uso_diario_assistente (
+    dia date NOT NULL,
+    mensagens integer NOT NULL,
+    CONSTRAINT uso_diario_assistente_mensagens_check CHECK ((mensagens > 0))
 );
 
 
 --
--- Name: TABLE turmas_agenda; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: TABLE uso_diario_assistente; Type: COMMENT; Schema: tech2d; Owner: -
 --
 
-COMMENT ON TABLE tech2d.turmas_agenda IS 'Turmas habilitadas na Agenda';
-
-
---
--- Name: COLUMN turmas_agenda.id_turma_agenda; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.id_turma_agenda IS 'Identificador numérico da própria entidade. Preserva o valor original e recebe novos IDs da sequência ids_entidades.';
+COMMENT ON TABLE tech2d.uso_diario_assistente IS 'Total de mensagens aceitas pelo Assistente por dia de Brasília.';
 
 
 --
--- Name: COLUMN turmas_agenda.ativa; Type: COMMENT; Schema: tech2d; Owner: -
+-- Name: vinculos_professores_turmas_id_seq; Type: SEQUENCE; Schema: tech2d; Owner: -
 --
 
-COMMENT ON COLUMN tech2d.turmas_agenda.ativa IS 'Campo active no contrato da API.';
-
-
---
--- Name: COLUMN turmas_agenda.referencia_pedido; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.referencia_pedido IS 'Campo requestId no contrato da API.';
-
-
---
--- Name: COLUMN turmas_agenda.aprovada_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.aprovada_em IS 'Campo approvedAt no contrato da API.';
-
-
---
--- Name: COLUMN turmas_agenda.id_turma; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.id_turma IS 'FK para turmas.id_turma, compartilhada com os horários. referencia_agenda no catálogo conserva o identificador textual esperado pela interface.';
-
-
---
--- Name: COLUMN turmas_agenda.versao; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.versao IS 'Revisão da entidade usada para detectar edições concorrentes.';
-
-
---
--- Name: COLUMN turmas_agenda.atualizado_em; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.atualizado_em IS 'Instante da última gravação da entidade no contrato da API.';
-
-
---
--- Name: COLUMN turmas_agenda.referencia_api; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON COLUMN tech2d.turmas_agenda.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
-
-
---
--- Name: visao_disciplinas_notas; Type: VIEW; Schema: tech2d; Owner: -
---
-
-CREATE VIEW tech2d.visao_disciplinas_notas AS
- SELECT d.id_disciplina AS id,
-    s.ano_serie,
-    (
-        CASE d.nome
-            WHEN 'Desenvolvimento de Aplicação Dinâmica'::text THEN 'Desenvolvimento Aplicação Dinâmica'::character varying
-            WHEN 'Engenharia e Qualidae de Software'::text THEN 'Engenharia e Qualidade de Software'::character varying
-            WHEN 'Língua Portuguesa e Suas Literaturas'::text THEN 'Língua Portuguesa e suas Literaturas'::character varying
-            WHEN 'Matemática 9-Banco de dados'::text THEN 'Matemática 9-Banco de Dados'::character varying
-            WHEN 'Lingua inglesa'::text THEN 'Língua Inglesa'::character varying
-            WHEN 'Biologia 2 - ESG'::text THEN 'Biologia 2-ESG-Environment, Social and Governance'::character varying
-            WHEN 'Matemática 14-Inteligência Artificial'::text THEN 'Matemática 14 - Inteligência Artificial'::character varying
-            ELSE d.nome
-        END)::character varying(160) AS nome
-   FROM (tech2d.disciplinas_series s
-     JOIN tech2d.disciplinas d ON ((d.id_disciplina = s.id_disciplina)));
-
-
---
--- Name: VIEW visao_disciplinas_notas; Type: COMMENT; Schema: tech2d; Owner: -
---
-
-COMMENT ON VIEW tech2d.visao_disciplinas_notas IS 'Projeção do catálogo compartilhado para o Notas. Conserva os rótulos que o frontend usa como chaves, sem armazenar outro catálogo de nomes.';
+ALTER TABLE tech2d.vinculos_professores_turmas ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME tech2d.vinculos_professores_turmas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -3630,6 +3910,38 @@ ALTER TABLE ONLY tech2d.anexos_atividade
 
 
 --
+-- Name: apelidos_disciplinas apelidos_disciplinas_id_disciplina_chave_normalizada_key; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.apelidos_disciplinas
+    ADD CONSTRAINT apelidos_disciplinas_id_disciplina_chave_normalizada_key UNIQUE (id_disciplina, chave_normalizada);
+
+
+--
+-- Name: apelidos_disciplinas apelidos_disciplinas_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.apelidos_disciplinas
+    ADD CONSTRAINT apelidos_disciplinas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: apelidos_professores apelidos_professores_id_professor_chave_normalizada_key; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.apelidos_professores
+    ADD CONSTRAINT apelidos_professores_id_professor_chave_normalizada_key UNIQUE (id_professor, chave_normalizada);
+
+
+--
+-- Name: apelidos_professores apelidos_professores_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.apelidos_professores
+    ADD CONSTRAINT apelidos_professores_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: recibos_gravacao app_commits_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
 --
 
@@ -3739,6 +4051,22 @@ ALTER TABLE ONLY tech2d.itens_checklist
 
 ALTER TABLE ONLY tech2d.itens_checklist
     ADD CONSTRAINT itens_checklist_pkey PRIMARY KEY (id_item_checklist);
+
+
+--
+-- Name: limites_mensagens_ia limites_mensagens_ia_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.limites_mensagens_ia
+    ADD CONSTRAINT limites_mensagens_ia_pkey PRIMARY KEY (firebase_uid);
+
+
+--
+-- Name: limpeza_anexos_agenda limpeza_anexos_agenda_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.limpeza_anexos_agenda
+    ADD CONSTRAINT limpeza_anexos_agenda_pkey PRIMARY KEY (chave_arquivo);
 
 
 --
@@ -3990,11 +4318,49 @@ ALTER TABLE ONLY tech2d.turmas
 
 
 --
+-- Name: uso_diario_assistente uso_diario_assistente_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.uso_diario_assistente
+    ADD CONSTRAINT uso_diario_assistente_pkey PRIMARY KEY (dia);
+
+
+--
+-- Name: vinculos_professores_turmas vinculos_professores_turmas_numrange_numrange1_daterange_excl; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.vinculos_professores_turmas
+    ADD CONSTRAINT vinculos_professores_turmas_numrange_numrange1_daterange_excl EXCLUDE USING gist (numrange((id_turma)::numeric, (id_turma)::numeric, '[]'::text) WITH &&, numrange((id_disciplina)::numeric, (id_disciplina)::numeric, '[]'::text) WITH &&, daterange(vigencia_inicio, vigencia_fim, '[]'::text) WITH &&);
+
+
+--
+-- Name: vinculos_professores_turmas vinculos_professores_turmas_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.vinculos_professores_turmas
+    ADD CONSTRAINT vinculos_professores_turmas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: visitas_aos_sites visitas_aos_sites_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
 --
 
 ALTER TABLE ONLY tech2d.visitas_aos_sites
     ADD CONSTRAINT visitas_aos_sites_pkey PRIMARY KEY (site, dia, intervalo_meia_hora, tipo_visitante, chave_visitante);
+
+
+--
+-- Name: apelidos_disciplinas_chave; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX apelidos_disciplinas_chave ON tech2d.apelidos_disciplinas USING btree (chave_normalizada);
+
+
+--
+-- Name: apelidos_professores_chave; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX apelidos_professores_chave ON tech2d.apelidos_professores USING btree (chave_normalizada);
 
 
 --
@@ -4051,6 +4417,13 @@ CREATE INDEX espacos_kanban_sharedkanban_caminho_api_idx ON tech2d.espacos_kanba
 --
 
 CREATE INDEX horarios_aula_caminho_api_idx ON tech2d.horarios_aula USING btree (tech2d.referencia_api('schedules'::character varying, ''::character varying, id_horario_aula));
+
+
+--
+-- Name: limpeza_anexos_agenda_pendentes_idx; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX limpeza_anexos_agenda_pendentes_idx ON tech2d.limpeza_anexos_agenda USING btree (tentar_apos, chave_arquivo);
 
 
 --
@@ -4173,6 +4546,20 @@ CREATE INDEX turmas_agenda_turma_idx ON tech2d.turmas_agenda USING btree (id_tur
 
 
 --
+-- Name: vinculos_professores_turmas_busca; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX vinculos_professores_turmas_busca ON tech2d.vinculos_professores_turmas USING btree (id_turma, id_disciplina, vigencia_inicio, vigencia_fim);
+
+
+--
+-- Name: vinculos_professores_turmas_professor; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX vinculos_professores_turmas_professor ON tech2d.vinculos_professores_turmas USING btree (id_professor, id_turma, id_disciplina, vigencia_inicio, vigencia_fim);
+
+
+--
 -- Name: horarios_aula vincular_disciplina_notaki; Type: TRIGGER; Schema: tech2d; Owner: -
 --
 
@@ -4185,6 +4572,22 @@ CREATE TRIGGER vincular_disciplina_notaki AFTER INSERT OR UPDATE OF id_turma, id
 
 ALTER TABLE ONLY tech2d.anexos_atividade
     ADD CONSTRAINT anexos_atividade_id_atividade_fkey FOREIGN KEY (id_atividade) REFERENCES tech2d.atividades(id_atividade) ON DELETE CASCADE;
+
+
+--
+-- Name: apelidos_disciplinas apelidos_disciplinas_id_disciplina_fkey; Type: FK CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.apelidos_disciplinas
+    ADD CONSTRAINT apelidos_disciplinas_id_disciplina_fkey FOREIGN KEY (id_disciplina) REFERENCES tech2d.disciplinas(id_disciplina) ON DELETE RESTRICT;
+
+
+--
+-- Name: apelidos_professores apelidos_professores_id_professor_fkey; Type: FK CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.apelidos_professores
+    ADD CONSTRAINT apelidos_professores_id_professor_fkey FOREIGN KEY (id_professor) REFERENCES tech2d.professores(id_professor) ON DELETE RESTRICT;
 
 
 --
@@ -4380,6 +4783,30 @@ ALTER TABLE ONLY tech2d.turmas_agenda
 
 
 --
+-- Name: vinculos_professores_turmas vinculos_professores_turmas_id_disciplina_fkey; Type: FK CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.vinculos_professores_turmas
+    ADD CONSTRAINT vinculos_professores_turmas_id_disciplina_fkey FOREIGN KEY (id_disciplina) REFERENCES tech2d.disciplinas(id_disciplina) ON DELETE RESTRICT;
+
+
+--
+-- Name: vinculos_professores_turmas vinculos_professores_turmas_id_professor_fkey; Type: FK CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.vinculos_professores_turmas
+    ADD CONSTRAINT vinculos_professores_turmas_id_professor_fkey FOREIGN KEY (id_professor) REFERENCES tech2d.professores(id_professor) ON DELETE RESTRICT;
+
+
+--
+-- Name: vinculos_professores_turmas vinculos_professores_turmas_id_turma_fkey; Type: FK CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.vinculos_professores_turmas
+    ADD CONSTRAINT vinculos_professores_turmas_id_turma_fkey FOREIGN KEY (id_turma) REFERENCES tech2d.turmas(id_turma) ON DELETE RESTRICT;
+
+
+--
 -- Name: notas_cadernos; Type: ROW SECURITY; Schema: tech2d; Owner: -
 --
 
@@ -4423,7 +4850,8 @@ CREATE POLICY notas_recuperacoes_conta ON tech2d.notas_recuperacoes USING (((id_
 --
 
 GRANT USAGE ON SCHEMA tech2d TO tech2d_api;
-GRANT USAGE ON SCHEMA tech2d TO assistente_ia_readonly;
+GRANT USAGE ON SCHEMA tech2d TO tech2d_prod_ai_reader;
+GRANT USAGE ON SCHEMA tech2d TO tech2d_prod_ai_quota;
 
 
 --
@@ -4623,6 +5051,14 @@ GRANT ALL ON FUNCTION tech2d.revisao_catalogo_publico(catalogo character varying
 
 
 --
+-- Name: FUNCTION travar_gravacao(caminhos text[]); Type: ACL; Schema: tech2d; Owner: -
+--
+
+REVOKE ALL ON FUNCTION tech2d.travar_gravacao(caminhos text[]) FROM PUBLIC;
+GRANT ALL ON FUNCTION tech2d.travar_gravacao(caminhos text[]) TO tech2d_api;
+
+
+--
 -- Name: FUNCTION vincular_disciplina_notaki(turma_id bigint, disciplina_id bigint); Type: ACL; Schema: tech2d; Owner: -
 --
 
@@ -4637,10 +5073,45 @@ REVOKE ALL ON FUNCTION tech2d.vincular_nova_disciplina_notaki() FROM PUBLIC;
 
 
 --
--- Name: TABLE catalogo_horarios; Type: ACL; Schema: tech2d; Owner: -
+-- Name: TABLE apelidos_disciplinas; Type: ACL; Schema: tech2d; Owner: -
 --
 
-GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.apelidos_disciplinas TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE apelidos_professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.apelidos_professores TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE assistant_class_catalog; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.assistant_class_catalog TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE disciplinas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.disciplinas TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE assistant_recurring_activities; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.assistant_recurring_activities TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE assistant_teacher_schedule; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.assistant_teacher_schedule TO tech2d_prod_ai_reader;
 
 
 --
@@ -4648,6 +5119,48 @@ GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.disciplinas_series TO tech2d_api;
+
+
+--
+-- Name: TABLE professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.professores TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE visao_disciplinas_notas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_api;
+
+
+--
+-- Name: TABLE catalogo_atividades_professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.catalogo_atividades_professores TO tech2d_prod_ai_reader;
+
+
+--
+-- Name: TABLE catalogo_horarios; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
+
+
+--
+-- Name: TABLE limites_mensagens_ia; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.limites_mensagens_ia TO tech2d_prod_ai_quota;
+
+
+--
+-- Name: TABLE limpeza_anexos_agenda; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.limpeza_anexos_agenda TO tech2d_api;
 
 
 --
@@ -4672,17 +5185,11 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_recuperacoes TO tech2d_a
 
 
 --
--- Name: TABLE recibos_gravacao; Type: ACL; Schema: tech2d; Owner: -
+-- Name: TABLE uso_diario_assistente; Type: ACL; Schema: tech2d; Owner: -
 --
 
-GRANT SELECT,INSERT ON TABLE tech2d.recibos_gravacao TO tech2d_api;
-
-
---
--- Name: TABLE visao_disciplinas_notas; Type: ACL; Schema: tech2d; Owner: -
---
-
-GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_api;
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.uso_diario_assistente TO tech2d_prod_ai_quota;
+GRANT SELECT ON TABLE tech2d.uso_diario_assistente TO tech2d_api;
 
 
 --
@@ -4732,13 +5239,6 @@ GRANT SELECT ON TABLE tech2d.visao_notas_resultados TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_perfis_administrativos TO tech2d_api;
-
-
---
--- Name: TABLE visao_recibos_gravacao; Type: ACL; Schema: tech2d; Owner: -
---
-
-GRANT SELECT,INSERT ON TABLE tech2d.visao_recibos_gravacao TO tech2d_api;
 
 
 --

@@ -100,6 +100,132 @@
     },
     {
         "kind": "table",
+        "name": "apelidos_disciplinas",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": true
+            },
+            {
+                "name": "id_disciplina",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "apelido",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "chave_normalizada",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "criado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": "Apelidos aprovados usados pela IA para identificar disciplinas.",
+        "references": [
+            {
+                "table": "disciplinas",
+                "column": "id_disciplina",
+                "target": "id_disciplina"
+            }
+        ],
+        "primary_key": [
+            "id"
+        ],
+        "foreign_key_count": 1
+    },
+    {
+        "kind": "table",
+        "name": "apelidos_professores",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": true
+            },
+            {
+                "name": "id_professor",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "apelido",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "chave_normalizada",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "criado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": "Apelidos aprovados usados pela IA para identificar professores.",
+        "references": [
+            {
+                "table": "professores",
+                "column": "id_professor",
+                "target": "id_professor"
+            }
+        ],
+        "primary_key": [
+            "id"
+        ],
+        "foreign_key_count": 1
+    },
+    {
+        "kind": "table",
         "name": "atividades",
         "columns": [
             {
@@ -919,6 +1045,77 @@
             "id_item_checklist"
         ],
         "foreign_key_count": 1
+    },
+    {
+        "kind": "table",
+        "name": "limites_mensagens_ia",
+        "columns": [
+            {
+                "name": "firebase_uid",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "data_uso",
+                "type": "date",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "quantidade",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "firebase_uid"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
+        "name": "limpeza_anexos_agenda",
+        "columns": [
+            {
+                "name": "chave_arquivo",
+                "type": "text",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "tentar_apos",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": "Fila de limpeza de anexos R2 desvinculados pelo expurgo e por recorrências.",
+        "references": [
+        ],
+        "primary_key": [
+            "chave_arquivo"
+        ],
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -2268,6 +2465,128 @@
             "id_turma_agenda"
         ],
         "foreign_key_count": 1
+    },
+    {
+        "kind": "table",
+        "name": "uso_diario_assistente",
+        "columns": [
+            {
+                "name": "dia",
+                "type": "date",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "mensagens",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": "Total de mensagens aceitas pelo Assistente por dia de Brasília.",
+        "references": [
+        ],
+        "primary_key": [
+            "dia"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
+        "name": "vinculos_professores_turmas",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": true
+            },
+            {
+                "name": "id_turma",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "id_disciplina",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "id_professor",
+                "type": "bigint",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "vigencia_inicio",
+                "type": "date",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "vigencia_fim",
+                "type": "date",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "criado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": "Professor confirmado por turma e disciplina durante uma vigência.",
+        "references": [
+            {
+                "table": "disciplinas",
+                "column": "id_disciplina",
+                "target": "id_disciplina"
+            },
+            {
+                "table": "professores",
+                "column": "id_professor",
+                "target": "id_professor"
+            },
+            {
+                "table": "turmas",
+                "column": "id_turma",
+                "target": "id_turma"
+            }
+        ],
+        "primary_key": [
+            "id"
+        ],
+        "foreign_key_count": 3
     },
     {
         "kind": "table",
