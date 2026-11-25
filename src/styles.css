@@ -4,11 +4,11 @@
 @source "../docs";
 
 @theme {
-  --font-sans: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Poppins", "Segoe UI", system-ui, sans-serif;
   --font-mono: "Cascadia Code", "IBM Plex Mono", Consolas, monospace;
-  --color-ink-950: #13213a;
-  --color-ink-800: #192840;
-  --color-accent-700: #1c4ec6;
-  --color-paper-50: #f5f7fb;
-  --color-paper-100: #eaf1ff;
+  --color-ink-950: #202e47;
+  --color-ink-800: #202e47;
+  --color-accent-700: #0a2dc4;
+  --color-paper-50: #f6f7fb;
+  --color-paper-100: #eef1fd;
 }

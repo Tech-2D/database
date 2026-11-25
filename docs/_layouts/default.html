@@ -4,7 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.description | default: site.description | escape }}">
-  <title>{{ page.title | escape }} · Tech-2D</title>
+  <title>{{ page.title | escape }} · 2ºD Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ '/assets/docs.css' | relative_url }}?v={{ site.github.build_revision }}">
   <script src="{{ '/assets/docs.js' | relative_url }}?v={{ site.github.build_revision }}" defer></script>
 </head>
@@ -12,7 +15,7 @@
   {% include doc-icons.html %}
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
   <aside class="sidebar db-sidebar lg:sticky lg:top-0 z-20 flex h-auto flex-col gap-3 px-3 py-3 sm:px-4 lg:h-screen lg:gap-6 lg:px-4 lg:py-6">
-    <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark" aria-hidden="true">T2</span><span><strong>Tech-2D</strong><small>Banco de dados · Documentação</small></span></a>
+    <a class="brand" href="{{ '/' | relative_url }}"><img class="brand-avatar" src="{{ "/assets/d2/d2.webp" | relative_url }}" width="48" height="48" alt=""><span><strong>2ºD Tech</strong><small>Documentação de dados</small></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar-navigation" data-sidebar-toggle>{% include doc-icon.html name="layers" %}Explorar documentação</button>
     <div class="database-switch" aria-label="Tecnologias documentadas">
       <a href="{{ '/' | relative_url }}"{% unless page.database == 'redis' %} aria-current="true"{% endunless %}>{% include doc-icon.html name="database" %}PostgreSQL</a>
@@ -59,7 +62,7 @@
       </nav>
       {% endif %}
     </div>
-    <footer class="sidebar-footer"><span class="read-only-badge"><span aria-hidden="true"></span>Somente leitura</span><a class="repo-link" href="https://github.com/Tech-2D/database">Repositório no GitHub ↗</a></footer>
+    <footer class="sidebar-footer"><span class="read-only-badge"><span aria-hidden="true"></span>Somente leitura</span><a class="repo-link" href="https://github.com/Tech-2D/modelagem-dados">Repositório no GitHub ↗</a></footer>
   </aside>
   <div class="workspace-shell">
     <div class="doc-toolbar">
@@ -74,14 +77,21 @@
         {% include doc-icon.html name="search" %}<input id="workspace-query" name="q" type="search" placeholder="Pesquisar tabelas, campos e recursos…" autocomplete="off"><kbd>Ctrl K</kbd>
       </form>
       {% endif %}
+      <a class="portal-link" href="https://tech-2d.github.io/web/">Abrir portal <span aria-hidden="true">↗</span></a>
       <span class="toolbar-status">{% include doc-icon.html name="eye" %}Somente leitura</span>
     </div>
   <div class="workspace mx-auto grid w-full min-w-0 max-w-[85rem] grid-cols-1 items-start gap-6 px-4 py-5 sm:px-8 sm:py-8 {% if page.wide %}xl:grid-cols-1{% else %}xl:grid-cols-[minmax(0,54rem)_11rem]{% endif %} xl:gap-12 xl:px-12 xl:py-14">
     <main id="conteudo" class="article min-w-0">
       <header class="page-heading">
-        <p class="page-eyebrow">TECH-2D / DOCUMENTAÇÃO</p>
-        <h1>{{ page.title | escape }}</h1>
-        {% if page.description %}<p>{{ page.description | escape }}</p>{% endif %}
+        <div class="heading-title">
+          <p class="page-eyebrow">2ºD TECH / BANCO DE DADOS</p>
+          <h1>{{ page.title | escape }}</h1>
+          {% if page.description %}<p>{{ page.description | escape }}</p>{% endif %}
+        </div>
+        <span class="d2-portrait" role="img" aria-label="D2, mascote da 2ºD Tech" style="--d2-idle-image: url('{{ '/assets/d2/d2-repouso.webp' | relative_url }}')">
+          <img src="{{ '/assets/d2/d2.webp' | relative_url }}" width="112" height="112" alt="">
+          <span class="d2-idle" aria-hidden="true"></span>
+        </span>
       </header>
       {{ content }}
     </main>

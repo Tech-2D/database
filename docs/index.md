@@ -9,7 +9,7 @@ permalink: /
   <span class="flow-arrow" aria-hidden="true">→</span>
   <span><strong>Cloudflare Workers</strong><small>API compartilhada</small></span>
   <span class="flow-arrow" aria-hidden="true">→</span>
-  <span><strong>PostgreSQL</strong><small>Aiven, via Hyperdrive</small></span>
+  <span><strong>PostgreSQL</strong><small>Neon, via Hyperdrive</small></span>
 </div>
 
 {% assign table_count = site.data.schema | where: "kind", "table" | size %}
