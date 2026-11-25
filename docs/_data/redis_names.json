@@ -130,5 +130,8 @@
   {
     "legacy": "tech2d:sql:public:v2:schedules",
     "current": "tech2d:{cache}:horarios"
+  },
+  {
+    "current": "tech2d:{recuperacao}:publicacao"
   }
 ]

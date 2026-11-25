@@ -33,6 +33,22 @@
       expiry: O prazo começa quando a API gera a resposta para aquela combinação de filtros.
       route: GET /api/catalog/schedules
 
+- id: periodo-de-recuperacao
+  title: Período de recuperação
+  nav: Recuperação
+  icon: calendar
+  description: Indica qual edição do edital aparece na Agenda e em quais datas. O edital e os horários são mantidos no PostgreSQL.
+  source: recovery.js
+  entries:
+    - id: recuperacao-publicacao
+      name: Edição publicada
+      key: 'tech2d:{recuperacao}:publicacao'
+      type: String (JSON)
+      ttl: Até o fim definido no painel
+      description: Guarda o identificador da edição e as datas de início e fim. A API mostra o edital apenas dentro desse intervalo.
+      expiry: A chave expira no fim do período ou é removida quando um administrador desativa a publicação.
+      route: GET /api/recovery e GET/POST /api/admin/recovery
+
 - id: comunicado-geral-da-agenda
   title: Comunicado geral da Agenda
   nav: Comunicado geral

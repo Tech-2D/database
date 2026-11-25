@@ -6,6 +6,12 @@ wide: true
 
 Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os recursos para consulta, sem separar fisicamente o banco. As tabelas usam colunas tipadas e chaves estrangeiras. Cada entidade guarda sua identidade numérica, referência externa, versão e data de atualização. A sequência `ids_entidades` gera os novos IDs. As views preparam o formato que a API entrega aos sites.
 
+## Recuperação na Agenda
+
+`tech2d.editais_recuperacao` guarda as versões do edital com título, orientações, link e intervalo de publicação. `tech2d.aulas_recuperacao` vincula a cada versão uma grade com data, horário, matéria, turma, professor e local. Uma aula sem turma vale para todas.
+
+O painel grava uma nova versão a cada salvamento. A publicação aponta para uma versão específica por meio de uma chave Redis com prazo até o fim do período. O edital e as aulas permanecem no PostgreSQL após o vencimento. [Migração 071](https://github.com/Tech-2D/api/blob/main/migrations/071_modo_recuperacao.sql) · [Catálogo Redis]({{ '/redis.html#recuperacao-publicacao' | relative_url }})
+
 ## Tabelas por área
 
 {% assign tables = site.data.schema | where: "kind", "table" %}
