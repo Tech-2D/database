@@ -187,7 +187,7 @@ h2[id], h3[id], details[id], [data-catalog-group] { scroll-margin-top: 6rem; }
 .schema-card-description { max-width: none; }
 .service-directory { overflow: hidden; border: 1px solid var(--line); border-radius: 1rem; background: var(--paper); }
 .service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; background: var(--line); }
-.service-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .8rem; align-items: start; padding: 1.15rem; background: var(--paper); }
+.service-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .8rem; align-items: start; margin: 0; padding: 1.15rem; background: var(--paper); }
 .service-item-icon { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: .65rem; background: var(--tint); color: var(--accent); }
 .service-item-icon .docs-icon { width: 1.15rem; height: 1.15rem; }
 .service-role { display: block; margin-bottom: .2rem; color: var(--accent); font: 500 .7rem/1.4 var(--font-mono); }
