@@ -2,13 +2,13 @@
   title: Cache dos catálogos
   nav: Cache dos catálogos
   icon: cache
-  description: Acelera a abertura do calendário e a busca de professores. É uma cópia descartável das consultas públicas; as atividades e os horários continuam salvos no PostgreSQL.
+  description: Acelera a abertura do calendário e a busca de professores. A API entrega cópias temporárias das consultas a contas autenticadas. As atividades e os horários ficam no PostgreSQL.
   source: redis-catalog.js
   entries:
     - id: cache-agenda
       name: Calendário da Agenda
       key: 'tech2d:{cache}:agenda:<revisao>:<hash_filtros>'
-      type: String
+      type: String (JSON ou JSON compactado)
       ttl: 60 s
       ttl_seconds: 60
       description: Guarda as atividades da turma, as atividades gerais e a lista de turmas ativas.
@@ -17,7 +17,7 @@
     - id: cache-updates
       name: Turmas no catálogo de atualizações
       key: 'tech2d:{cache}:atualizacoes:<revisao>:<hash_filtros>'
-      type: String
+      type: String (JSON ou JSON compactado)
       ttl: 60 s
       ttl_seconds: 60
       description: Guarda a lista de turmas ativas usada pela rota de atualizações. A rota busca as publicações diretamente nas chaves do grupo atualizacoes.
@@ -26,7 +26,7 @@
     - id: cache-schedules
       name: Horários do Cadê o professor
       key: 'tech2d:{cache}:horarios:<revisao>:<hash_filtros>'
-      type: String
+      type: String (JSON ou JSON compactado)
       ttl: 5 min
       ttl_seconds: 300
       description: Guarda os horários ativos selecionados pelos filtros de turma, dia e busca.
@@ -44,9 +44,10 @@
       name: Edição publicada
       key: 'tech2d:{recuperacao}:publicacao'
       type: String (JSON)
-      ttl: De 1 a 90 dias a partir da ativação
+      ttl: Até o fim do período
+      ttl_seconds: configuravel
       description: Guarda o identificador da edição e as datas de início e fim. A API mostra o edital apenas dentro desse intervalo.
-      expiry: A chave expira após a duração definida no painel ou é removida quando um administrador desliga o modo.
+      expiry: Na ativação imediata o painel aceita de 1 a 90 dias. Para uma edição com datas definidas, vale a data final da publicação. Um superadministrador pode desativar o período antes da expiração.
       route: GET /api/recovery e GET/POST /api/admin/recovery
 
 - id: comunicado-geral-da-agenda
@@ -64,7 +65,7 @@
       ttl_seconds: 604800
       description: Guarda a mensagem, a data e a versão do comunicado que aparece na Agenda.
       expiry: Cada publicação substitui o texto e inicia um novo prazo. O superadministrador também pode removê-lo.
-      route: GET /api/catalog/agenda · GET /api/catalog/updates
+      route: GET /api/catalog/agenda · GET /api/catalog/updates · POST /api/data
     - id: announcement-commit
       name: Recibo do comunicado
       key: 'tech2d:{comunicado}:recibo:<id_operacao>'
@@ -90,7 +91,7 @@
       ttl_seconds: 1209600
       description: Guarda título, descrição, data e os dados do crédito da sugestão quando autorizado. A API seleciona os campos públicos antes de devolvê-los.
       expiry: O prazo conta da publicação de cada item e continua correndo quando sai outra atualização.
-      route: GET /api/catalog/updates · GET /api/catalog/agenda
+      route: GET /api/catalog/updates · GET /api/catalog/agenda · POST /api/data
     - id: update-index
       name: Índice de atualizações
       key: 'tech2d:{atualizacoes}:indice'
@@ -99,7 +100,7 @@
       ttl_seconds: 1209600
       description: Associa o ID de cada atualização à expiração em milissegundos desde a época Unix. A API lista até 100 publicações vigentes.
       expiry: Uma publicação nova renova o prazo do índice. O prazo de cada publicação segue na chave do item.
-      route: GET /api/catalog/updates · GET /api/catalog/agenda
+      route: GET /api/catalog/updates · GET /api/catalog/agenda · POST /api/data
     - id: update-commit
       name: Recibo de publicação
       key: 'tech2d:{atualizacoes}:recibo:<id_operacao>'
@@ -212,7 +213,7 @@
       ttl: Até a última expiração do e-mail
       ttl_seconds: dinamico
       description: Localiza os convites do e-mail autenticado. O sufixo usa SHA-256 do e-mail normalizado serializado em JSON, para formar a chave.
-      expiry: A chave expira na data do convite mais recente desse e-mail. Convites vencidos deixam de autorizar a ativação.
+      expiry: A chave expira na data de vencimento mais distante entre os convites desse e-mail. Convites vencidos deixam de autorizar a ativação.
       route: POST /api/data · consulta e ativação da própria conta
 
 - id: reservas-resumo-semanal
@@ -243,8 +244,7 @@
       name: Registros de upload
       key: 'tech2d:{uploads}:registros'
       type: Hash (valores JSON)
-      ttl: Até confirmação ou limpeza
-      ttl_seconds: dinamico
+      ttl: Sem TTL na chave
       description: Um campo por upload guarda o arquivo esperado, o UID, a atividade e a chave privada do objeto no R2.
       expiry: A confirmação é válida por uma hora. O registro permanece disponível depois desse prazo para que o serviço de limpeza possa apagar o objeto abandonado. Se o arquivo já consta como anexo, a limpeza só remove o registro no Redis.
       route: POST /api/internal/web-data · serviço de arquivos
@@ -252,9 +252,8 @@
       name: Índice por data de criação
       key: 'tech2d:{uploads}:por_data'
       type: ZSET
-      ttl: Até confirmação ou limpeza
-      ttl_seconds: dinamico
-      description: Ordena os uploads pendentes pela data de criação em milissegundos. O cron consulta os vencidos em lotes de até 100.
+      ttl: Sem TTL na chave
+      description: Ordena os uploads pendentes pela data de criação em milissegundos. O serviço de arquivos consulta os vencidos em lotes de até 100.
       expiry: A entrada sai do índice junto com o registro do upload.
       route: POST /api/internal/web-data · limpeza periódica
 
@@ -341,7 +340,7 @@
       key: 'tech2d:{limpeza}:pendentes'
       type: List
       ttl: Sem TTL
-      description: Recebe as limpezas de cartões removidos. Falhas no R2 e listagens incompletas devolvem o item ao fim da fila.
+      description: Recebe as limpezas de cartões removidos. Se o R2 falhar ou ainda houver arquivos a listar, o item volta ao fim da fila.
       expiry: Cada item é processado pela rotina diária. A lista desaparece quando fica vazia.
       route: POST /api/data e rotina diária de limpeza
     - id: limpeza-kanban-processamento

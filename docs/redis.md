@@ -16,6 +16,7 @@ database: redis
     <div><dt>Sugestões e pedidos de Agenda</dt><dd>7 dias</dd></div>
     <div><dt>Atualizações da Agenda</dt><dd>14 dias</dd></div>
     <div><dt>Bloqueios de conta</dt><dd>Prazo configurável</dd></div>
+    <div><dt>Período de recuperação</dt><dd>Até o fim da publicação</dd></div>
   </dl>
 </section>
 
@@ -23,8 +24,8 @@ database: redis
 
 | Conceito | O que significa na aplicação |
 | --- | --- |
-| **String (JSON)** | Um registro completo, como um aviso ou pedido. JSON aqui é o formato do valor no Redis. |
-| **Índice ZSET** | Uma lista ordenada de IDs ou referências. Ajuda a encontrar registros por turma, data ou solicitante; não substitui o conteúdo de cada item. |
+| **String** | Um valor único, como um aviso em JSON, uma assinatura de requisição ou um token de processamento. |
+| **Índice ZSET** | Um conjunto ordenado de IDs ou referências. Ajuda a encontrar registros por turma, data ou solicitante. O conteúdo de cada item fica em outro registro. |
 | **Hash** | Vários registros dentro de uma chave. Nos uploads, cada campo identifica um arquivo ainda pendente. |
 | **List** | Uma fila de trabalho. Na limpeza do Kanban, guarda os arquivos que ainda precisam ser removidos do R2. |
 | **Recibo** | Reconhece uma requisição já concluída. Se houver reenvio por falha de rede, evita publicar ou contar a mesma operação duas vezes. |
@@ -33,7 +34,7 @@ database: redis
 
 **Expiração do cache:** apenas a cópia da consulta é removida. A próxima consulta recompõe a resposta a partir do PostgreSQL.
 
-**Índices e filas:** o índice pode durar até a expiração do último item, enquanto cada conteúdo mantém seu próprio prazo. Filas de limpeza ficam sem TTL para que uma falha temporária no R2 não deixe arquivos esquecidos.
+**Índices e filas** podem ter prazos diferentes dos itens que referenciam. Os registros de uploads e as filas de limpeza do Kanban ficam sem TTL para que o serviço possa limpar arquivos pendentes no R2 mesmo após uma interrupção.
 
 <section class="redis-inventory" id="catalogo-redis" aria-labelledby="chaves">
   <div class="redis-inventory-heading">
@@ -48,7 +49,7 @@ database: redis
     <dl class="redis-key-parts">
       <div><dt><code>tech2d</code> e <code>finalidade</code></dt><dd>Indicam o sistema e o uso da chave. Os nomes fixos usam português sem acentos e <code>:</code> separa as partes.</dd></div>
       <div><dt><code>{grupo}</code></dt><dd>Um nome fixo como <code>{avisos}</code> mantém juntas as chaves usadas na mesma operação Redis.</dd></div>
-      <div><dt><code>&lt;identificador&gt;</code></dt><dd>Substitua pelo valor indicado. Pode ser uma turma, um hash usado na busca, um UID do Firebase, um ID de operação ou uma revisão do cache.</dd></div>
+      <div><dt><code>&lt;identificador&gt;</code></dt><dd>Quando aparece no padrão, substitua pelo valor indicado. Pode ser uma turma, um hash usado na busca, um UID do Firebase, um ID de operação ou uma revisão do cache.</dd></div>
     </dl>
   </div>
 
@@ -75,7 +76,7 @@ database: redis
       </article>
       {% endfor %}
     </div>
-    <p class="redis-source"><a href="https://github.com/Tech-2D/api/blob/main/src/{{ group.source }}">Ver {{ group.source }} na API</a></p>
+    <p class="redis-source"><a href="https://github.com/Tech-2D/api/blob/main/src/{{ group.source }}">Ver {{ group.source }} na API</a> · Requer acesso ao repositório no GitHub</p>
   </section>
   {% endfor %}
 </section>
@@ -89,21 +90,21 @@ database: redis
   </div>
   <div>
     <dt>Quando o Redis fica indisponível</dt>
-    <dd>Se a falha for no cache, a API consulta atividades e horários no PostgreSQL. Recursos que existem apenas no Redis, como avisos e pedidos, podem ficar indisponíveis — expiração e falha de conexão são situações diferentes. Operações protegidas que dependem da checagem de bloqueio não são liberadas sem essa verificação. A API não cria uma cópia SQL silenciosa desses dados temporários.</dd>
+    <dd>Se a falha ocorrer na etapa de cache, a API carrega atividades e horários do PostgreSQL. Nas respostas de calendário e atualizações, a API devolve uma lista vazia de atualizações ou um comunicado nulo se a leitura desses dados falhar. O quadro de avisos e as consultas de pedidos podem ficar indisponíveis. Em rotas com moderação ativa, a API precisa confirmar a situação do bloqueio antes de liberar o acesso.</dd>
   </div>
   <div>
     <dt>Como diagnosticar o cache</dt>
-    <dd>Confira o header <code>X-Catalog-Cache</code> nas rotas de cache. O Worker limita cada operação Redis a 700 ms.</dd>
+    <dd>Confira o cabeçalho <code>X-Catalog-Cache</code> nas rotas de cache. Ele informa o estado da cópia dos dados SQL. A comunicação do Worker com o Redis tem limite de 700 ms por chamada, incluindo a autenticação no Redis.</dd>
     <dd><ul class="redis-cache-states">
       <li><code>HIT</code> Resposta servida do cache.</li>
-      <li><code>MISS</code> Resposta gerada pelo PostgreSQL.</li>
+      <li><code>MISS</code> Resposta gerada pelo PostgreSQL após não encontrar uma cópia utilizável.</li>
       <li><code>BYPASS</code> Cache desativado ou conexão sem configuração.</li>
       <li><code>UNAVAILABLE</code> Falha na revisão do catálogo ou no acesso ao Redis.</li>
     </ul></dd>
   </div>
   <div>
     <dt>Quem acessa as chaves</dt>
-    <dd>O navegador consulta a API com a sessão do Firebase Authentication. O Worker usa as credenciais do Redis guardadas nos secrets e verifica permissões no PostgreSQL antes de gravar.</dd>
+    <dd>O navegador usa a sessão do Firebase Authentication para consultar a API. Serviços como anexos e resumo semanal usam a rota interna da API com credenciais próprias. O Worker acessa o Redis e aplica as regras de autorização de cada rota.</dd>
   </div>
 </dl>
 

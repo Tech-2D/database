@@ -48,8 +48,13 @@ console.log(`Scripts SQL validados: ${exported('VIEW').length} views, ${exported
 
 const redisNames = JSON.parse(await read('docs/_data/redis_names.json'))
 const redisCatalog = await read('docs/_data/redis_catalog.yml')
+const iconLibrary = await read('docs/_includes/doc-icons.html')
+for (const [, icon] of redisCatalog.matchAll(/^  icon: ([\w-]+)$/gm)) {
+  assert.ok(iconLibrary.includes(`id="icon-${icon}"`), 'Ícone do catálogo Redis sem definição: ' + icon)
+}
 const documentedKeys = [...redisCatalog.matchAll(/^      key: '([^']+)'$/gm)].map(m => m[1])
 assert.ok(documentedKeys.length > 25, 'Documentar os grupos Redis usados pela aplicação')
+assert.equal(new Set(documentedKeys).size, documentedKeys.length, 'O catálogo Redis contém chaves duplicadas')
 for (const key of documentedKeys) {
   const example = key.replace('<tipo>', 'atividades').replace('<quadro_ou_usuario>', 'quadro').replaceAll(/<[^>]+>/g, 'EXEMPLO')
   assert.ok(redisNames.some(r => example === r.current || example.startsWith(r.current + ':')), 'Padrão Redis sem implementação documentada: ' + key)
