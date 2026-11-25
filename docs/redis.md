@@ -40,8 +40,17 @@ database: redis
     <h2 id="chaves">{% include doc-icon.html name="key" %}Chaves do Redis</h2>
     <div data-catalog-controls hidden><p class="catalog-status" data-catalog-status role="status"></p></div>
   </div>
-  <p>O padrão é <code>tech2d:{grupo}:finalidade:&lt;identificador&gt;</code>. Os nomes fixos estão em português, sem acentos e separados por <code>:</code>. Por exemplo: <code>tech2d:{avisos}:item:AVISO_EXEMPLO</code>.</p>
-  <p>As chaves de agrupamento, como <code>{avisos}</code>, são literais: identificam o grupo e mantêm juntas as chaves usadas na mesma operação Redis. Já os trechos entre <code>&lt;...&gt;</code> devem ser substituídos pelo ID, turma ou hash indicado. O hash é uma assinatura determinística usada para localizar o registro; não é uma senha nem uma autorização de acesso. O UID vem do Firebase Authentication. IDs de operação identificam tentativas de gravação; a revisão identifica a versão dos dados que gerou o cache.</p>
+  <div class="redis-key-guide">
+    <dl class="redis-key-examples">
+      <div><dt>Padrão de nome</dt><dd><code>tech2d:{grupo}:finalidade:&lt;identificador&gt;</code></dd></div>
+      <div><dt>Exemplo de aviso</dt><dd><code>tech2d:{avisos}:item:AVISO_EXEMPLO</code></dd></div>
+    </dl>
+    <dl class="redis-key-parts">
+      <div><dt><code>tech2d</code> e <code>finalidade</code></dt><dd>Indicam o sistema e o uso da chave. Os nomes fixos usam português sem acentos e <code>:</code> separa as partes.</dd></div>
+      <div><dt><code>{grupo}</code></dt><dd>Um nome fixo como <code>{avisos}</code> mantém juntas as chaves usadas na mesma operação Redis.</dd></div>
+      <div><dt><code>&lt;identificador&gt;</code></dt><dd>Substitua pelo valor indicado. Pode ser uma turma, um hash usado na busca, um UID do Firebase, um ID de operação ou uma revisão do cache.</dd></div>
+    </dl>
+  </div>
 
   {% for group in site.data.redis_catalog %}
   <section class="redis-group" id="{{ group.id }}" data-catalog-group="{{ group.id }}" aria-labelledby="{{ group.id }}-titulo">
