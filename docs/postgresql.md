@@ -8,9 +8,9 @@ Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os re
 
 ## Recuperação na Agenda
 
-`tech2d.editais_recuperacao` guarda as versões do edital com título, orientações, link e intervalo de publicação. `tech2d.aulas_recuperacao` vincula a cada versão uma grade com data, horário, matéria, turma, professor e local. Uma aula sem turma vale para todas.
+`tech2d.editais_recuperacao` guarda as versões do edital com título, orientações e link. `tech2d.aulas_recuperacao` vincula a cada versão uma grade com data, horário, matéria, turma, professor e local. Uma aula sem turma vale para todas. As edições antigas podem ter início e fim registrados no edital.
 
-O painel grava uma nova versão a cada salvamento. A publicação aponta para uma versão específica por meio de uma chave Redis com prazo até o fim do período. O edital e as aulas permanecem no PostgreSQL após o vencimento. [Migração 071](https://github.com/Tech-2D/api/blob/main/migrations/071_modo_recuperacao.sql) · [Catálogo Redis]({{ '/redis.html#recuperacao-publicacao' | relative_url }})
+O painel grava uma nova versão a cada salvamento da grade ou do edital. A ativação aponta para uma versão salva no Redis e expira após a duração escolhida pelo administrador. O edital e as aulas permanecem no PostgreSQL após o vencimento. [Migração das tabelas](https://github.com/Tech-2D/api/blob/main/migrations/071_modo_recuperacao.sql) · [Migração da duração](https://github.com/Tech-2D/api/blob/main/migrations/072_duracao_recuperacao.sql) · [Catálogo Redis]({{ '/redis.html#recuperacao-publicacao' | relative_url }})
 
 ## Tabelas por área
 

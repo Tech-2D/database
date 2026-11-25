@@ -44,9 +44,9 @@
       name: Edição publicada
       key: 'tech2d:{recuperacao}:publicacao'
       type: String (JSON)
-      ttl: Até o fim definido no painel
+      ttl: De 1 a 90 dias a partir da ativação
       description: Guarda o identificador da edição e as datas de início e fim. A API mostra o edital apenas dentro desse intervalo.
-      expiry: A chave expira no fim do período ou é removida quando um administrador desativa a publicação.
+      expiry: A chave expira após a duração definida no painel ou é removida quando um administrador desliga o modo.
       route: GET /api/recovery e GET/POST /api/admin/recovery
 
 - id: comunicado-geral-da-agenda
