@@ -35,12 +35,43 @@ permalink: /
 
 ## Serviços e dados
 
-| Serviço | O que faz |
-| --- | --- |
-| PostgreSQL | Armazena atividades, horários, permissões e estatísticas. |
-| Firebase Authentication | Identifica a conta. A API verifica a sessão e aplica as permissões. |
-| Cloudflare R2 | Guarda arquivos anexados. A API controla quem pode acessar cada arquivo. |
-| Redis | Cache de catálogos, comunicado geral e avisos de turma de sete dias, e atualizações da Agenda de 14 dias. |
-| Firestore | Origem histórica dos dados preservados na migração para PostgreSQL. |
-
-[Código da API compartilhada](https://github.com/Tech-2D/api)
+<div class="service-directory">
+  <ul class="service-grid" aria-label="Serviços em uso">
+    <li class="service-item">
+      <span class="service-item-icon">{% include doc-icon.html name="database" %}</span>
+      <div>
+        <span class="service-role">Banco principal</span>
+        <h3>PostgreSQL</h3>
+        <p>Guarda atividades, horários, permissões e estatísticas.</p>
+      </div>
+    </li>
+    <li class="service-item">
+      <span class="service-item-icon">{% include doc-icon.html name="cache" %}</span>
+      <div>
+        <span class="service-role">Cache e dados temporários</span>
+        <h3>Redis</h3>
+        <p>Acelera a leitura dos catálogos. Comunicados e avisos ficam por <strong>7 dias</strong> e atualizações da Agenda por <strong>14 dias</strong>.</p>
+      </div>
+    </li>
+    <li class="service-item">
+      <span class="service-item-icon">{% include doc-icon.html name="key" %}</span>
+      <div>
+        <span class="service-role">Login</span>
+        <h3>Firebase Authentication</h3>
+        <p>Identifica a conta. A API valida a sessão e aplica as permissões.</p>
+      </div>
+    </li>
+    <li class="service-item">
+      <span class="service-item-icon">{% include doc-icon.html name="layers" %}</span>
+      <div>
+        <span class="service-role">Armazenamento de arquivos</span>
+        <h3>Cloudflare R2</h3>
+        <p>Guarda os anexos. A API verifica quem pode acessar cada arquivo.</p>
+      </div>
+    </li>
+  </ul>
+  <div class="service-footer">
+    <p><strong>Histórico da migração.</strong> O Firestore foi a origem dos dados migrados para o PostgreSQL.</p>
+    <a class="service-code" href="https://github.com/Tech-2D/api">{% include doc-icon.html name="code" %} Código da API compartilhada {% include doc-icon.html name="arrow" %}</a>
+  </div>
+</div>

@@ -185,12 +185,27 @@ h2[id], h3[id], details[id], [data-catalog-group] { scroll-margin-top: 6rem; }
 .workspace-search { background: #f6f7fb; }
 .schema-card-header > .docs-icon, code { color: var(--accent); }
 .schema-card-description { max-width: none; }
+.service-directory { overflow: hidden; border: 1px solid var(--line); border-radius: 1rem; background: var(--paper); }
+.service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; background: var(--line); }
+.service-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .8rem; align-items: start; padding: 1.15rem; background: var(--paper); }
+.service-item-icon { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: .65rem; background: var(--tint); color: var(--accent); }
+.service-item-icon .docs-icon { width: 1.15rem; height: 1.15rem; }
+.service-role { display: block; margin-bottom: .2rem; color: var(--accent); font: 500 .7rem/1.4 var(--font-mono); }
+.service-item h3 { margin: 0; color: var(--ink); font-size: 1rem; font-weight: 650; line-height: 1.4; }
+.service-item p, .service-footer p { margin: .35rem 0 0; color: var(--muted); font-size: .82rem; line-height: 1.65; }
+.service-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; padding: .95rem 1.15rem; border-top: 1px solid var(--line); background: var(--tint); }
+.service-footer p { flex: 1 1 20rem; margin: 0; }
+.article .service-code { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--line); border-radius: .55rem; padding: .5rem .65rem; background: var(--paper); color: var(--accent); font-size: .75rem; font-weight: 600; text-decoration: none; }
+.article .service-code:hover { border-color: var(--accent); }
+.article .service-code:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 600px) {
   .doc-toolbar { gap: .5rem; }
   .portal-link { padding: .55rem; font-size: .7rem; }
   .page-heading { gap: .5rem; }
   .d2-portrait { width: 4rem; }
   .page-heading h1 { font-size: 1.65rem; }
+  .service-grid { grid-template-columns: minmax(0, 1fr); }
+  .service-item, .service-footer { padding: 1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .d2-idle { display: none; animation: none; }
