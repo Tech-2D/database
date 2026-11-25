@@ -65,21 +65,20 @@
     <footer class="sidebar-footer"><span class="read-only-badge"><span aria-hidden="true"></span>Somente leitura</span><a class="repo-link" href="https://github.com/Tech-2D/modelagem-dados">Repositório no GitHub ↗</a></footer>
   </aside>
   <div class="workspace-shell">
-    <div class="doc-toolbar">
+    <header class="doc-toolbar">
       {% if page.database == 'redis' %}
       <form class="workspace-search" action="{{ '/redis.html' | relative_url }}#chaves" method="get" role="search">
         <label for="workspace-query" class="visually-hidden">Pesquisar chaves Redis</label>
-        {% include doc-icon.html name="search" %}<input id="workspace-query" data-catalog-search name="q" type="search" placeholder="Pesquisar chaves, TTL e funções…" autocomplete="off" aria-controls="catalogo-redis"><kbd>Ctrl K</kbd>
+        {% include doc-icon.html name="search" %}<input id="workspace-query" data-catalog-search name="q" type="search" placeholder="Buscar chaves Redis" autocomplete="off" aria-controls="catalogo-redis"><kbd aria-hidden="true">Ctrl K</kbd>
       </form>
       {% else %}
       <form class="workspace-search" action="{{ '/postgresql.html' | relative_url }}" method="get" role="search">
         <label for="workspace-query" class="visually-hidden">Pesquisar tabelas e campos</label>
-        {% include doc-icon.html name="search" %}<input id="workspace-query" name="q" type="search" placeholder="Pesquisar tabelas, campos e recursos…" autocomplete="off"><kbd>Ctrl K</kbd>
+        {% include doc-icon.html name="search" %}<input id="workspace-query" name="q" type="search" placeholder="Tabelas e campos" autocomplete="off"><kbd aria-hidden="true">Ctrl K</kbd>
       </form>
       {% endif %}
-      <a class="portal-link" href="https://tech-2d.github.io/web/">Abrir portal <span aria-hidden="true">↗</span></a>
-      <span class="toolbar-status">{% include doc-icon.html name="eye" %}Somente leitura</span>
-    </div>
+      <a class="portal-link" href="https://tech-2d.github.io/web/" aria-label="Abrir portal da 2ºD Tech">Portal <span aria-hidden="true">↗</span></a>
+    </header>
   <div class="workspace mx-auto grid w-full min-w-0 max-w-[85rem] grid-cols-1 items-start gap-6 px-4 py-5 sm:px-8 sm:py-8 {% if page.wide %}xl:grid-cols-1{% else %}xl:grid-cols-[minmax(0,54rem)_11rem]{% endif %} xl:gap-12 xl:px-12 xl:py-14">
     <main id="conteudo" class="article min-w-0">
       <header class="page-heading">
