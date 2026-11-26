@@ -33,6 +33,7 @@ code, pre code { font-family: var(--font-mono); }
 .db-sidebar { background: var(--nav); color: var(--ink); border-right: 1px solid var(--line); }
 .sidebar-heading { display: grid; gap: .65rem; flex: none; }
 .db-sidebar .brand { gap: .65rem; width: fit-content; padding: .15rem 0; border-radius: .65rem; }
+.brand-logo { flex: none; width: 2.75rem; height: 2.75rem; }
 .brand strong { font-size: 1.1rem; letter-spacing: -.035em; color: var(--accent); }
 .database-switch { gap: .25rem; padding: .2rem; border-color: var(--line); background: var(--background); border-radius: .65rem; }
 .database-switch a { gap: .4rem; min-height: 2.25rem; padding: .4rem .25rem; font-size: .75rem; font-weight: 500; color: var(--muted); }
@@ -165,7 +166,6 @@ h2[id], h3[id], details[id], [data-catalog-group] { scroll-margin-top: 6rem; }
 }
 
 /* D2 identity shared with the portal. */
-.brand-avatar { flex: none; width: 2.75rem; height: 2.75rem; padding: .15rem; border-radius: .65rem; object-fit: contain; background: var(--tint); }
 .brand small { color: var(--muted); }
 .db-sidebar nav a { color: var(--ink); }
 .db-sidebar nav a:hover, .db-sidebar .nav-object-group > summary:hover { background: var(--tint); color: var(--accent); }
