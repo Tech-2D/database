@@ -6,6 +6,10 @@ wide: true
 
 Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os recursos para consulta, sem separar fisicamente o banco. As tabelas usam colunas tipadas e chaves estrangeiras. Cada entidade guarda sua identidade numérica, referência externa, versão e data de atualização. A sequência `ids_entidades` gera os novos IDs. As views preparam o formato que a API entrega aos sites.
 
+## Limpeza de virada de ano
+
+`tech2d.limpezas_anuais_agenda` guarda o identificador, o administrador, o momento, a revisão da prévia e as contagens de cada limpeza confirmada. A data da última limpeza também marca o limite dos convites antigos de representação. Os anexos desvinculados entram em `tech2d.limpeza_anexos_agenda` na mesma transação e o R2 é limpo depois da confirmação no PostgreSQL. [Migração da limpeza](https://github.com/Tech-2D/api/blob/main/migrations/073_limpeza_ano_letivo.sql)
+
 ## Recuperação na Agenda
 
 `tech2d.editais_recuperacao` guarda as versões do edital com título, orientações e link. `tech2d.aulas_recuperacao` vincula a cada versão uma grade com data, horário, matéria, turma, professor e local. Uma aula sem turma vale para todas. As edições antigas podem ter início e fim registrados no edital.
