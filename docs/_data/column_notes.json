@@ -42,6 +42,18 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
+  "aulas_recuperacao": {
+    "edital_id": "Chave estrangeira para a edição do edital. Compõe a chave primária com a posição.",
+    "ordem": "Posição positiva dentro da edição. Distingue horários mesmo quando acontecem no mesmo dia.",
+    "dia": "Data da aula ou prova. A Agenda usa este campo para organizar a grade por dia.",
+    "inicio": "Hora local de início da aula ou da prova.",
+    "fim": "Hora local de término, posterior à hora de início.",
+    "materia": "Nome da matéria apresentado na grade de recuperação.",
+    "turma": "Rótulo da turma que deve ver este horário. Em branco, o horário vale para todas.",
+    "professor": "Nome do professor informado para a aula ou a prova, quando disponível.",
+    "local": "Sala ou local informado para a aula ou a prova, quando disponível.",
+    "prova": "Classifica o horário como prova quando verdadeiro e como aula de revisão quando falso."
+  },
   "cartoes_kanban": {
     "id_cartao_kanban": "Identificador de cartoes_kanban. É a chave primária da entidade. Identificador numérico gerado pelo banco.",
     "id_quadro_kanban": "Identifica o quadro que contém a tarefa. Referencia quadros_kanban.id_quadro_kanban. Junto com referencia_coluna, também referencia colunas_kanban(id_quadro_kanban, referencia), exigindo uma coluna do mesmo quadro.",
@@ -65,6 +77,20 @@
     "cor": "Cor de apresentação escolhida no Kanban.",
     "concluida": "Marca a coluna como etapa final. Os cartões nela colocados contam como concluídos no progresso do quadro."
   },
+  "config_assistente": {
+    "id": "Chave primária fixa em 1. Mantém uma única configuração do limite padrão.",
+    "limite_diario": "Número máximo padrão de mensagens por conta e por dia. Aceita de 1 a 1.000.",
+    "versao": "Revisão usada pelo painel para detectar quando outro administrador alterou a configuração.",
+    "atualizado_em": "Momento da última alteração do limite padrão de mensagens.",
+    "atualizado_por": "UID da conta administrativa que gravou a última alteração."
+  },
+  "config_fechamento_agenda": {
+    "id": "Chave primária fixa em 1. O editor e a Agenda consultam o mesmo registro.",
+    "versao": "Revisão atual da tela. A API confere esta versão ao salvar, publicar ou reabrir.",
+    "rascunho": "Configuração em edição, com textos, blocos, aparência e ilustração escolhidos no painel.",
+    "publicado": "Configuração exibida no lugar do calendário. O valor nulo indica que a Agenda está aberta.",
+    "atualizado_em": "Momento da última ação de salvamento, publicação ou reabertura."
+  },
   "disciplinas": {
     "id_disciplina": "Identificador de disciplinas. É a chave primária da entidade. Identidade numérica da matéria no catálogo compartilhado. Horários e disciplinas_series reutilizam esta chave, evitando nomes duplicados por aplicativo.",
     "nome": "Nome canônico da matéria. É apresentado nos horários e projetado pela view da área de Notas, que mantém os rótulos compatíveis com as notas existentes."
@@ -72,6 +98,14 @@
   "disciplinas_series": {
     "id_disciplina": "Referência à matéria em disciplinas. Permite reutilizar a mesma matéria em várias séries sem cadastrar novamente o nome.",
     "ano_serie": "Série de 1 a 3 em que a matéria pode receber notas. Compõe a chave e valida a compatibilidade entre a disciplina e o caderno."
+  },
+  "editais_recuperacao": {
+    "id": "Identificador gerado pelo banco. A grade e a publicação no Redis apontam para esta edição.",
+    "titulo": "Título do edital exibido no painel e na tela de recuperação da Agenda.",
+    "descricao": "Texto de orientação do edital. Pode ficar vazio quando as informações estão em um link.",
+    "link": "Endereço opcional do edital externo. A API aceita endereços que usam HTTPS.",
+    "inicio": "Início registrado nas edições com datas fixas. Na ativação por duração, a publicação guarda o início no Redis.",
+    "fim": "Término registrado nas edições com datas fixas. Na ativação por duração, o vencimento fica no Redis."
   },
   "espacos_kanban": {
     "id_espaco_kanban": "Identificador numérico próprio de espacos_kanban. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
@@ -121,6 +155,13 @@
   "limpeza_anexos_agenda": {
     "chave_arquivo": "Localizador do objeto no R2 desvinculado da atividade removida.",
     "tentar_apos": "Momento a partir do qual a próxima tentativa de limpeza pode ocorrer."
+  },
+  "limpezas_anuais_agenda": {
+    "operacao": "Chave primária da solicitação de limpeza. Permite recuperar o resultado em um reenvio.",
+    "administrador_uid": "UID da conta administrativa que confirmou a limpeza anual.",
+    "revisao": "Revisão da prévia confirmada. A API a compara com a solicitação em reenvios.",
+    "executada_em": "Momento da confirmação da limpeza. Serve de corte para os convites anteriores.",
+    "resultado": "Resumo em JSON das contagens e do resultado devolvido para a operação concluída."
   },
   "notas_cadernos": {
     "id_usuario": "UID do dono do caderno confirmado pelo token. As políticas RLS usam essa identidade para impedir acesso às notas de outra conta.",
@@ -238,6 +279,14 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
+  "reservas_mensagens_ia": {
+    "firebase_uid": "UID da conta que reservou a vaga. Compõe a chave primária com a operação.",
+    "operacao": "Identificador da mensagem ou tentativa usado para reconhecer um reenvio da mesma operação.",
+    "data_uso": "Dia de Brasília ao qual a reserva e o consumo de cota ficam associados.",
+    "expira_em": "Horário em que uma reserva pendente deixa de ocupar uma vaga da cota.",
+    "saldo_final": "Saldo registrado depois de confirmar o consumo. Nulo enquanto a reserva está pendente.",
+    "limite_aplicado": "Limite usado ao criar a reserva. Permite manter a decisão mesmo se a configuração mudar."
+  },
   "sugestoes_melhoria": {
     "id_sugestao_melhoria": "Identificador numérico próprio de sugestoes_melhoria. É a chave primária da entidade; o banco gera novos valores pela sequência ids_entidades e os relacionamentos apontam diretamente para esta chave.",
     "mensagem": "Descrição da melhoria ou do problema enviada pela conta autenticada. É a base da análise e da decisão da administração sobre o pedido.",
@@ -269,6 +318,11 @@
     "atualizado_em": "Data e hora da última gravação desta entidade. Apoia a sincronização das telas e a revisão dos catálogos.",
     "referencia_api": "Referência externa estável usada nos links e nas requisições da API. Fica nesta entidade e é preservada durante alterações."
   },
+  "uso_contas_assistente": {
+    "dia": "Dia de Brasília usado na contagem. Compõe a chave primária com o UID.",
+    "firebase_uid": "UID da conta à qual pertence a contagem de mensagens do dia.",
+    "mensagens": "Quantidade de mensagens confirmadas para a conta naquele dia."
+  },
   "uso_diario_assistente": {
     "dia": "Data de Brasília em que as mensagens foram admitidas.",
     "mensagens": "Total de mensagens admitidas pelo Assistente no dia."
@@ -281,6 +335,13 @@
     "vigencia_inicio": "Primeira data em que o vínculo é considerado nas consultas.",
     "vigencia_fim": "Última data em que o vínculo se aplica, quando há término.",
     "criado_em": "Momento em que o registro foi criado no banco de dados."
+  },
+  "vinculos_turma_perfil": {
+    "firebase_uid": "Chave primária. Vincula a turma à conta identificada pelo Firebase Authentication.",
+    "turma": "Identificador da turma confirmada que a Agenda usa como turma padrão da conta.",
+    "alterada_em": "Momento da última alteração confirmada, usado para aplicar o intervalo entre trocas.",
+    "pedido_turma": "Identificador da turma solicitada para revisão. Fica nulo quando não há pedido pendente.",
+    "pedido_em": "Momento em que o pedido pendente foi registrado para análise da administração."
   },
   "visitas_aos_sites": {
     "dia": "Data local da visita no horário de Brasília. Sustenta os agrupamentos diários do painel e o corte de retenção.",

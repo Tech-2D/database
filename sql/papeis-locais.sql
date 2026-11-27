@@ -14,5 +14,11 @@ BEGIN
   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'tech2d_prod_ai_quota') THEN
     CREATE ROLE tech2d_prod_ai_quota NOLOGIN;
   END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'tech2d_qa_ai_quota') THEN
+    CREATE ROLE tech2d_qa_ai_quota NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'tech2d_backup') THEN
+    CREATE ROLE tech2d_backup NOLOGIN;
+  END IF;
 END;
 $$;

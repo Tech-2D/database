@@ -398,6 +398,115 @@
     },
     {
         "kind": "table",
+        "name": "aulas_recuperacao",
+        "columns": [
+            {
+                "name": "edital_id",
+                "type": "integer",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "ordem",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "dia",
+                "type": "date",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "inicio",
+                "type": "time without time zone",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "fim",
+                "type": "time without time zone",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "materia",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "turma",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "professor",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "local",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "prova",
+                "type": "boolean",
+                "check": false,
+                "unique": false,
+                "comment": "Indica uma prova de recuperação, distinta de uma aula de revisão.",
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+            {
+                "table": "editais_recuperacao",
+                "column": "edital_id",
+                "target": "id"
+            }
+        ],
+        "primary_key": [
+            "edital_id",
+            "ordem"
+        ],
+        "foreign_key_count": 1
+    },
+    {
+        "kind": "table",
         "name": "cartoes_kanban",
         "columns": [
             {
@@ -615,6 +724,122 @@
     },
     {
         "kind": "table",
+        "name": "config_assistente",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "limite_diario",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "atualizado_por",
+                "type": "text",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "id"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
+        "name": "config_fechamento_agenda",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "versao",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "rascunho",
+                "type": "jsonb",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "publicado",
+                "type": "jsonb",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "atualizado_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "id"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
         "name": "disciplinas",
         "columns": [
             {
@@ -680,6 +905,73 @@
             "ano_serie"
         ],
         "foreign_key_count": 1
+    },
+    {
+        "kind": "table",
+        "name": "editais_recuperacao",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": true
+            },
+            {
+                "name": "titulo",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "descricao",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "link",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "inicio",
+                "type": "timestamp with time zone",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "fim",
+                "type": "timestamp with time zone",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "id"
+        ],
+        "foreign_key_count": 0
     },
     {
         "kind": "table",
@@ -1114,6 +1406,64 @@
         ],
         "primary_key": [
             "chave_arquivo"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
+        "name": "limpezas_anuais_agenda",
+        "columns": [
+            {
+                "name": "operacao",
+                "type": "text",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "administrador_uid",
+                "type": "text",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "revisao",
+                "type": "text",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "executada_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "resultado",
+                "type": "jsonb",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "operacao"
         ],
         "foreign_key_count": 0
     },
@@ -2194,6 +2544,74 @@
     },
     {
         "kind": "table",
+        "name": "reservas_mensagens_ia",
+        "columns": [
+            {
+                "name": "firebase_uid",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "operacao",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "data_uso",
+                "type": "date",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "expira_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "saldo_final",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "limite_aplicado",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "firebase_uid",
+            "operacao"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
         "name": "sugestoes_melhoria",
         "columns": [
             {
@@ -2468,6 +2886,47 @@
     },
     {
         "kind": "table",
+        "name": "uso_contas_assistente",
+        "columns": [
+            {
+                "name": "dia",
+                "type": "date",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "firebase_uid",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "mensagens",
+                "type": "integer",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "dia",
+            "firebase_uid"
+        ],
+        "foreign_key_count": 0
+    },
+    {
+        "kind": "table",
         "name": "uso_diario_assistente",
         "columns": [
             {
@@ -2587,6 +3046,64 @@
             "id"
         ],
         "foreign_key_count": 3
+    },
+    {
+        "kind": "table",
+        "name": "vinculos_turma_perfil",
+        "columns": [
+            {
+                "name": "firebase_uid",
+                "type": "text",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "turma",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "alterada_em",
+                "type": "timestamp with time zone",
+                "check": false,
+                "unique": false,
+                "comment": null,
+                "nullable": false,
+                "generated": false
+            },
+            {
+                "name": "pedido_turma",
+                "type": "text",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            },
+            {
+                "name": "pedido_em",
+                "type": "timestamp with time zone",
+                "check": true,
+                "unique": false,
+                "comment": null,
+                "nullable": true,
+                "generated": false
+            }
+        ],
+        "comment": null,
+        "references": [
+        ],
+        "primary_key": [
+            "firebase_uid"
+        ],
+        "foreign_key_count": 0
     },
     {
         "kind": "table",

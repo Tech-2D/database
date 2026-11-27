@@ -32,5 +32,5 @@ CREATE VIEW tech2d.catalogo_atividades_professores AS
      LEFT JOIN tech2d.regras_recorrencia r USING (id_regra_recorrencia))
      LEFT JOIN tech2d.disciplinas d ON ((d.id_disciplina = a.id_disciplina)))
      LEFT JOIN tech2d.turmas t ON ((t.id_turma = a.id_turma)))
-     LEFT JOIN tech2d.vinculos_professores_turmas x ON ((((x.id_turma = a.id_turma) AND (x.id_disciplina = a.id_disciplina)) AND (a.data_atividade <@ daterange(x.vigencia_inicio, x.vigencia_fim, '[]'::text)))))
+     LEFT JOIN tech2d.vinculos_professores_turmas x ON (((x.id_turma = a.id_turma) AND (x.id_disciplina = a.id_disciplina) AND (a.data_atividade <@ daterange(x.vigencia_inicio, x.vigencia_fim, '[]'::text)))))
      LEFT JOIN tech2d.professores p ON ((p.id_professor = x.id_professor)));

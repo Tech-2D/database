@@ -7,7 +7,7 @@
 - **Consultar dados:** `examples/consultas.sql` contém consultas de leitura sobre a estrutura atual.
 - **Entender uma alteração passada:** `migrations/` e `migrate.psql` preservam o histórico. Uma migração pode citar objetos antigos removidos depois; isso não significa que eles ainda existam no banco atual.
 
-O snapshot atual é `061_simplificar_recorrencias`, exportado do PostgreSQL 18.6. Há 25 tabelas, 15 views, 51 funções, 10 sequências, um trigger e três políticas RLS. **Não existem procedures nessa versão**; quando forem criadas, o exportador passará a gerar `atual/procedures/`.
+O snapshot atual é `078_classificar_provas_recuperacao`, gerado no PostgreSQL 18.6 e conferido contra o catálogo do Neon 18.7. Há 39 tabelas, 19 views, 52 funções, 14 sequências, um gatilho e seis políticas RLS. O inventário registra zero procedures.
 
 `estrutura.sql` contém definições completas, comentários e GRANT/REVOKE, na ordem das dependências. Os arquivos individuais são referências para leitura: comentários ficam em `comentarios.sql`, permissões em `permissoes.sql`, e PK/FK/UNIQUE em `restricoes/`. Não substitua a instalação completa por executar arquivos isolados.
 
@@ -21,7 +21,7 @@ psql -X -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/instalar.
 psql -X -d tech2d_local -v ON_ERROR_STOP=1 -f sql/examples/consultas.sql
 ```
 
-O instalador recusa um schema `tech2d` já existente. Não executa DROP, não cria usuários de login, não contém senhas e não insere dados de negócio. Os papéis `tech2d_api` e `assistente_ia_readonly` são criados localmente apenas se não existirem, pois aparecem nos GRANT exportados. O segundo possui somente USAGE no schema nessa exportação; isso não concede SELECT sobre tabelas.
+O instalador recusa um schema `tech2d` já existente. Ele cria apenas os papéis de referência declarados em `papeis-locais.sql`, sem login ou senha, e inicializa o registro que mantém a Agenda aberta. `permissoes-provisionadas.sql` reproduz no histórico local os acessos de serviço conferidos no Neon, incluindo as políticas de leitura das tabelas de Notas para o backup.
 
 Os SECURITY DEFINER são propriedade da conta que instala o snapshot, devido a `--no-owner`. Em produção, propriedade, login e rotação de segredos são responsabilidades do provisionamento da API. O snapshot não substitui esse processo.
 
@@ -30,13 +30,13 @@ Os SECURITY DEFINER são propriedade da conta que instala o snapshot, devido a `
 Na raiz do repositório, execute `npm run check` e, com `PGHOST` local explícito, `npm run check:sql`. O segundo verifica:
 
 1. Criação completa a partir do snapshot, incluindo permissões.
-2. Criação a partir das 61 migrações e equivalência dos objetos, após normalizar a representação de CHECK pelo PostgreSQL.
+2. Criação a partir do histórico até a migração 078 e equivalência dos objetos, após normalizar a representação de CHECK pelo PostgreSQL.
 3. Reexecução do histórico sem alterações na estrutura.
 4. Consultas reais com o papel limitado da API e exemplos SQL.
 5. Ausência de CREATE no schema e de UPDATE direto em perfis administrativos para a API.
 6. Recusa de reinstalação sobre schema existente, preservando os objetos.
 
-O teste cria e remove somente bancos locais temporários com nomes próprios. **Nenhum registro de produção é necessário**. O PostgreSQL temporário que foi usado para a conferência de 15/11/2026 era da versão 18.6.
+O teste cria e remove somente bancos locais temporários. A validação da versão 078 rodou no PostgreSQL 18.6 com dados de negócio vazios.
 
 ## Atualização da referência
 

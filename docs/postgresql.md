@@ -4,7 +4,7 @@ description: Consulte tabelas, colunas, chaves e relações do esquema tech2d.
 wide: true
 ---
 
-Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os recursos para consulta, sem separar fisicamente o banco. As tabelas usam colunas tipadas e chaves estrangeiras. Cada entidade guarda sua identidade numérica, referência externa, versão e data de atualização. A sequência `ids_entidades` gera os novos IDs. As views preparam o formato que a API entrega aos sites.
+Todas as tabelas da aplicação ficam no schema `tech2d`. As áreas desta página agrupam os recursos para consulta. Cada tabela tem sua própria chave, que pode ser um identificador numérico, um UID de conta ou uma combinação de campos. As views preparam o formato que a API entrega aos sites.
 
 ## Vínculo de turma no perfil
 

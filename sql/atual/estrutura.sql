@@ -30,7 +30,7 @@ CREATE SCHEMA tech2d;
 -- Name: SCHEMA tech2d; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:068_fila_anexos_e_travas';
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:078_classificar_provas_recuperacao';
 
 
 --
@@ -140,13 +140,20 @@ CREATE FUNCTION tech2d.gravar_conteudo(alvo bigint, tipo character varying, obje
     LANGUAGE plpgsql
     SET search_path TO 'pg_catalog'
     AS $$
+DECLARE
+  turma_vinculada text;
 BEGIN
   IF jsonb_typeof(objeto) IS DISTINCT FROM 'object' THEN
-    RAISE EXCEPTION 'Objeto de registro inválido' USING ERRCODE='check_violation';
+    RAISE EXCEPTION 'Objeto de registro invÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido' USING ERRCODE='check_violation';
   END IF;
   objeto := tech2d.padronizar_listas_registro(tipo,tech2d.remover_nulos_recursivo(objeto));
   IF tipo='recurringActivities' THEN
     objeto := objeto - 'createdByEmail' - 'deleted';
+  ELSIF tipo='userProfiles' THEN
+    SELECT turma INTO turma_vinculada FROM tech2d.vinculos_turma_perfil WHERE firebase_uid=chave_api;
+    IF FOUND THEN
+      objeto := jsonb_set(objeto, '{className}', to_jsonb(turma_vinculada));
+    END IF;
   END IF;
   CASE tipo
     WHEN 'activities' THEN PERFORM tech2d.gravar_atividades(alvo,objeto,chave_api,compartilhado_api,pai_api,id_pai_api);
@@ -2049,6 +2056,37 @@ COMMENT ON COLUMN tech2d.atividades.referencia_api IS 'Identificador externo est
 
 
 --
+-- Name: aulas_recuperacao; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.aulas_recuperacao (
+    edital_id integer NOT NULL,
+    ordem integer NOT NULL,
+    dia date NOT NULL,
+    inicio time without time zone NOT NULL,
+    fim time without time zone NOT NULL,
+    materia text NOT NULL,
+    turma text,
+    professor text,
+    local text,
+    prova boolean DEFAULT false NOT NULL,
+    CONSTRAINT aulas_recuperacao_check CHECK ((fim > inicio)),
+    CONSTRAINT aulas_recuperacao_local_check CHECK ((length(local) <= 120)),
+    CONSTRAINT aulas_recuperacao_materia_check CHECK (((length(materia) >= 1) AND (length(materia) <= 120))),
+    CONSTRAINT aulas_recuperacao_ordem_check CHECK ((ordem >= 1)),
+    CONSTRAINT aulas_recuperacao_professor_check CHECK ((length(professor) <= 120)),
+    CONSTRAINT aulas_recuperacao_turma_check CHECK ((length(turma) <= 100))
+);
+
+
+--
+-- Name: COLUMN aulas_recuperacao.prova; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.aulas_recuperacao.prova IS 'Indica uma prova de recuperação, distinta de uma aula de revisão.';
+
+
+--
 -- Name: cartoes_kanban; Type: TABLE; Schema: tech2d; Owner: -
 --
 
@@ -2309,7 +2347,7 @@ CREATE VIEW tech2d.catalogo_atividades_professores AS
      LEFT JOIN tech2d.regras_recorrencia r USING (id_regra_recorrencia))
      LEFT JOIN tech2d.disciplinas d ON ((d.id_disciplina = a.id_disciplina)))
      LEFT JOIN tech2d.turmas t ON ((t.id_turma = a.id_turma)))
-     LEFT JOIN tech2d.vinculos_professores_turmas x ON ((((x.id_turma = a.id_turma) AND (x.id_disciplina = a.id_disciplina)) AND (a.data_atividade <@ daterange(x.vigencia_inicio, x.vigencia_fim, '[]'::text)))))
+     LEFT JOIN tech2d.vinculos_professores_turmas x ON (((x.id_turma = a.id_turma) AND (x.id_disciplina = a.id_disciplina) AND (a.data_atividade <@ daterange(x.vigencia_inicio, x.vigencia_fim, '[]'::text)))))
      LEFT JOIN tech2d.professores p ON ((p.id_professor = x.id_professor)));
 
 
@@ -2405,6 +2443,72 @@ COMMENT ON COLUMN tech2d.colunas_kanban.concluida IS 'Campo done no contrato da 
 
 ALTER TABLE tech2d.colunas_kanban ALTER COLUMN id_coluna_kanban ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME tech2d.colunas_kanban_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: config_assistente; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.config_assistente (
+    id integer NOT NULL,
+    limite_diario integer NOT NULL,
+    versao integer NOT NULL,
+    atualizado_em timestamp with time zone DEFAULT now() NOT NULL,
+    atualizado_por text NOT NULL,
+    CONSTRAINT config_assistente_id_check CHECK ((id = 1)),
+    CONSTRAINT config_assistente_limite_diario_check CHECK (((limite_diario >= 1) AND (limite_diario <= 1000))),
+    CONSTRAINT config_assistente_versao_check CHECK ((versao > 0))
+);
+
+
+--
+-- Name: config_fechamento_agenda; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.config_fechamento_agenda (
+    id integer NOT NULL,
+    versao integer DEFAULT 0 NOT NULL,
+    rascunho jsonb,
+    publicado jsonb,
+    atualizado_em timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT config_fechamento_agenda_id_check CHECK ((id = 1)),
+    CONSTRAINT config_fechamento_agenda_publicado_check CHECK ((jsonb_typeof(publicado) = 'object'::text)),
+    CONSTRAINT config_fechamento_agenda_rascunho_check CHECK ((jsonb_typeof(rascunho) = 'object'::text)),
+    CONSTRAINT config_fechamento_agenda_versao_check CHECK ((versao >= 0))
+);
+
+
+--
+-- Name: editais_recuperacao; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.editais_recuperacao (
+    id integer NOT NULL,
+    titulo text NOT NULL,
+    descricao text NOT NULL,
+    link text,
+    inicio timestamp with time zone,
+    fim timestamp with time zone,
+    CONSTRAINT editais_recuperacao_check CHECK ((fim > inicio)),
+    CONSTRAINT editais_recuperacao_descricao_check CHECK ((length(descricao) <= 6000)),
+    CONSTRAINT editais_recuperacao_janela_completa CHECK (((inicio IS NULL) = (fim IS NULL))),
+    CONSTRAINT editais_recuperacao_link_check CHECK ((length(link) <= 1000)),
+    CONSTRAINT editais_recuperacao_titulo_check CHECK (((length(titulo) >= 1) AND (length(titulo) <= 140)))
+);
+
+
+--
+-- Name: editais_recuperacao_id_seq; Type: SEQUENCE; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE tech2d.editais_recuperacao ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME tech2d.editais_recuperacao_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2604,6 +2708,19 @@ COMMENT ON TABLE tech2d.limpeza_anexos_agenda IS 'Fila de limpeza de anexos R2 d
 
 
 --
+-- Name: limpezas_anuais_agenda; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.limpezas_anuais_agenda (
+    operacao text NOT NULL,
+    administrador_uid text NOT NULL,
+    revisao text NOT NULL,
+    executada_em timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    resultado jsonb NOT NULL
+);
+
+
+--
 -- Name: notas_cadernos; Type: TABLE; Schema: tech2d; Owner: -
 --
 
@@ -2619,8 +2736,8 @@ CREATE TABLE tech2d.notas_cadernos (
     alterado_em timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT notas_cadernos_ano_letivo_check CHECK (((ano_letivo >= 2020) AND (ano_letivo <= 2100))),
     CONSTRAINT notas_cadernos_ano_serie_check CHECK (((ano_serie >= 1) AND (ano_serie <= 3))),
-    CONSTRAINT notas_cadernos_modo_primeiro_check CHECK (((modo_primeiro)::text = ANY ((ARRAY['notas'::character varying, 'media'::character varying])::text[]))),
-    CONSTRAINT notas_cadernos_modo_segundo_check CHECK (((modo_segundo)::text = ANY ((ARRAY['notas'::character varying, 'media'::character varying])::text[]))),
+    CONSTRAINT notas_cadernos_modo_primeiro_check CHECK (((modo_primeiro)::text = ANY (ARRAY[('notas'::character varying)::text, ('media'::character varying)::text]))),
+    CONSTRAINT notas_cadernos_modo_segundo_check CHECK (((modo_segundo)::text = ANY (ARRAY[('notas'::character varying)::text, ('media'::character varying)::text]))),
     CONSTRAINT notas_cadernos_versao_check CHECK ((versao >= 0))
 );
 
@@ -2670,7 +2787,7 @@ CREATE TABLE tech2d.notas_lancamentos (
     CONSTRAINT notas_lancamentos_media_informada_check CHECK (((media_informada >= (0)::numeric) AND (media_informada <= (10)::numeric))),
     CONSTRAINT notas_lancamentos_n1_check CHECK (((n1 >= (0)::numeric) AND (n1 <= (10)::numeric))),
     CONSTRAINT notas_lancamentos_n2_check CHECK (((n2 >= (0)::numeric) AND (n2 <= (10)::numeric))),
-    CONSTRAINT notas_lancamentos_peso_n1_check CHECK ((((peso_n1 >= 10) AND (peso_n1 <= 90)) AND (((peso_n1)::integer % 5) = 0))),
+    CONSTRAINT notas_lancamentos_peso_n1_check CHECK (((peso_n1 >= 10) AND (peso_n1 <= 90) AND (((peso_n1)::integer % 5) = 0))),
     CONSTRAINT notas_lancamentos_semestre_check CHECK ((semestre = ANY (ARRAY[1, 2])))
 );
 
@@ -3209,6 +3326,24 @@ COMMENT ON COLUMN tech2d.regras_retencao.referencia_api IS 'Identificador extern
 
 
 --
+-- Name: reservas_mensagens_ia; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.reservas_mensagens_ia (
+    firebase_uid text NOT NULL,
+    operacao text NOT NULL,
+    data_uso date NOT NULL,
+    expira_em timestamp with time zone NOT NULL,
+    saldo_final integer,
+    limite_aplicado integer,
+    CONSTRAINT reservas_mensagens_ia_firebase_uid_check CHECK (((length(firebase_uid) >= 1) AND (length(firebase_uid) <= 128))),
+    CONSTRAINT reservas_mensagens_ia_limite_aplicado_check CHECK ((limite_aplicado > 0)),
+    CONSTRAINT reservas_mensagens_ia_operacao_check CHECK (((length(operacao) >= 1) AND (length(operacao) <= 161))),
+    CONSTRAINT reservas_mensagens_ia_saldo_final_check CHECK ((saldo_final >= 0))
+);
+
+
+--
 -- Name: school_classes_id_seq; Type: SEQUENCE; Schema: tech2d; Owner: -
 --
 
@@ -3394,6 +3529,19 @@ COMMENT ON COLUMN tech2d.sugestoes_melhoria.referencia_api IS 'Identificador ext
 
 
 --
+-- Name: uso_contas_assistente; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.uso_contas_assistente (
+    dia date NOT NULL,
+    firebase_uid text NOT NULL,
+    mensagens integer NOT NULL,
+    CONSTRAINT uso_contas_assistente_firebase_uid_check CHECK (((length(firebase_uid) >= 1) AND (length(firebase_uid) <= 128))),
+    CONSTRAINT uso_contas_assistente_mensagens_check CHECK ((mensagens > 0))
+);
+
+
+--
 -- Name: uso_diario_assistente; Type: TABLE; Schema: tech2d; Owner: -
 --
 
@@ -3422,6 +3570,23 @@ ALTER TABLE tech2d.vinculos_professores_turmas ALTER COLUMN id ADD GENERATED ALW
     NO MINVALUE
     NO MAXVALUE
     CACHE 1
+);
+
+
+--
+-- Name: vinculos_turma_perfil; Type: TABLE; Schema: tech2d; Owner: -
+--
+
+CREATE TABLE tech2d.vinculos_turma_perfil (
+    firebase_uid text NOT NULL,
+    turma text NOT NULL,
+    alterada_em timestamp with time zone NOT NULL,
+    pedido_turma text,
+    pedido_em timestamp with time zone,
+    CONSTRAINT vinculos_turma_perfil_check CHECK (((pedido_turma IS NULL) = (pedido_em IS NULL))),
+    CONSTRAINT vinculos_turma_perfil_check1 CHECK (((pedido_turma IS NULL) OR (pedido_turma <> turma))),
+    CONSTRAINT vinculos_turma_perfil_pedido_turma_check CHECK (((length(pedido_turma) >= 1) AND (length(pedido_turma) <= 80))),
+    CONSTRAINT vinculos_turma_perfil_turma_check CHECK (((length(turma) >= 1) AND (length(turma) <= 80)))
 );
 
 
@@ -3890,7 +4055,7 @@ CREATE TABLE tech2d.visitas_aos_sites (
     site character varying(32) DEFAULT 'agenda'::text CONSTRAINT agenda_access_site_not_null NOT NULL,
     CONSTRAINT agenda_access_check CHECK (((((tipo_visitante)::text = 'anonymous'::text) AND ((chave_visitante)::text ~ '^[0-9a-f]{64}$'::text)) OR (((tipo_visitante)::text = 'account'::text) AND ((char_length((chave_visitante)::text) >= 1) AND (char_length((chave_visitante)::text) <= 128))))),
     CONSTRAINT agenda_access_kind_check CHECK (((tipo_visitante)::text = ANY (ARRAY['account'::text, 'anonymous'::text]))),
-    CONSTRAINT visitas_aos_sites_site_check CHECK (((site)::text = ANY ((ARRAY['agenda'::character varying, 'professores'::character varying, 'pegaki'::character varying, 'kanban'::character varying])::text[])))
+    CONSTRAINT visitas_aos_sites_site_check CHECK (((site)::text = ANY (ARRAY[('agenda'::character varying)::text, ('professores'::character varying)::text, ('pegaki'::character varying)::text, ('kanban'::character varying)::text])))
 );
 
 
@@ -3966,6 +4131,14 @@ ALTER TABLE ONLY tech2d.atividades
 
 
 --
+-- Name: aulas_recuperacao aulas_recuperacao_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.aulas_recuperacao
+    ADD CONSTRAINT aulas_recuperacao_pkey PRIMARY KEY (edital_id, ordem);
+
+
+--
 -- Name: cartoes_kanban cartoes_kanban_id_quadro_kanban_ordem_key; Type: CONSTRAINT; Schema: tech2d; Owner: -
 --
 
@@ -4006,11 +4179,35 @@ ALTER TABLE ONLY tech2d.colunas_kanban
 
 
 --
+-- Name: config_assistente config_assistente_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.config_assistente
+    ADD CONSTRAINT config_assistente_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: config_fechamento_agenda config_fechamento_agenda_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.config_fechamento_agenda
+    ADD CONSTRAINT config_fechamento_agenda_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: disciplinas_series disciplinas_series_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
 --
 
 ALTER TABLE ONLY tech2d.disciplinas_series
     ADD CONSTRAINT disciplinas_series_pkey PRIMARY KEY (id_disciplina, ano_serie);
+
+
+--
+-- Name: editais_recuperacao editais_recuperacao_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.editais_recuperacao
+    ADD CONSTRAINT editais_recuperacao_pkey PRIMARY KEY (id);
 
 
 --
@@ -4067,6 +4264,14 @@ ALTER TABLE ONLY tech2d.limites_mensagens_ia
 
 ALTER TABLE ONLY tech2d.limpeza_anexos_agenda
     ADD CONSTRAINT limpeza_anexos_agenda_pkey PRIMARY KEY (chave_arquivo);
+
+
+--
+-- Name: limpezas_anuais_agenda limpezas_anuais_agenda_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.limpezas_anuais_agenda
+    ADD CONSTRAINT limpezas_anuais_agenda_pkey PRIMARY KEY (operacao);
 
 
 --
@@ -4198,6 +4403,14 @@ ALTER TABLE ONLY tech2d.regras_retencao
 
 
 --
+-- Name: reservas_mensagens_ia reservas_mensagens_ia_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.reservas_mensagens_ia
+    ADD CONSTRAINT reservas_mensagens_ia_pkey PRIMARY KEY (firebase_uid, operacao);
+
+
+--
 -- Name: turmas school_classes_name_key; Type: CONSTRAINT; Schema: tech2d; Owner: -
 --
 
@@ -4318,6 +4531,14 @@ ALTER TABLE ONLY tech2d.turmas
 
 
 --
+-- Name: uso_contas_assistente uso_contas_assistente_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.uso_contas_assistente
+    ADD CONSTRAINT uso_contas_assistente_pkey PRIMARY KEY (dia, firebase_uid);
+
+
+--
 -- Name: uso_diario_assistente uso_diario_assistente_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
 --
 
@@ -4339,6 +4560,14 @@ ALTER TABLE ONLY tech2d.vinculos_professores_turmas
 
 ALTER TABLE ONLY tech2d.vinculos_professores_turmas
     ADD CONSTRAINT vinculos_professores_turmas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vinculos_turma_perfil vinculos_turma_perfil_pkey; Type: CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.vinculos_turma_perfil
+    ADD CONSTRAINT vinculos_turma_perfil_pkey PRIMARY KEY (firebase_uid);
 
 
 --
@@ -4424,6 +4653,13 @@ CREATE INDEX horarios_aula_caminho_api_idx ON tech2d.horarios_aula USING btree (
 --
 
 CREATE INDEX limpeza_anexos_agenda_pendentes_idx ON tech2d.limpeza_anexos_agenda USING btree (tentar_apos, chave_arquivo);
+
+
+--
+-- Name: limpezas_anuais_agenda_executada_idx; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX limpezas_anuais_agenda_executada_idx ON tech2d.limpezas_anuais_agenda USING btree (executada_em DESC);
 
 
 --
@@ -4560,6 +4796,13 @@ CREATE INDEX vinculos_professores_turmas_professor ON tech2d.vinculos_professore
 
 
 --
+-- Name: vinculos_turma_pedidos_idx; Type: INDEX; Schema: tech2d; Owner: -
+--
+
+CREATE INDEX vinculos_turma_pedidos_idx ON tech2d.vinculos_turma_perfil USING btree (pedido_em, firebase_uid) WHERE (pedido_em IS NOT NULL);
+
+
+--
 -- Name: horarios_aula vincular_disciplina_notaki; Type: TRIGGER; Schema: tech2d; Owner: -
 --
 
@@ -4612,6 +4855,14 @@ ALTER TABLE ONLY tech2d.atividades
 
 ALTER TABLE ONLY tech2d.atividades
     ADD CONSTRAINT atividades_id_turma_fkey FOREIGN KEY (id_turma) REFERENCES tech2d.turmas(id_turma) ON DELETE RESTRICT;
+
+
+--
+-- Name: aulas_recuperacao aulas_recuperacao_edital_id_fkey; Type: FK CONSTRAINT; Schema: tech2d; Owner: -
+--
+
+ALTER TABLE ONLY tech2d.aulas_recuperacao
+    ADD CONSTRAINT aulas_recuperacao_edital_id_fkey FOREIGN KEY (edital_id) REFERENCES tech2d.editais_recuperacao(id);
 
 
 --
@@ -4807,6 +5058,27 @@ ALTER TABLE ONLY tech2d.vinculos_professores_turmas
 
 
 --
+-- Name: notas_cadernos leitura_backup; Type: POLICY; Schema: tech2d; Owner: -
+--
+
+CREATE POLICY leitura_backup ON tech2d.notas_cadernos FOR SELECT TO tech2d_backup USING (true);
+
+
+--
+-- Name: notas_lancamentos leitura_backup; Type: POLICY; Schema: tech2d; Owner: -
+--
+
+CREATE POLICY leitura_backup ON tech2d.notas_lancamentos FOR SELECT TO tech2d_backup USING (true);
+
+
+--
+-- Name: notas_recuperacoes leitura_backup; Type: POLICY; Schema: tech2d; Owner: -
+--
+
+CREATE POLICY leitura_backup ON tech2d.notas_recuperacoes FOR SELECT TO tech2d_backup USING (true);
+
+
+--
 -- Name: notas_cadernos; Type: ROW SECURITY; Schema: tech2d; Owner: -
 --
 
@@ -4852,6 +5124,8 @@ CREATE POLICY notas_recuperacoes_conta ON tech2d.notas_recuperacoes USING (((id_
 GRANT USAGE ON SCHEMA tech2d TO tech2d_api;
 GRANT USAGE ON SCHEMA tech2d TO tech2d_prod_ai_reader;
 GRANT USAGE ON SCHEMA tech2d TO tech2d_prod_ai_quota;
+GRANT USAGE ON SCHEMA tech2d TO assistente_ia_readonly;
+GRANT USAGE ON SCHEMA tech2d TO tech2d_backup;
 
 
 --
@@ -5073,10 +5347,32 @@ REVOKE ALL ON FUNCTION tech2d.vincular_nova_disciplina_notaki() FROM PUBLIC;
 
 
 --
+-- Name: TABLE anexos_atividade; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.anexos_atividade TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE anexos_atividade_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.anexos_atividade_id_seq TO tech2d_backup;
+
+
+--
 -- Name: TABLE apelidos_disciplinas; Type: ACL; Schema: tech2d; Owner: -
 --
 
 GRANT SELECT ON TABLE tech2d.apelidos_disciplinas TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.apelidos_disciplinas TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE apelidos_disciplinas_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.apelidos_disciplinas_id_seq TO tech2d_backup;
 
 
 --
@@ -5084,6 +5380,28 @@ GRANT SELECT ON TABLE tech2d.apelidos_disciplinas TO tech2d_prod_ai_reader;
 --
 
 GRANT SELECT ON TABLE tech2d.apelidos_professores TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.apelidos_professores TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE apelidos_professores_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.apelidos_professores_id_seq TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE ids_entidades; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.ids_entidades TO tech2d_backup;
+
+
+--
+-- Name: TABLE turmas_agenda; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.turmas_agenda TO tech2d_backup;
 
 
 --
@@ -5091,6 +5409,7 @@ GRANT SELECT ON TABLE tech2d.apelidos_professores TO tech2d_prod_ai_reader;
 --
 
 GRANT SELECT ON TABLE tech2d.assistant_class_catalog TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.assistant_class_catalog TO tech2d_backup;
 
 
 --
@@ -5098,6 +5417,21 @@ GRANT SELECT ON TABLE tech2d.assistant_class_catalog TO tech2d_prod_ai_reader;
 --
 
 GRANT SELECT ON TABLE tech2d.disciplinas TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.disciplinas TO tech2d_backup;
+
+
+--
+-- Name: TABLE regras_recorrencia; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.regras_recorrencia TO tech2d_backup;
+
+
+--
+-- Name: TABLE turmas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.turmas TO tech2d_backup;
 
 
 --
@@ -5105,6 +5439,21 @@ GRANT SELECT ON TABLE tech2d.disciplinas TO tech2d_prod_ai_reader;
 --
 
 GRANT SELECT ON TABLE tech2d.assistant_recurring_activities TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.assistant_recurring_activities TO tech2d_backup;
+
+
+--
+-- Name: TABLE faixas_horario; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.faixas_horario TO tech2d_backup;
+
+
+--
+-- Name: TABLE horarios_aula; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.horarios_aula TO tech2d_backup;
 
 
 --
@@ -5112,6 +5461,36 @@ GRANT SELECT ON TABLE tech2d.assistant_recurring_activities TO tech2d_prod_ai_re
 --
 
 GRANT SELECT ON TABLE tech2d.assistant_teacher_schedule TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.assistant_teacher_schedule TO tech2d_backup;
+
+
+--
+-- Name: TABLE atividades; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.atividades TO tech2d_backup;
+
+
+--
+-- Name: TABLE aulas_recuperacao; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT ON TABLE tech2d.aulas_recuperacao TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.aulas_recuperacao TO tech2d_backup;
+
+
+--
+-- Name: TABLE cartoes_kanban; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.cartoes_kanban TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE cartoes_kanban_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.cartoes_kanban_id_seq TO tech2d_backup;
 
 
 --
@@ -5119,6 +5498,7 @@ GRANT SELECT ON TABLE tech2d.assistant_teacher_schedule TO tech2d_prod_ai_reader
 --
 
 GRANT SELECT ON TABLE tech2d.disciplinas_series TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.disciplinas_series TO tech2d_backup;
 
 
 --
@@ -5126,6 +5506,14 @@ GRANT SELECT ON TABLE tech2d.disciplinas_series TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.professores TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.professores TO tech2d_backup;
+
+
+--
+-- Name: TABLE vinculos_professores_turmas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.vinculos_professores_turmas TO tech2d_backup;
 
 
 --
@@ -5133,6 +5521,7 @@ GRANT SELECT ON TABLE tech2d.professores TO tech2d_prod_ai_reader;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_backup;
 
 
 --
@@ -5140,6 +5529,7 @@ GRANT SELECT ON TABLE tech2d.visao_disciplinas_notas TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.catalogo_atividades_professores TO tech2d_prod_ai_reader;
+GRANT SELECT ON TABLE tech2d.catalogo_atividades_professores TO tech2d_backup;
 
 
 --
@@ -5147,6 +5537,75 @@ GRANT SELECT ON TABLE tech2d.catalogo_atividades_professores TO tech2d_prod_ai_r
 --
 
 GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_backup;
+
+
+--
+-- Name: TABLE colunas_kanban; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.colunas_kanban TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE colunas_kanban_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.colunas_kanban_id_seq TO tech2d_backup;
+
+
+--
+-- Name: TABLE config_assistente; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.config_assistente TO tech2d_prod_ai_quota;
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.config_assistente TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.config_assistente TO tech2d_qa_ai_quota;
+GRANT SELECT ON TABLE tech2d.config_assistente TO tech2d_backup;
+
+
+--
+-- Name: TABLE config_fechamento_agenda; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,UPDATE ON TABLE tech2d.config_fechamento_agenda TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.config_fechamento_agenda TO tech2d_backup;
+
+
+--
+-- Name: TABLE editais_recuperacao; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT ON TABLE tech2d.editais_recuperacao TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.editais_recuperacao TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE editais_recuperacao_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.editais_recuperacao_id_seq TO tech2d_backup;
+
+
+--
+-- Name: TABLE espacos_kanban; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.espacos_kanban TO tech2d_backup;
+
+
+--
+-- Name: TABLE itens_checklist; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.itens_checklist TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE itens_checklist_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.itens_checklist_id_seq TO tech2d_backup;
 
 
 --
@@ -5154,6 +5613,7 @@ GRANT SELECT ON TABLE tech2d.catalogo_horarios TO tech2d_api;
 --
 
 GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.limites_mensagens_ia TO tech2d_prod_ai_quota;
+GRANT SELECT ON TABLE tech2d.limites_mensagens_ia TO tech2d_backup;
 
 
 --
@@ -5161,6 +5621,15 @@ GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.limites_mensagens_ia TO tech2d_prod_a
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.limpeza_anexos_agenda TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.limpeza_anexos_agenda TO tech2d_backup;
+
+
+--
+-- Name: TABLE limpezas_anuais_agenda; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT ON TABLE tech2d.limpezas_anuais_agenda TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.limpezas_anuais_agenda TO tech2d_backup;
 
 
 --
@@ -5168,6 +5637,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.limpeza_anexos_agenda TO tech2
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_cadernos TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.notas_cadernos TO tech2d_backup;
 
 
 --
@@ -5175,6 +5645,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_cadernos TO tech2d_api;
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_lancamentos TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.notas_lancamentos TO tech2d_backup;
 
 
 --
@@ -5182,6 +5653,111 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_lancamentos TO tech2d_ap
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_recuperacoes TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.notas_recuperacoes TO tech2d_backup;
+
+
+--
+-- Name: TABLE participantes_kanban; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.participantes_kanban TO tech2d_backup;
+
+
+--
+-- Name: TABLE perfis; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.perfis TO tech2d_backup;
+
+
+--
+-- Name: TABLE perfis_administrativos; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.perfis_administrativos TO tech2d_backup;
+
+
+--
+-- Name: TABLE quadros_kanban; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.quadros_kanban TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE quadros_kanban_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.quadros_kanban_id_seq TO tech2d_backup;
+
+
+--
+-- Name: TABLE recibos_gravacao; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT ON TABLE tech2d.recibos_gravacao TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.recibos_gravacao TO tech2d_backup;
+
+
+--
+-- Name: TABLE regras_retencao; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.regras_retencao TO tech2d_backup;
+
+
+--
+-- Name: TABLE reservas_mensagens_ia; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.reservas_mensagens_ia TO tech2d_prod_ai_quota;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.reservas_mensagens_ia TO tech2d_qa_ai_quota;
+GRANT SELECT ON TABLE tech2d.reservas_mensagens_ia TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE school_classes_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.school_classes_id_seq TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE school_subjects_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.school_subjects_id_seq TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE school_teachers_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.school_teachers_id_seq TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE school_time_slots_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.school_time_slots_id_seq TO tech2d_backup;
+
+
+--
+-- Name: TABLE sugestoes_melhoria; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.sugestoes_melhoria TO tech2d_backup;
+
+
+--
+-- Name: TABLE uso_contas_assistente; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.uso_contas_assistente TO tech2d_prod_ai_quota;
+GRANT SELECT ON TABLE tech2d.uso_contas_assistente TO tech2d_api;
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.uso_contas_assistente TO tech2d_qa_ai_quota;
+GRANT SELECT ON TABLE tech2d.uso_contas_assistente TO tech2d_backup;
 
 
 --
@@ -5190,6 +5766,23 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE tech2d.notas_recuperacoes TO tech2d_a
 
 GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.uso_diario_assistente TO tech2d_prod_ai_quota;
 GRANT SELECT ON TABLE tech2d.uso_diario_assistente TO tech2d_api;
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.uso_diario_assistente TO tech2d_qa_ai_quota;
+GRANT SELECT ON TABLE tech2d.uso_diario_assistente TO tech2d_backup;
+
+
+--
+-- Name: SEQUENCE vinculos_professores_turmas_id_seq; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON SEQUENCE tech2d.vinculos_professores_turmas_id_seq TO tech2d_backup;
+
+
+--
+-- Name: TABLE vinculos_turma_perfil; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT,UPDATE ON TABLE tech2d.vinculos_turma_perfil TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.vinculos_turma_perfil TO tech2d_backup;
 
 
 --
@@ -5197,6 +5790,7 @@ GRANT SELECT ON TABLE tech2d.uso_diario_assistente TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_atividades TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_atividades TO tech2d_backup;
 
 
 --
@@ -5204,6 +5798,7 @@ GRANT SELECT ON TABLE tech2d.visao_atividades TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_atividades_automacao TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_atividades_automacao TO tech2d_backup;
 
 
 --
@@ -5211,6 +5806,14 @@ GRANT SELECT ON TABLE tech2d.visao_atividades_automacao TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_catalogo_horarios TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_catalogo_horarios TO tech2d_backup;
+
+
+--
+-- Name: TABLE visao_disciplinas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_disciplinas TO tech2d_backup;
 
 
 --
@@ -5218,6 +5821,7 @@ GRANT SELECT ON TABLE tech2d.visao_catalogo_horarios TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_documentos_aplicacao TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_documentos_aplicacao TO tech2d_backup;
 
 
 --
@@ -5225,6 +5829,21 @@ GRANT SELECT ON TABLE tech2d.visao_documentos_aplicacao TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_documentos_catalogo TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_documentos_catalogo TO tech2d_backup;
+
+
+--
+-- Name: TABLE visao_faixas_horario; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_faixas_horario TO tech2d_backup;
+
+
+--
+-- Name: TABLE visao_horarios_aula; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_horarios_aula TO tech2d_backup;
 
 
 --
@@ -5232,6 +5851,7 @@ GRANT SELECT ON TABLE tech2d.visao_documentos_catalogo TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_notas_resultados TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_notas_resultados TO tech2d_backup;
 
 
 --
@@ -5239,6 +5859,29 @@ GRANT SELECT ON TABLE tech2d.visao_notas_resultados TO tech2d_api;
 --
 
 GRANT SELECT ON TABLE tech2d.visao_perfis_administrativos TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_perfis_administrativos TO tech2d_backup;
+
+
+--
+-- Name: TABLE visao_professores; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_professores TO tech2d_backup;
+
+
+--
+-- Name: TABLE visao_recibos_gravacao; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT,INSERT ON TABLE tech2d.visao_recibos_gravacao TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visao_recibos_gravacao TO tech2d_backup;
+
+
+--
+-- Name: TABLE visao_turmas; Type: ACL; Schema: tech2d; Owner: -
+--
+
+GRANT SELECT ON TABLE tech2d.visao_turmas TO tech2d_backup;
 
 
 --
@@ -5246,6 +5889,7 @@ GRANT SELECT ON TABLE tech2d.visao_perfis_administrativos TO tech2d_api;
 --
 
 GRANT SELECT,INSERT,DELETE ON TABLE tech2d.visitas_aos_sites TO tech2d_api;
+GRANT SELECT ON TABLE tech2d.visitas_aos_sites TO tech2d_backup;
 
 
 --

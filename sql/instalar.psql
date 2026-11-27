@@ -13,3 +13,5 @@ END;
 $$;
 \ir papeis-locais.sql
 \ir atual/estrutura.sql
+-- Linha de controle exigida pela API. Não contém preferências nem dados de negócio.
+INSERT INTO tech2d.config_fechamento_agenda (id) VALUES (1);

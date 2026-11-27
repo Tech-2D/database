@@ -1,22 +1,22 @@
 {
   "schema": "tech2d",
-  "version": "068_fila_anexos_e_travas",
+  "version": "078_classificar_provas_recuperacao",
   "serverVersion": "18.6",
   "dumpVersion": "18.6",
   "counts": {
     "SCHEMA": 1,
-    "COMMENT": 215,
+    "COMMENT": 216,
     "FUNCTION": 52,
-    "TABLE": 31,
-    "SEQUENCE": 13,
+    "TABLE": 39,
+    "SEQUENCE": 14,
     "VIEW": 19,
-    "CONSTRAINT": 56,
-    "INDEX": 30,
+    "CONSTRAINT": 64,
+    "INDEX": 32,
     "TRIGGER": 1,
-    "FK CONSTRAINT": 30,
+    "FK CONSTRAINT": 31,
+    "POLICY": 6,
     "ROW SECURITY": 3,
-    "POLICY": 3,
-    "ACL": 56,
+    "ACL": 103,
     "PROCEDURE": 0
   },
   "objects": [
@@ -927,6 +927,18 @@
       "file": "comentarios.sql"
     },
     {
+      "name": "aulas_recuperacao",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/aulas_recuperacao.sql"
+    },
+    {
+      "name": "COLUMN aulas_recuperacao.prova",
+      "type": "COMMENT",
+      "schema": "tech2d",
+      "file": "comentarios.sql"
+    },
+    {
       "name": "cartoes_kanban",
       "type": "TABLE",
       "schema": "tech2d",
@@ -1149,6 +1161,30 @@
       "file": "sequencias/colunas_kanban_id_seq.sql"
     },
     {
+      "name": "config_assistente",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/config_assistente.sql"
+    },
+    {
+      "name": "config_fechamento_agenda",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/config_fechamento_agenda.sql"
+    },
+    {
+      "name": "editais_recuperacao",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/editais_recuperacao.sql"
+    },
+    {
+      "name": "editais_recuperacao_id_seq",
+      "type": "SEQUENCE",
+      "schema": "tech2d",
+      "file": "sequencias/editais_recuperacao_id_seq.sql"
+    },
+    {
       "name": "espacos_kanban",
       "type": "TABLE",
       "schema": "tech2d",
@@ -1279,6 +1315,12 @@
       "type": "COMMENT",
       "schema": "tech2d",
       "file": "comentarios.sql"
+    },
+    {
+      "name": "limpezas_anuais_agenda",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/limpezas_anuais_agenda.sql"
     },
     {
       "name": "notas_cadernos",
@@ -1701,6 +1743,12 @@
       "file": "comentarios.sql"
     },
     {
+      "name": "reservas_mensagens_ia",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/reservas_mensagens_ia.sql"
+    },
+    {
       "name": "school_classes_id_seq",
       "type": "SEQUENCE",
       "schema": "tech2d",
@@ -1821,6 +1869,12 @@
       "file": "comentarios.sql"
     },
     {
+      "name": "uso_contas_assistente",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/uso_contas_assistente.sql"
+    },
+    {
       "name": "uso_diario_assistente",
       "type": "TABLE",
       "schema": "tech2d",
@@ -1837,6 +1891,12 @@
       "type": "SEQUENCE",
       "schema": "tech2d",
       "file": "sequencias/vinculos_professores_turmas_id_seq.sql"
+    },
+    {
+      "name": "vinculos_turma_perfil",
+      "type": "TABLE",
+      "schema": "tech2d",
+      "file": "tabelas/vinculos_turma_perfil.sql"
     },
     {
       "name": "visao_atividades",
@@ -2055,6 +2115,12 @@
       "file": "restricoes/atividades.sql"
     },
     {
+      "name": "aulas_recuperacao aulas_recuperacao_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/aulas_recuperacao.sql"
+    },
+    {
       "name": "cartoes_kanban cartoes_kanban_id_quadro_kanban_ordem_key",
       "type": "CONSTRAINT",
       "schema": "tech2d",
@@ -2085,10 +2151,28 @@
       "file": "restricoes/colunas_kanban.sql"
     },
     {
+      "name": "config_assistente config_assistente_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/config_assistente.sql"
+    },
+    {
+      "name": "config_fechamento_agenda config_fechamento_agenda_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/config_fechamento_agenda.sql"
+    },
+    {
       "name": "disciplinas_series disciplinas_series_pkey",
       "type": "CONSTRAINT",
       "schema": "tech2d",
       "file": "restricoes/disciplinas_series.sql"
+    },
+    {
+      "name": "editais_recuperacao editais_recuperacao_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/editais_recuperacao.sql"
     },
     {
       "name": "espacos_kanban espacos_kanban_compartilhado_referencia_api_key",
@@ -2131,6 +2215,12 @@
       "type": "CONSTRAINT",
       "schema": "tech2d",
       "file": "restricoes/limpeza_anexos_agenda.sql"
+    },
+    {
+      "name": "limpezas_anuais_agenda limpezas_anuais_agenda_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/limpezas_anuais_agenda.sql"
     },
     {
       "name": "notas_cadernos notas_cadernos_id_usuario_ano_letivo_ano_serie_key",
@@ -2229,6 +2319,12 @@
       "file": "restricoes/regras_retencao.sql"
     },
     {
+      "name": "reservas_mensagens_ia reservas_mensagens_ia_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/reservas_mensagens_ia.sql"
+    },
+    {
       "name": "turmas school_classes_name_key",
       "type": "CONSTRAINT",
       "schema": "tech2d",
@@ -2319,6 +2415,12 @@
       "file": "restricoes/turmas.sql"
     },
     {
+      "name": "uso_contas_assistente uso_contas_assistente_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/uso_contas_assistente.sql"
+    },
+    {
       "name": "uso_diario_assistente uso_diario_assistente_pkey",
       "type": "CONSTRAINT",
       "schema": "tech2d",
@@ -2335,6 +2437,12 @@
       "type": "CONSTRAINT",
       "schema": "tech2d",
       "file": "restricoes/vinculos_professores_turmas.sql"
+    },
+    {
+      "name": "vinculos_turma_perfil vinculos_turma_perfil_pkey",
+      "type": "CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/vinculos_turma_perfil.sql"
     },
     {
       "name": "visitas_aos_sites visitas_aos_sites_pkey",
@@ -2407,6 +2515,12 @@
       "type": "INDEX",
       "schema": "tech2d",
       "file": "indices/limpeza_anexos_agenda_pendentes_idx.sql"
+    },
+    {
+      "name": "limpezas_anuais_agenda_executada_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/limpezas_anuais_agenda_executada_idx.sql"
     },
     {
       "name": "participantes_kanban_caminho_api_idx",
@@ -2523,6 +2637,12 @@
       "file": "indices/vinculos_professores_turmas_professor.sql"
     },
     {
+      "name": "vinculos_turma_pedidos_idx",
+      "type": "INDEX",
+      "schema": "tech2d",
+      "file": "indices/vinculos_turma_pedidos_idx.sql"
+    },
+    {
       "name": "horarios_aula vincular_disciplina_notaki",
       "type": "TRIGGER",
       "schema": "tech2d",
@@ -2563,6 +2683,12 @@
       "type": "FK CONSTRAINT",
       "schema": "tech2d",
       "file": "restricoes/atividades.sql"
+    },
+    {
+      "name": "aulas_recuperacao aulas_recuperacao_edital_id_fkey",
+      "type": "FK CONSTRAINT",
+      "schema": "tech2d",
+      "file": "restricoes/aulas_recuperacao.sql"
     },
     {
       "name": "cartoes_kanban cartoes_kanban_coluna",
@@ -2707,6 +2833,24 @@
       "type": "FK CONSTRAINT",
       "schema": "tech2d",
       "file": "restricoes/vinculos_professores_turmas.sql"
+    },
+    {
+      "name": "notas_cadernos leitura_backup",
+      "type": "POLICY",
+      "schema": "tech2d",
+      "file": "politicas/notas_cadernos_leitura_backup.sql"
+    },
+    {
+      "name": "notas_lancamentos leitura_backup",
+      "type": "POLICY",
+      "schema": "tech2d",
+      "file": "politicas/notas_lancamentos_leitura_backup.sql"
+    },
+    {
+      "name": "notas_recuperacoes leitura_backup",
+      "type": "POLICY",
+      "schema": "tech2d",
+      "file": "politicas/notas_recuperacoes_leitura_backup.sql"
     },
     {
       "name": "notas_cadernos",
@@ -2931,13 +3075,49 @@
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE anexos_atividade",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE anexos_atividade_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE apelidos_disciplinas",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
     },
     {
+      "name": "SEQUENCE apelidos_disciplinas_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE apelidos_professores",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE apelidos_professores_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE ids_entidades",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE turmas_agenda",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
@@ -2955,13 +3135,61 @@
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE regras_recorrencia",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE turmas",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE assistant_recurring_activities",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE faixas_horario",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE horarios_aula",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE assistant_teacher_schedule",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE atividades",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE aulas_recuperacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE cartoes_kanban",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE cartoes_kanban_id_seq",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
@@ -2974,6 +3202,12 @@
     },
     {
       "name": "TABLE professores",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE vinculos_professores_turmas",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
@@ -2997,6 +3231,60 @@
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE colunas_kanban",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE colunas_kanban_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE config_assistente",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE config_fechamento_agenda",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE editais_recuperacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE editais_recuperacao_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE espacos_kanban",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE itens_checklist",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE itens_checklist_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE limites_mensagens_ia",
       "type": "ACL",
       "schema": "tech2d",
@@ -3004,6 +3292,12 @@
     },
     {
       "name": "TABLE limpeza_anexos_agenda",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE limpezas_anuais_agenda",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
@@ -3027,7 +3321,103 @@
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE participantes_kanban",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE perfis",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE perfis_administrativos",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE quadros_kanban",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE quadros_kanban_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE recibos_gravacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE regras_retencao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE reservas_mensagens_ia",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE school_classes_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE school_subjects_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE school_teachers_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE school_time_slots_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE sugestoes_melhoria",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE uso_contas_assistente",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE uso_diario_assistente",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "SEQUENCE vinculos_professores_turmas_id_seq",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE vinculos_turma_perfil",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"
@@ -3051,6 +3441,12 @@
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE visao_disciplinas",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE visao_documentos_aplicacao",
       "type": "ACL",
       "schema": "tech2d",
@@ -3063,6 +3459,18 @@
       "file": "permissoes.sql"
     },
     {
+      "name": "TABLE visao_faixas_horario",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_horarios_aula",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
       "name": "TABLE visao_notas_resultados",
       "type": "ACL",
       "schema": "tech2d",
@@ -3070,6 +3478,24 @@
     },
     {
       "name": "TABLE visao_perfis_administrativos",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_professores",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_recibos_gravacao",
+      "type": "ACL",
+      "schema": "tech2d",
+      "file": "permissoes.sql"
+    },
+    {
+      "name": "TABLE visao_turmas",
       "type": "ACL",
       "schema": "tech2d",
       "file": "permissoes.sql"

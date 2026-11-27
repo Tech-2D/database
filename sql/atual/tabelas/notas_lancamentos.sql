@@ -16,6 +16,6 @@ CREATE TABLE tech2d.notas_lancamentos (
     CONSTRAINT notas_lancamentos_media_informada_check CHECK (((media_informada >= (0)::numeric) AND (media_informada <= (10)::numeric))),
     CONSTRAINT notas_lancamentos_n1_check CHECK (((n1 >= (0)::numeric) AND (n1 <= (10)::numeric))),
     CONSTRAINT notas_lancamentos_n2_check CHECK (((n2 >= (0)::numeric) AND (n2 <= (10)::numeric))),
-    CONSTRAINT notas_lancamentos_peso_n1_check CHECK ((((peso_n1 >= 10) AND (peso_n1 <= 90)) AND (((peso_n1)::integer % 5) = 0))),
+    CONSTRAINT notas_lancamentos_peso_n1_check CHECK (((peso_n1 >= 10) AND (peso_n1 <= 90) AND (((peso_n1)::integer % 5) = 0))),
     CONSTRAINT notas_lancamentos_semestre_check CHECK ((semestre = ANY (ARRAY[1, 2])))
 );

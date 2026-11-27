@@ -1,3 +1,44 @@
+\ir papeis-locais.sql
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:078_classificar_provas_recuperacao' AS latest_078 \gset
+\if :latest_078
+\echo Estrutura já instalada na versão 078.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:077_fechamento_agenda' AS latest_077 \gset
+\if :latest_077
+\echo Estrutura já instalada na versão 077.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:076_ampliar_grade_recuperacao' AS latest_076 \gset
+\if :latest_076
+\echo Estrutura já instalada na versão 076.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:075_preservar_recorrencias_no_vinculo' AS latest_075 \gset
+\if :latest_075
+\echo Estrutura já instalada na versão 075.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:074_vinculo_turma_perfil' AS latest_074 \gset
+\if :latest_074
+\echo Estrutura já instalada na versão 074.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:073_limpeza_ano_letivo' AS latest_073 \gset
+\if :latest_073
+\echo Estrutura já instalada na versão 073.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:072_duracao_recuperacao' AS latest_072 \gset
+\if :latest_072
+\echo Estrutura já instalada na versão 072.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:071_modo_recuperacao' AS latest_071 \gset
+\if :latest_071
+\echo Estrutura já instalada na versão 071.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:070_painel_assistente' AS latest_070 \gset
+\if :latest_070
+\echo Estrutura já instalada na versão 070.
+\else
+SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:069_reservas_cota_assistente' AS latest_069 \gset
+\if :latest_069
+\echo Estrutura já instalada na versão 069.
+\else
 SELECT COALESCE(obj_description(to_regnamespace('tech2d'), 'pg_namespace'), '') LIKE '%tech2d-schema-version:068_fila_anexos_e_travas' AS latest_068 \gset
 \if :latest_068
 \echo Estrutura já instalada na versão 068.
@@ -383,4 +424,45 @@ COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:067_uso_dia
 
 \ir migrations/068_fila_anexos_e_travas.sql
 COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:068_fila_anexos_e_travas';
+\endif
+
+\ir migrations/069_reservas_cota_assistente.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:069_reservas_cota_assistente';
+\endif
+
+\ir migrations/070_painel_assistente.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:070_painel_assistente';
+\endif
+
+\ir migrations/071_modo_recuperacao.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:071_modo_recuperacao';
+\endif
+
+\ir migrations/072_duracao_recuperacao.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:072_duracao_recuperacao';
+\endif
+
+\ir migrations/073_limpeza_ano_letivo.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:073_limpeza_ano_letivo';
+\endif
+
+\ir migrations/074_vinculo_turma_perfil.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:074_vinculo_turma_perfil';
+\endif
+
+\ir migrations/075_preservar_recorrencias_no_vinculo.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:075_preservar_recorrencias_no_vinculo';
+\endif
+
+\ir migrations/076_ampliar_grade_recuperacao.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:076_ampliar_grade_recuperacao';
+\endif
+
+\ir migrations/077_fechamento_agenda.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:077_fechamento_agenda';
+\endif
+
+\ir migrations/078_classificar_provas_recuperacao.sql
+\ir permissoes-provisionadas.sql
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:078_classificar_provas_recuperacao';
 \endif

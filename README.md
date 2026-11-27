@@ -2,7 +2,7 @@
 
 Documentação e scripts do PostgreSQL e do Redis usados pela Agenda e pelo Cadê o professor. [Abrir documentação](https://tech-2d.github.io/database/).
 
-A estrutura consolidada foi extraída do PostgreSQL na versão **068_fila_anexos_e_travas**: **31 tabelas, 19 views e 52 funções** no schema `tech2d`. Não há procedures atualmente. O inventário inclui sequências, índices, constraints, trigger, políticas RLS, comentários e permissões. A exportação contém apenas definições, sem registros de usuários ou credenciais.
+A estrutura consolidada corresponde à versão **078_classificar_provas_recuperacao**, conferida no catálogo do Neon. O schema `tech2d` tem **39 tabelas, 19 views, 52 funções e 0 procedures**. O inventário inclui sequências, índices, restrições, gatilho, políticas RLS, comentários e permissões. O SQL consolidado contém apenas as definições.
 
 | Conteúdo | Onde encontrar |
 | --- | --- |
@@ -29,7 +29,7 @@ psql -X -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/instalar.
 psql -X -d tech2d_local -v ON_ERROR_STOP=1 -f sql/examples/consultas.sql
 ```
 
-A instalação exige um schema `tech2d` inexistente e não apaga estruturas anteriores. Os papéis locais referenciados nos GRANT são criados sem login nem senha. O banco começa sem dados de negócio; consultas podem retornar zero linhas. Não execute esse instalador sobre o banco de produção.
+A instalação é destinada a um banco local vazio e exige um schema `tech2d` inexistente. Ela cria os papéis referenciados nos GRANT sem login nem senha e inicializa a configuração com a Agenda aberta. As tabelas de dados de negócio começam vazias.
 
 Os arquivos individuais servem para consultar o código. Eles possuem dependências entre si; não execute as pastas em ordem alfabética. O arquivo `estrutura.sql` preserva a ordem correta do `pg_dump`. Para atualizar um banco existente, use as migrações da [API](https://github.com/Tech-2D/api), conforme as instruções de cada alteração.
 
@@ -48,7 +48,7 @@ npm run check:sql
 
 O teste exige `PGHOST=127.0.0.1`, `localhost` ou `::1`. Cria três bancos temporários, instala o snapshot e o histórico completo, compara os objetos, executa consultas e verifica permissões e reexecução. Ao terminar, remove apenas os bancos de teste criados por ele. Se os binários não estiverem no PATH, configure `PG_BIN` com a pasta `bin` do PostgreSQL.
 
-Em 15/11/2026, essa validação passou no PostgreSQL 18.6. Inclui os exemplos SQL, corrigidos para os nomes e relacionamentos atuais.
+O snapshot da versão 078 passou nessa validação no PostgreSQL 18.6. Os metadados foram conferidos contra o Neon PostgreSQL 18.7.
 
 ## Manter estrutura e documentação sincronizadas
 

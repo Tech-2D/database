@@ -15,6 +15,10 @@
     "feature": "Calendário · Dia, semana, mês e detalhes",
     "description": "Alimenta o calendário, os links diretos e as automações. id_disciplina referencia o catálogo de disciplinas; id_turma referencia o mesmo catálogo escolar usado pelos horários. id_regra_recorrencia liga uma ocorrência à regra que a gerou. Os nomes exibidos são reconstruídos pelas funções SQL, sem repetir nomes de catálogos no registro."
   },
+  "aulas_recuperacao": {
+    "feature": "Agenda · Grade de recuperação",
+    "description": "Guarda as aulas de revisão e provas exibidas na recuperação da Agenda. Cada linha pertence a uma edição do edital e pode se aplicar a uma turma específica ou a todas."
+  },
   "cartoes_kanban": {
     "feature": "Meu Kanban · Tarefas pessoais e compartilhadas",
     "description": "Guarda o conteúdo de cada tarefa exibida nos quadros. Coluna, posição, prazo, prioridade, responsável e vínculos com atividades permitem organizar o trabalho sem transformar o cartão em uma atividade da turma."
@@ -23,6 +27,14 @@
     "feature": "Meu Kanban · Etapas do quadro",
     "description": "Define as etapas que recebem os cartões e a ordem em que aparecem. A indicação de conclusão alimenta o cálculo de progresso; mover uma coluna altera sua posição, não o conteúdo das tarefas."
   },
+  "config_assistente": {
+    "feature": "Administração · Limite diário do Assistente",
+    "description": "Guarda o limite padrão de mensagens configurado no painel do D2. O serviço usa esse valor quando calcula a cota diária de uma conta."
+  },
+  "config_fechamento_agenda": {
+    "feature": "Administração · Fechamento da Agenda",
+    "description": "Sustenta o editor da tela de fechamento. O administrador pode salvar um rascunho, publicar a tela no lugar do calendário ou reabrir a Agenda."
+  },
   "disciplinas": {
     "feature": "Catálogo compartilhado · Horários e notas",
     "description": "Catálogo único de matérias reutilizado por horários, atividades, recorrências, sugestões e Notas. Os vínculos usam id_disciplina. Rótulos equivalentes são resolvidos para o cadastro existente; a nomenclatura de exibição da Agenda e de Notas é reconstruída na leitura."
@@ -30,6 +42,10 @@
   "disciplinas_series": {
     "feature": "Catálogo compartilhado · Matérias por série",
     "description": "Relaciona uma disciplina já existente à série em que ela pode receber notas na área de Notas. É uma associação, sem outro nome de matéria. As chaves estrangeiras das notas impedem usar disciplinas de uma série diferente."
+  },
+  "editais_recuperacao": {
+    "feature": "Agenda · Edital de recuperação",
+    "description": "Guarda cada versão salva do edital e reúne seus horários. O Redis aponta para a edição publicada e sua validade, enquanto o PostgreSQL conserva o edital e a grade."
   },
   "espacos_kanban": {
     "feature": "Meu Kanban · Espaços pessoais e compartilhados",
@@ -54,6 +70,10 @@
   "limpeza_anexos_agenda": {
     "feature": "Limpeza de arquivos da Agenda",
     "description": "A exclusão de uma atividade por expurgo ou recorrência registra os arquivos na fila antes da confirmação no banco. Depois da confirmação, o Worker remove os objetos no R2 e repete tentativas pendentes."
+  },
+  "limpezas_anuais_agenda": {
+    "feature": "Administração · Limpeza de virada de ano",
+    "description": "Registra limpezas anuais concluídas para reconhecer reenvios da mesma confirmação. A data da limpeza mais recente também limita a validade dos convites antigos de representação."
   },
   "notas_cadernos": {
     "feature": "Notas · Meu caderno de notas",
@@ -99,6 +119,10 @@
     "feature": "Representantes · Expurgo da turma",
     "description": "Define por quanto tempo cada turma mantém as atividades no calendário. Na rotina diária, a API aplica a regra da turma, exclui os anexos do R2 e remove a atividade e seus metadados do PostgreSQL. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
   },
+  "reservas_mensagens_ia": {
+    "feature": "Assistente · Fila de mensagens e cota",
+    "description": "Reserva uma vaga na cota antes de processar a mensagem. A confirmação registra o saldo resultante, o que permite reconhecer reenvios sem contabilizar duas vezes."
+  },
   "sugestoes_melhoria": {
     "feature": "Comentar melhoria · Minhas sugestões e administração",
     "description": "Guarda o feedback autenticado sobre o sistema, seu andamento e a autorização de crédito público. Administradores acompanham e concluem as sugestões e podem vinculá-las a um aviso de atualização. O vínculo com a turma usa id_turma, FK para turmas, em vez de repetir o nome."
@@ -111,6 +135,10 @@
     "feature": "Agenda · Turmas habilitadas pela administração",
     "description": "Guarda a habilitação de uma Agenda para uma turma escolar existente, por id_turma, além da aprovação e de sua origem. Não mantém outro cadastro de nomes: turmas é o catálogo e referencia_agenda preserva o identificador público. Há no máximo uma habilitação por turma."
   },
+  "uso_contas_assistente": {
+    "feature": "Administração · Uso do Assistente por conta",
+    "description": "Mantém o total diário por usuário usado na cota do Assistente e nas consultas administrativas por conta. O painel também dispõe de totais consolidados por dia."
+  },
   "uso_diario_assistente": {
     "feature": "Estatísticas do Assistente",
     "description": "Armazena os totais diários mostrados nas estatísticas administrativas, inclusive as mensagens das contas isentas da cota. Preserva apenas dia e quantidade."
@@ -118,6 +146,10 @@
   "vinculos_professores_turmas": {
     "feature": "Professor responsável por turma e disciplina",
     "description": "O Assistente consulta o vínculo vigente para identificar o professor associado a uma disciplina em determinada turma."
+  },
+  "vinculos_turma_perfil": {
+    "feature": "Perfil · Turma escolhida na Agenda",
+    "description": "Guarda a turma confirmada por conta e o pedido opcional de correção. A Agenda usa o vínculo na seleção inicial, e a administração pode aprovar a troca pelo painel."
   },
   "visitas_aos_sites": {
     "feature": "Administração · Estatísticas de acesso",

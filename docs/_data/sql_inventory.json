@@ -1,20 +1,20 @@
 {
-  "version": "068_fila_anexos_e_travas",
+  "version": "078_classificar_provas_recuperacao",
   "serverVersion": "18.6",
   "counts": {
     "SCHEMA": 1,
-    "COMMENT": 215,
+    "COMMENT": 216,
     "FUNCTION": 52,
-    "TABLE": 31,
-    "SEQUENCE": 13,
+    "TABLE": 39,
+    "SEQUENCE": 14,
     "VIEW": 19,
-    "CONSTRAINT": 56,
-    "INDEX": 30,
+    "CONSTRAINT": 64,
+    "INDEX": 32,
     "TRIGGER": 1,
-    "FK CONSTRAINT": 30,
+    "FK CONSTRAINT": 31,
+    "POLICY": 6,
     "ROW SECURITY": 3,
-    "POLICY": 3,
-    "ACL": 56,
+    "ACL": 103,
     "PROCEDURE": 0
   }
 }

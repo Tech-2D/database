@@ -15,7 +15,7 @@ CREATE TABLE tech2d.notas_cadernos (
     alterado_em timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT notas_cadernos_ano_letivo_check CHECK (((ano_letivo >= 2020) AND (ano_letivo <= 2100))),
     CONSTRAINT notas_cadernos_ano_serie_check CHECK (((ano_serie >= 1) AND (ano_serie <= 3))),
-    CONSTRAINT notas_cadernos_modo_primeiro_check CHECK (((modo_primeiro)::text = ANY ((ARRAY['notas'::character varying, 'media'::character varying])::text[]))),
-    CONSTRAINT notas_cadernos_modo_segundo_check CHECK (((modo_segundo)::text = ANY ((ARRAY['notas'::character varying, 'media'::character varying])::text[]))),
+    CONSTRAINT notas_cadernos_modo_primeiro_check CHECK (((modo_primeiro)::text = ANY (ARRAY[('notas'::character varying)::text, ('media'::character varying)::text]))),
+    CONSTRAINT notas_cadernos_modo_segundo_check CHECK (((modo_segundo)::text = ANY (ARRAY[('notas'::character varying)::text, ('media'::character varying)::text]))),
     CONSTRAINT notas_cadernos_versao_check CHECK ((versao >= 0))
 );

@@ -3,7 +3,7 @@ title: Organização por áreas
 description: Localize as tabelas da Agenda, dos professores, do Kanban e da área de Notas em um único banco.
 ---
 
-Todas as tabelas da aplicação permanecem no schema `tech2d`, dentro do banco `defaultdb`. Não há uma divisão física por aplicativo. Em uma consulta como `tech2d.atividades`, o prefixo identifica onde a tabela está no PostgreSQL.
+Todas as tabelas da aplicação usam o schema `tech2d` no PostgreSQL hospedado no Neon. Em uma consulta como `tech2d.atividades`, o prefixo indica onde a tabela está.
 
 As áreas abaixo servem para navegar na documentação. Elas não criam schemas nem cópias das tabelas.
 
@@ -17,11 +17,13 @@ As áreas abaixo servem para navegar na documentação. Elas não criam schemas 
 
 ## Como as partes se conectam
 
-- **Agenda:** atividades, anexos, avisos, sugestões, representantes e resumos por e-mail.
+- **Agenda:** atividades, anexos, fechamento do calendário, limpeza anual e configuração das turmas.
+- **Recuperação:** edições do edital, aulas de revisão e provas. O Redis controla a validade da publicação.
 - **Cadê o professor:** horários de aula e os catálogos de professores, disciplinas, turmas e faixas de horário.
 - **Kanban:** espaços, quadros, colunas, cartões, checklists, participantes e pedidos de acesso.
 - **Notas:** disciplinas, cadernos, notas e recuperações. As notas são protegidas por conta com RLS.
-- **Dados compartilhados:** perfis, identidade e versão dos registros, acessos, auditoria e controles dos serviços.
+- **Assistente:** catálogos de referência, configuração da cota, reservas e contagens de mensagens.
+- **Dados compartilhados:** perfis, vínculo de turma, estatísticas de acesso e recibos das gravações.
 
 As tabelas podem se relacionar entre áreas por chaves estrangeiras. O [explorador de relações]({{ '/modelagem.html' | relative_url }}) mostra esses vínculos usando as definições do PostgreSQL.
 
@@ -33,17 +35,17 @@ O Worker autentica o usuário e verifica as permissões antes de executar essas 
 
 ## Simplificações aplicadas
 
-A versão `061_simplificar_recorrencias` está instalada no banco.
+A estrutura conferida no Neon está na versão `{{ site.data.sql_inventory.version }}`.
 
 | Mudança | Estrutura atual |
 | --- | --- |
 | Visitas aos sites | `visitas_aos_sites` reúne as contagens e a última data registrada na Agenda. A moderação usa bloqueios por UID no Redis, com prazo configurável. |
 | Catálogo de matérias | A área de Notas reutiliza disciplinas; disciplinas_series associa matérias e séries sem repetir nomes. visao_disciplinas_notas preserva os rótulos usados pela interface. |
-| Expurgo de atividades | O Worker exclui os anexos do R2 antes de remover a atividade e seus metadados do PostgreSQL. A rotina não cria cópias. |
+| Expurgo de atividades | A API remove as atividades e registra as chaves dos anexos em uma fila no PostgreSQL. A limpeza do R2 ocorre depois de confirmar a transação. |
 | Gravações da aplicação | Os recibos ajudam a reconhecer requisições repetidas. O histórico de auditoria foi retirado. |
 | Listas e agrupamentos | Foram removidos os marcadores `grupo` e `listas_presentes`. A ordem continua explícita nas tabelas filhas, e a API devolve listas vazias como `[]`. |
 
-O histórico dos scripts fica no Git. A versão instalada fica no comentário de `tech2d`, sem uma tabela de controle de migrações. Os schemas internos do PostgreSQL e do Aiven pertencem ao serviço e não fazem parte das áreas da aplicação.
+O Git guarda o histórico dos scripts. O comentário de `tech2d` identifica a versão instalada. Os catálogos do PostgreSQL e os schemas internos do Neon servem à infraestrutura.
 
 ## Recurso retirado: enquetes
 

@@ -3,7 +3,7 @@ title: Scripts de instalação
 description: Instale a estrutura atual ou consulte o código SQL de cada objeto.
 ---
 
-A referência atual é **{{ site.data.sql_inventory.version }}**, extraída do PostgreSQL **{{ site.data.sql_inventory.serverVersion }}**. Os arquivos preservam as dependências e as permissões do banco; contêm apenas definições, sem registros de pessoas nem credenciais.
+A referência atual é **{{ site.data.sql_inventory.version }}**. O SQL foi gerado em PostgreSQL **{{ site.data.sql_inventory.serverVersion }}** e comparado com o catálogo do Neon. O snapshot contém definições, comentários e permissões.
 
 ## Estrutura atual
 
@@ -16,7 +16,8 @@ A referência atual é **{{ site.data.sql_inventory.version }}**, extraída do P
 | Sequências | {{ site.data.sql_inventory.counts.SEQUENCE }} | [Geração de IDs](https://github.com/Tech-2D/database/tree/main/sql/atual/sequencias) |
 | Trigger | {{ site.data.sql_inventory.counts.TRIGGER }} | [Gatilhos](https://github.com/Tech-2D/database/tree/main/sql/atual/gatilhos) |
 | Políticas RLS | {{ site.data.sql_inventory.counts.POLICY }} | [Políticas](https://github.com/Tech-2D/database/tree/main/sql/atual/politicas) · [Ativação de RLS](https://github.com/Tech-2D/database/tree/main/sql/atual/seguranca) |
-| Índices e relações | — | [Índices](https://github.com/Tech-2D/database/tree/main/sql/atual/indices) · [PK, FK e restrições](https://github.com/Tech-2D/database/tree/main/sql/atual/restricoes) |
+| Índices | {{ site.data.sql_inventory.counts.INDEX }} declarados separadamente, além dos criados por restrições | [Índices](https://github.com/Tech-2D/database/tree/main/sql/atual/indices) |
+| Restrições | {{ site.data.sql_inventory.counts.CONSTRAINT }} + {{ site.data.sql_inventory.counts["FK CONSTRAINT"] }} FKs | [PK, FK e restrições](https://github.com/Tech-2D/database/tree/main/sql/atual/restricoes) |
 | Permissões e comentários | — | [GRANT e REVOKE](https://github.com/Tech-2D/database/blob/main/sql/atual/permissoes.sql) · [Comentários](https://github.com/Tech-2D/database/blob/main/sql/atual/comentarios.sql) |
 
 [Ver o SQL consolidado](https://github.com/Tech-2D/database/blob/main/sql/atual/estrutura.sql) · [Consultar o inventário de objetos](https://github.com/Tech-2D/database/blob/main/sql/atual/catalogo.json)
@@ -33,13 +34,13 @@ psql -X -d tech2d_local -v ON_ERROR_STOP=1 --single-transaction -f sql/instalar.
 psql -X -d tech2d_local -v ON_ERROR_STOP=1 -f sql/examples/consultas.sql
 ```
 
-O instalador recusa um schema `tech2d` existente. Cria os papéis de referência sem login ou senha e não insere dados de negócio. Não deve ser executado sobre produção. As funções SECURITY DEFINER ficam sob a propriedade da conta que instala o snapshot; o provisionamento seguro de produção continua sob responsabilidade da API.
+O instalador é destinado a bancos locais vazios e recusa um schema `tech2d` existente. Ele cria os papéis de referência sem login ou senha e inicializa a configuração local com a Agenda aberta. A conta que executa a instalação fica como proprietária das funções SECURITY DEFINER. A API mantém o provisionamento de produção.
 
 Os arquivos em `sql/migrations/` descrevem as mudanças passadas, incluindo objetos depois removidos. Para consultar o que existe hoje, use `sql/atual/`. Para atualizar uma instalação existente, siga o executor de migrações da API, com as etapas de publicação e transferência de dados pertinentes.
 
 ## Validação
 
-O snapshot e as 61 migrações foram instalados em bancos vazios PostgreSQL 18.6 e produziram estruturas equivalentes. Também foram conferidos os exemplos SQL, a consulta do catálogo com o papel limitado da API, a reexecução do histórico e a recusa de reinstalação sobre schema existente.
+O teste instala o snapshot e o histórico em bancos locais vazios e compara as estruturas. Também confere os exemplos SQL, a consulta do catálogo com o papel limitado da API, a reexecução do histórico e a recusa de reinstalação sobre schema existente.
 
 Para repetir a conferência, configure `PGHOST`, `PGPORT` e `PGUSER` de um servidor PostgreSQL local:
 

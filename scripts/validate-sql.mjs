@@ -45,6 +45,11 @@ try {
   assert.equal(Number(sql(snapshot, "SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='tech2d' AND p.prokind='f'")), inventory.counts.FUNCTION)
   assert.equal(sql(snapshot, "SELECT has_schema_privilege('tech2d_api','tech2d','CREATE')"), 'f', 'O papel da API não deve criar objetos')
   assert.equal(sql(snapshot, "SELECT has_table_privilege('tech2d_api','tech2d.perfis_administrativos','UPDATE')"), 'f', 'O papel da API não deve editar diretamente permissões')
+  for (const db of [snapshot, migrations]) {
+    assert.equal(sql(db, "SELECT versao = 0 AND publicado IS NULL FROM tech2d.config_fechamento_agenda WHERE id=1"), 't', 'A instalação deve iniciar com a Agenda aberta')
+    assert.equal(sql(db, "SELECT count(*) FROM pg_policies WHERE schemaname='tech2d' AND policyname='leitura_backup' AND cmd='SELECT' AND roles=ARRAY['tech2d_backup']::name[]"), '3', 'O papel de backup deve poder ler as três tabelas de Notas com RLS')
+    assert.equal(sql(db, "SELECT has_table_privilege('tech2d_backup','tech2d.notas_cadernos','INSERT,UPDATE,DELETE')"), 'f', 'O papel de backup deve permanecer somente leitura')
+  }
   sql(snapshot, 'SET ROLE tech2d_api; SELECT count(*) FROM tech2d.visao_atividades; SELECT count(*) FROM tech2d.visao_documentos_catalogo; SELECT * FROM tech2d.consultar_catalogo_agenda(NULL::text, true); RESET ROLE;')
   run('psql', ['-X', '-d', snapshot, '-v', 'ON_ERROR_STOP=1', '-f', 'sql/examples/consultas.sql'])
   // Installation must refuse an existing schema, preserving every object.

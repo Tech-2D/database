@@ -7,13 +7,20 @@ CREATE FUNCTION tech2d.gravar_conteudo(alvo bigint, tipo character varying, obje
     LANGUAGE plpgsql
     SET search_path TO 'pg_catalog'
     AS $$
+DECLARE
+  turma_vinculada text;
 BEGIN
   IF jsonb_typeof(objeto) IS DISTINCT FROM 'object' THEN
-    RAISE EXCEPTION 'Objeto de registro inválido' USING ERRCODE='check_violation';
+    RAISE EXCEPTION 'Objeto de registro invÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido' USING ERRCODE='check_violation';
   END IF;
   objeto := tech2d.padronizar_listas_registro(tipo,tech2d.remover_nulos_recursivo(objeto));
   IF tipo='recurringActivities' THEN
     objeto := objeto - 'createdByEmail' - 'deleted';
+  ELSIF tipo='userProfiles' THEN
+    SELECT turma INTO turma_vinculada FROM tech2d.vinculos_turma_perfil WHERE firebase_uid=chave_api;
+    IF FOUND THEN
+      objeto := jsonb_set(objeto, '{className}', to_jsonb(turma_vinculada));
+    END IF;
   END IF;
   CASE tipo
     WHEN 'activities' THEN PERFORM tech2d.gravar_atividades(alvo,objeto,chave_api,compartilhado_api,pai_api,id_pai_api);

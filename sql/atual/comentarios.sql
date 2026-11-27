@@ -3,7 +3,7 @@
 -- Name: SCHEMA tech2d; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:068_fila_anexos_e_travas';
+COMMENT ON SCHEMA tech2d IS 'Dados da Tech-2D. tech2d-schema-version:078_classificar_provas_recuperacao';
 
 -- Name: FUNCTION buscar_id_turma(valor text); Type: COMMENT; Schema: tech2d; Owner: -
 --
@@ -404,6 +404,11 @@ COMMENT ON COLUMN tech2d.atividades.atualizado_em IS 'Instante da última grava�
 --
 
 COMMENT ON COLUMN tech2d.atividades.referencia_api IS 'Identificador externo estável usado pelo contrato da API e pelos links da entidade.';
+
+-- Name: COLUMN aulas_recuperacao.prova; Type: COMMENT; Schema: tech2d; Owner: -
+--
+
+COMMENT ON COLUMN tech2d.aulas_recuperacao.prova IS 'Indica uma prova de recuperação, distinta de uma aula de revisão.';
 
 -- Name: TABLE cartoes_kanban; Type: COMMENT; Schema: tech2d; Owner: -
 --

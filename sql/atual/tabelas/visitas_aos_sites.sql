@@ -11,5 +11,5 @@ CREATE TABLE tech2d.visitas_aos_sites (
     site character varying(32) DEFAULT 'agenda'::text CONSTRAINT agenda_access_site_not_null NOT NULL,
     CONSTRAINT agenda_access_check CHECK (((((tipo_visitante)::text = 'anonymous'::text) AND ((chave_visitante)::text ~ '^[0-9a-f]{64}$'::text)) OR (((tipo_visitante)::text = 'account'::text) AND ((char_length((chave_visitante)::text) >= 1) AND (char_length((chave_visitante)::text) <= 128))))),
     CONSTRAINT agenda_access_kind_check CHECK (((tipo_visitante)::text = ANY (ARRAY['account'::text, 'anonymous'::text]))),
-    CONSTRAINT visitas_aos_sites_site_check CHECK (((site)::text = ANY ((ARRAY['agenda'::character varying, 'professores'::character varying, 'pegaki'::character varying, 'kanban'::character varying])::text[])))
+    CONSTRAINT visitas_aos_sites_site_check CHECK (((site)::text = ANY (ARRAY[('agenda'::character varying)::text, ('professores'::character varying)::text, ('pegaki'::character varying)::text, ('kanban'::character varying)::text])))
 );

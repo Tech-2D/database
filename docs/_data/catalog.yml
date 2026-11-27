@@ -7,6 +7,10 @@
       title: Metadados dos arquivos anexados às atividades
     - name: limpeza_anexos_agenda
       title: Fila de limpeza de anexos
+    - name: limpezas_anuais_agenda
+      title: Confirmações de limpeza anual
+    - name: config_fechamento_agenda
+      title: Tela de fechamento da Agenda
     - name: regras_recorrencia
       title: Regras de repetição
     - name: regras_retencao
@@ -26,6 +30,13 @@
       title: Turmas do catálogo de horários
     - name: faixas_horario
       title: Faixas de horário
+- id: recuperacao
+  name: Recuperação na Agenda
+  objects:
+    - name: editais_recuperacao
+      title: Edições do edital
+    - name: aulas_recuperacao
+      title: Aulas e provas de recuperação
 - id: colaboracao
   name: Sugestões e colaboração
   objects:
@@ -53,6 +64,8 @@
       title: Papéis administrativos
     - name: perfis
       title: Perfis dos usuários
+    - name: vinculos_turma_perfil
+      title: Turma confirmada da conta
     - name: visitas_aos_sites
       title: Visitas aos sites
 - id: operacao
@@ -82,6 +95,12 @@
       title: Professor no Assistente
     - name: limites_mensagens_ia
       title: Cota de mensagens do Assistente
+    - name: config_assistente
+      title: Configuração do limite diário
+    - name: reservas_mensagens_ia
+      title: Reservas de cota por operação
+    - name: uso_contas_assistente
+      title: Uso diário do Assistente por conta
     - name: uso_diario_assistente
       title: Estatísticas do Assistente
     - name: vinculos_professores_turmas
