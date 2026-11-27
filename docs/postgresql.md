@@ -20,6 +20,12 @@ Todas as tabelas ficam no schema `tech2d`. As áreas desta página agrupam os re
 
 O painel grava uma nova versão a cada salvamento da grade ou do edital. A ativação aponta para uma versão salva no Redis e expira após a duração escolhida pelo administrador. O edital e as aulas permanecem no PostgreSQL após o vencimento. [Migração das tabelas](https://github.com/Tech-2D/api/blob/main/migrations/071_modo_recuperacao.sql) · [Migração da duração](https://github.com/Tech-2D/api/blob/main/migrations/072_duracao_recuperacao.sql) · [Catálogo Redis]({{ '/redis.html#recuperacao-publicacao' | relative_url }})
 
+O campo `ordem` aceita posições positivas, inclusive acima de 200. [Migração da grade](https://github.com/Tech-2D/api/blob/main/migrations/076_ampliar_grade_recuperacao.sql)
+
+## Fechamento da Agenda
+
+`tech2d.config_fechamento_agenda` guarda um registro único. `rascunho` contém a tela em edição. `publicado` contém a tela visível na Agenda ou SQL `NULL` quando o calendário está aberto. `versao` impede que uma edição desatualizada sobrescreva a mais recente. Cada gravação atualiza `atualizado_em`. [Migração do fechamento](https://github.com/Tech-2D/api/blob/main/migrations/077_fechamento_agenda.sql)
+
 ## Tabelas por área
 
 {% assign tables = site.data.schema | where: "kind", "table" %}
