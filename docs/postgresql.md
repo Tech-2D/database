@@ -22,6 +22,8 @@ O painel grava uma nova versão a cada salvamento da grade ou do edital. A ativa
 
 O campo `ordem` aceita posições positivas, inclusive acima de 200. [Migração da grade](https://github.com/Tech-2D/api/blob/main/migrations/076_ampliar_grade_recuperacao.sql)
 
+`aulas_recuperacao.prova` indica, por horário, se o registro é uma prova. A classificação usa um booleano com padrão falso e reconhece os registros já cadastrados com o sufixo `(Prova)`. A API expõe `kind` para diferenciar aula e prova na grade. [Migração das provas](https://github.com/Tech-2D/api/blob/main/migrations/078_classificar_provas_recuperacao.sql)
+
 ## Fechamento da Agenda
 
 `tech2d.config_fechamento_agenda` guarda um registro único. `rascunho` contém a tela em edição. `publicado` contém a tela visível na Agenda ou SQL `NULL` quando o calendário está aberto. `versao` impede que uma edição desatualizada sobrescreva a mais recente. Cada gravação atualiza `atualizado_em`. [Migração do fechamento](https://github.com/Tech-2D/api/blob/main/migrations/077_fechamento_agenda.sql)
